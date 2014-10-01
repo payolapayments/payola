@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     payola-payments (0.0.1)
-      aasm (~> 3.1.0)
+      aasm (~> 3.4.0)
       rails (~> 4.1.4)
       stripe (~> 1.15.0)
       stripe_event (~> 1.3.0)
@@ -10,7 +10,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (3.1.1)
+    aasm (3.4.0)
     actionmailer (4.1.6)
       actionpack (= 4.1.6)
       actionview (= 4.1.6)
