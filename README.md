@@ -2,6 +2,8 @@
 
 One-off and subscription payments for your Rails application.
 
+*Note: this whole thing should be treated as alpha-level, at best. It's based on currently-running code but it hasn't had the same level of testing yet.*
+
 ## Installation
 
 Add Payola to your Gemfile:
