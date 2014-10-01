@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141001203541) do
+ActiveRecord::Schema.define(version: 20141001230848) do
 
   create_table "payola_sales", force: true do |t|
     t.string   "email"
@@ -44,6 +44,14 @@ ActiveRecord::Schema.define(version: 20141001203541) do
 
   create_table "payola_stripe_webhooks", force: true do |t|
     t.string   "stripe_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "products", force: true do |t|
+    t.string   "name"
+    t.string   "permalink"
+    t.integer  "price"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

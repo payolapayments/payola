@@ -6,7 +6,7 @@ module Payola
 
     included do
       validates_presence_of :name
-      validates_presense_of :permalink
+      validates_presence_of :permalink
       validates_uniqueness_of :permalink
     end
 

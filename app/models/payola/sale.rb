@@ -13,7 +13,7 @@ module Payola
 
     before_save :populate_guid
 
-    belongs_to :product
+    belongs_to :product, polymorphic: true
     belongs_to :coupon
     belongs_to :affiliate
 
