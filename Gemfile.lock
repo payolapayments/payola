@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    payola (0.0.1)
+    payola-payments (0.0.1)
       aasm (~> 3.1.0)
       rails (~> 4.1.4)
       stripe (~> 1.15.0)
@@ -94,5 +94,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  payola!
+  payola-payments!
   sqlite3
