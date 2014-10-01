@@ -36,6 +36,16 @@ module Payola
         Payola::Worker.autofind.call(sale)
       end
     end
+
+    def reset!
+      StripeEvent.event_retriever = Retriever
+
+      self.background_worker = nil
+      self.event_filter = lambda { |event| event }
+      self.publishable_key = ENV['STRIPE_PUBLISHABLE_KEY']
+      self.secret_key = ENV['STRIPE_SECRET_KEY']
+      self.secret_key_retriever = lambda { |sale| Payola.secret_key }
+    end
   end
 
   class Retriever
@@ -47,10 +57,5 @@ module Payola
     end
   end
 
-  StripeEvent.event_retriever
-
-  self.event_filter = lambda { |event| event }
-  self.publishable_key = ENV['STIRPE_PUBLISHABLE_KEY']
-  self.secret_key = ENV['STRIPE_SECRET_KEY']
-  self.secret_key_retriever = lambda { |sale| Payola.secret_key }
+  self.reset!
 end

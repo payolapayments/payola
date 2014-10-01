@@ -4,7 +4,7 @@ module Payola
       attr_accessor :registry
 
       def find(symbol)
-        if registry.has_key? symobl
+        if registry.has_key? symbol
           return registry[symbol]
         else
           raise "No such worker type: #{symbol}"

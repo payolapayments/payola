@@ -2,40 +2,92 @@ require 'spec_helper'
 
 module Payola
   describe "#configure" do
-    it "should pass the class back to the given block"
+    it "should pass the class back to the given block" do
+      Payola.configure do |payola|
+        expect(payola).to eq Payola
+      end
+    end
   end
 
   describe "keys" do
-    it "should set publishable key from env"
-    it "should set secret key from env"
+    it "should set publishable key from env" do
+      ENV['STRIPE_PUBLISHABLE_KEY'] = 'some_key'
+      Payola.reset!
+      expect(Payola.publishable_key).to eq 'some_key'
+    end
+
+    it "should set secret key from env" do
+      ENV['STRIPE_SECRET_KEY'] = 'some_secret'
+      Payola.reset!
+      expect(Payola.secret_key).to eq 'some_secret'
+    end
   end
 
   describe "instrumentation" do
-    it "should pass subscribe to StripeEvent"
-    it "should pass instrument to StripeEvent.backend"
-    it "should pass all to StripeEvent"
+    it "should pass subscribe to StripeEvent" do
+      StripeEvent.should_receive(:subscribe)
+      Payola.subscribe('foo', 'blah')
+    end
+    it "should pass instrument to StripeEvent.backend" do
+      ActiveSupport::Notifications.should_receive(:instrument)
+      Payola.instrument('foo', 'blah')
+    end
+    it "should pass all to StripeEvent" do
+      StripeEvent.should_receive(:all)
+      Payola.all('blah')
+    end
   end
 
   describe "#queue" do
+    before do
+      Payola.reset!
+
+      class FakeWorker; end
+      Payola::Worker.registry ||= {}
+      Payola::Worker.registry[:fake] = FakeWorker
+    end
+
     describe "with symbol" do
-      it "should find the correct background worker"
-      it "should not find a background worker for an unknown symbol"
+      it "should find the correct background worker" do
+        FakeWorker.should_receive(:call)
+
+        Payola.background_worker = :fake
+        Payola.queue!('blah')
+      end
+
+      it "should not find a background worker for an unknown symbol" do
+        Payola.background_worker = :another_fake
+        expect { Payola.queue!('blah') }.to raise_error(RuntimeError)
+      end
     end
 
     describe "with callable" do
-      it "should call the callable"
+      it "should call the callable" do
+        foo = nil
+        
+        Payola.background_worker = lambda do |sale|
+          foo = sale
+        end
+  
+        Payola.queue!('blah')
+  
+        expect(foo).to eq 'blah'
+      end
     end
 
     describe "with nothing" do
-      it "should call autofind"
+      it "should call autofind" do
+        FakeWorker.should_receive(:call).and_return(:true)
+        Payola::Worker.should_receive(:autofind).and_return(FakeWorker)
+        Payola.queue!('blah')
+      end
     end
   end
 
-  describe "#event_filter" do
-    it "should get called"
-  end
-
   describe "#secret_key_retriever" do
-    it "should get called"
+    it "should get called" do
+      Payola.secret_key_retriever = lambda { |sale| 'foo' }
+      expect(Payola.secret_key_for_sale('blah')).to eq 'foo'
+    end
   end
 end
