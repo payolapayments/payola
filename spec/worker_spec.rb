@@ -1,23 +1,35 @@
 require 'spec_helper'
 
 module Payola
-  describe Worker do
-    describe "#find" do
-      it "should find a worker class in the registry"
-    end
-
-    describe "#autofind" do
-      it "should find a worker if there is one available"
-    end
-
-    describe Worker::Sidekiq do
-      describe "#can_run?" do
-        it "should return true if ::Sidekiq::Worker is defined"
+  describe Worker::Sidekiq do
+    before do
+      module ::Sidekiq
+        module Worker
+          def perform_async
+          end
+        end
       end
+    end
 
-      describe "#call" do
-        it "should include ::Sidekiq::Worker"
-        it "should call perform_async"
+    describe "#can_run?" do
+      it "should return true if ::Sidekiq::Worker is defined" do
+        expect(Payola::Worker::Sidekiq.can_run?).to be_truthy
+      end
+    end
+
+    describe "#call" do
+      it "should include ::Sidekiq::Worker" do
+        Payola::Worker::Sidekiq.should_receive(:include).with(::Sidekiq::Worker)
+        Payola::Worker::Sidekiq.should_receive(:perform_async)
+        sale = double()
+        sale.should_receive(:guid).and_return('blah')
+        Payola::Worker::Sidekiq.call(sale)
+      end
+      it "should call perform_async" do
+        Payola::Worker::Sidekiq.should_receive(:perform_async)
+        sale = double()
+        sale.should_receive(:guid).and_return('blah')
+        Payola::Worker::Sidekiq.call(sale)
       end
     end
   end
