@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.1.4"
   s.add_dependency "stripe", "~> 1.15.0"
-  s.add_dependency "paper_trail", "~> 3.0.5"
+  s.add_dependency "aasm", "~> 3.1.0"
 
   s.add_development_dependency "sqlite3"
 end

@@ -24,17 +24,10 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    @sale = Sale.create_for_product_token_email(
-      product:      @product,
-      stripe_token: params[:stripeToken],
-      email:        params[:email],
-      coupon_id:    @coupon.try(:id),
-      opt_in:       params[:opt_in],
-      affiliate:    @affiliate
-    )
+    @sale = CreateSale.call(sale_params, @product, @coupon, @affiliate)
 
     if @sale.save
-      @sale.queue_job!
+      Payola.queue(@sale)
       render json: { guid: @sale.guid }
     else
       render json: { error: @sale.errors.full_messages.join(". ") }, status: 400
@@ -57,6 +50,9 @@ class TransactionsController < ApplicationController
 
   def find_product_and_coupon_and_affiliate
     @product_class = params[:product_class].camelize.constantize
+
+    raise ActionController::RoutingError.new('Not Found') unless @product_class.payola_sellable?
+
     @product = @product_class.find_by!(permalink: params[:permalink])
     coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
 
