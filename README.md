@@ -25,7 +25,7 @@ $ rake db:migrate
 
 To start selling one-off products, just include `Payola::Sellable`. For example, if you have a `Book` model:
 
-```
+```ruby
 class Book < ActiveRecord::Base
   include Payola::Sellable
 
@@ -51,7 +51,7 @@ To sell a product, send the user to `/payola/buy/:product_class/:permalink`. For
 
 You can provide short-cut paths in your application's routes like this:
 
-```
+```ruby
 get '/buy/mmp', to: 'payola/transactions#new', defaults: {
   product_class: 'book',
   permalink: 'mastering-modern-payments'
