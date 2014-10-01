@@ -5,7 +5,7 @@ require "payola/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "payola"
+  s.name        = "payola-payments"
   s.version     = Payola::VERSION
   s.authors     = ["Pete Keen"]
   s.email       = ["pete@payola.io"]

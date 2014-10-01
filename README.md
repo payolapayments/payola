@@ -7,7 +7,7 @@ One-off and subscription payments for your Rails application.
 Add Payola to your Gemfile:
 
 ```ruby
-gem 'payola'
+gem 'payola-payments'
 ```
 
 Run the installer and install the migrations:
