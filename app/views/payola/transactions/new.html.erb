@@ -1,0 +1,1 @@
+<%= render 'form', stripe_key: @product.user.stripe_publishable_key, :username => @product.user.username, :permalink => @product.permalink, :sale => @sale, :price => formatted_price(@price), :coupon => @coupon %>

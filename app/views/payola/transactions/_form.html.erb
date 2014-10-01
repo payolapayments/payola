@@ -1,0 +1,151 @@
+<div class="well payment-well" style="margin-bottom: 0px;">
+  <%= form_tag buy_path(username: username, permalink: permalink), :class => '', :id => 'payment-form' do %>
+  <% if coupon %>
+    <input type="hidden" name="coupon_code" value="<%= coupon.code %>" />
+  <% end %>
+  <div class="row">
+    <label class="control-label" for="email">Email Address <span class="label pull-right" style="margin-right: 8px">Secure <img src="<%= asset_path('lock.png') %>" style="height: 13px"></span></label>
+    <input autofocus="true" type="email" name="email" id="email" placeholder="you@example.com" class="payment-input"/>
+  </div>
+  <div class="row">
+    <label class="control-label" for="number">Card Number <span class="pull-right" style="margin-right: 8px"><img src="<%= asset_path('visa.png') %>" style="height: 15px;"><img src="<%= asset_path('mastercard.png') %>" style="height: 15px;"><img src="<%= asset_path('amex.png') %>" style="height: 15px;"><img src="<%= asset_path('discover.png') %>" style="height: 15px;"></span></label>
+    <input type="text" size="20" data-stripe="number" id="number" placeholder="1234 5678 9012 3456" pattern="[\d ]*" class="payment-input"/>
+  </div>
+  <div class="row">
+    <div style="float: left">
+      <label class="control-label" for="cvc">CV Code</label>
+      <input type="text" style="width: 3em" size="3" data-stripe="cvc" id="cvc" placeholder="123" pattern="\d*"/>
+      <img id="card-image" src="<%= asset_path('credit.png') %>" style="height: 30px; padding-left: 10px; margin-top: -10px">
+    </div>
+    <div style="float: right; margin-right: 8px">
+      <label class="control-label">Expiry Date</label>
+      <input style="width: 2em" type="text" size="2" id="exp-month" data-stripe="exp-month" placeholder="MM" pattern="\d*"/>
+      <span> / </span>
+      <input style="width: 3em" type="text" size="4" id="exp-year" data-stripe="exp-year" placeholder="YYYY" pattern="\d*"/>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px">
+    <div class="price" style="margin-top: 20px; float: left"><%= price %></div>
+    <div style="float: right; margin-right: 8px;text-align:center">
+      <div class="btn btn-success btn-large" disabled="disabled" style="display: none; width: 70px; height: 20px;" id="spinner-button"><img src="<%= asset_path('green_spinner_2.gif') %>" style="height: 15px;"></div>
+      <button type="submit" class="btn btn-success btn-large" id="pay-button">Pay Now</button><br>
+      <small style="font-size:0.65em">90 Day Money-Back Guarantee</small>
+    </div>
+  </div>
+  <% end %>
+</div>
+<div class="payment-well" style="margin-top: 0px; margin-bottom: 0px;">
+  <div class="row">
+    <div id="powered-by-stripe" style="<%= sale.errors.any? ? 'display: none;' : '' %> margin-left: auto; margin-right: auto; text-align: center; margin-top: 15px;">
+      <img src="<%= asset_path('powered_by_stripe.png') %>">
+    </div>
+    <div id="payment-errors" class="alert payment-alert" style="<%= sale.errors.any? ? '' : 'display: none;' %> margin-bottom: 0px;">
+      <% sale.errors.full_messages.each do |msg| %>
+        <span><%= msg %></span>
+      <% end %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+  $(function(){
+
+    <% if mixpanel_enabled? %>
+    mixpanel.track("Opened Purchase Form", {
+      "product": "<%= sale.product.permalink %>",
+      "coupon": "<%= coupon.try(:code) %>",
+      "price": "<%= price %>",
+      "affiliate": "<%= @affiliate.try(:code) %>"
+    });
+    <% end %>
+  
+    Stripe.setPublishableKey('<%= stripe_key %>');
+
+    $('#number').payment('formatCardNumber');
+    $('#cvc').payment('formatCardCVC');
+    $('#exp-month').payment('restrictNumeric');
+    $('#exp-year').payment('restrictNumeric');
+    $('#number').keyup(function(event) {
+      var number = $('#number').val();
+      var cardType = $.payment.cardType(number);
+      var img = $('#card-image')[0];
+      if (cardType === 'visa') {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('visa.png') %>";
+      } else if (cardType === 'mastercard') {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('mastercard.png') %>";
+      } else if (cardType === 'discover') {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('discover.png') %>";
+      } else if (cardType === 'amex') {
+        $('#cvc').attr("placeholder", "1234");
+        img.src = "<%= asset_path('amex.png') %>";
+      } else if (cardType === 'dinersclub') {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('diners.png') %>";
+      } else if (cardType === 'maestro') {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('maestro.png') %>";
+      } else if (cardType === 'laser') {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('laser.png') %>";
+      } else {
+        $('#cvc').attr("placeholder", "123");
+        img.src = "<%= asset_path('credit.png')%>";
+      }
+    });
+
+    $('#payment-form').submit(function(event) {
+      var form = $(this);
+      form.find('button').prop('disabled', true);
+      Stripe.createToken(form, stripeResponseHandler);
+      $('#pay-button').hide();
+      $('#spinner-button').show();
+      $('#pay-button').prop('disabled', false);
+      return false;
+    });
+
+    function stripeResponseHandler(status, response) {
+      var form = $('#payment-form');
+      if (response.error) {
+        showError(response.error.message);
+      } else {
+        var token = response.id;
+        form.append($('<input type="hidden" name="stripeToken">').val(token));
+        $.ajax({
+          type: "POST",
+          url: "<%= payola.buy_url(product_class: product.product_class, permalink: product.permalink) %>",
+          data: $('#payment-form').serialize(),
+          success: function(data) { poll(data.guid, 60) },
+          error: function(data) { showError(data.responseJSON.error) }
+        });
+      }
+    }
+
+    function showError(error) {
+      var form = $('#payment-form');
+      $('#payment-errors').html(error);
+      $('#payment-errors').show();
+      $('#pay-button').show();
+      $('#powered-by-stripe').hide();
+      $('#spinner-button').hide();
+    }
+
+    function poll(guid, num_retries_left) {
+      if (num_retries_left == 0) {
+        showError("This seems to be taking too long. Email <a href=\"mailto:<%= Payola.support_email %>\"><%= Payola.support_email %></a> and reference transaction <strong>" + guid + "</strong>.");
+        return;
+      }
+      $.get("/payola/status/" + guid, function(data) {
+        if (data.status === "finished") {
+          window.location = "/payola/confirm/" + guid;
+        } else if (data.status === "errored") {
+          showError(data.error)
+        } else {
+          setTimeout(function() { poll(guid, num_retries_left - 1) }, 500);
+        }
+      });
+    }
+  });
+</script>

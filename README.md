@@ -26,13 +26,18 @@ To start selling one-off products, just include `Payola::Sellable`. For example,
 ```
 class Book < ActiveRecord::Base
   include Payola::Sellable
+
+  def redirect_path(sale)
+    '/'
+  end
 end
 ```
 
-Each sellable model requires two attributes:
+Each sellable model requires two attributes and a method:
 
 * `permalink`, a human-readable slug that is exposed in the URL
 * `name`, a human-readable name exposed on product pages
+* `redirect_path`, a method that Payola will call with the sale object to find out where to redirect the user when they click the pickup link in their email.
 
 When people buy your product, Payola records information in `Payola::Sale` records, and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 
@@ -50,6 +55,7 @@ get '/buy/mmp', to: 'payola/transactions#new', defaults: {
   permalink: 'mastering-modern-payments'
 }
 ```
+
 
 ### Subscriptions
 
@@ -98,6 +104,20 @@ Payola.configure do |payola|
     SaleMailer.admin_receipt(sale.guid)
   end
 end
+```
+
+**Payola sets `StripeEvent#event_retriever`**. If you would like to customize or filter the events that come through, use Payola's `event_filter`:
+
+```ruby
+Payola.configure do |payola|
+  payola.event_filter = lambda do |event|
+    return nil unless event.blah?
+    event
+  end
+end
+```
+
+`event_filter` takes an event and returns either `nil` or an event. If you return nil, the event ID will be recorded in the database but no further action will be taken. Returning the event allows processing to continue.
 
 ### Background Jobs
 

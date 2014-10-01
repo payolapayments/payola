@@ -25,9 +25,9 @@ class CreatePayolaSales < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index "sales", ["coupon_id"], name: "index_sales_on_coupon_id", using: :btree
-    add_index "sales", ["product_id", "product_type"], name: "index_sales_on_product", using: :btree
-    add_index "sales", ["email"], name: "index_sales_on_email", using: :btree
-    add_index "sales", ["guid"], name: "index_sales_on_guid", using: :btree
+    add_index "payola_sales", ["coupon_id"], name: "index_payola_sales_on_coupon_id", using: :btree
+    add_index "payola_sales", ["product_id", "product_type"], name: "index_payola_sales_on_product", using: :btree
+    add_index "payola_sales", ["email"], name: "index_payola_sales_on_email", using: :btree
+    add_index "payola_sales", ["guid"], name: "index_payola_sales_on_guid", using: :btree
   end
 end

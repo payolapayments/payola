@@ -10,6 +10,10 @@ module Payola
       validates_uniqueness_of :permalink
     end
 
+    def product_class
+      self.class.to_s.underscore
+    end
+
     module ClassMethods
       def sellable?
         true
