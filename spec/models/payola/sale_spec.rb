@@ -45,7 +45,7 @@ module Payola
     describe "#finish" do
       it "should instrument finish" do
         sale = create(:sale, state: 'processing')
-        Payola.should_receive(:instrument).with('payola.sale.finished', sale)
+        Payola.should_receive(:instrument).with('payola.product.sale.finished', sale)
 
         sale.finish!
       end
@@ -54,7 +54,7 @@ module Payola
     describe "#fail" do
       it "should instrument fail" do
         sale = create(:sale, state: 'processing')
-        Payola.should_receive(:instrument).with('payola.sale.failed', sale)
+        Payola.should_receive(:instrument).with('payola.product.sale.failed', sale)
 
         sale.fail!
       end
@@ -63,7 +63,7 @@ module Payola
     describe "#refund" do
       it "should instrument refund" do
         sale = create(:sale, state: 'finished')
-        Payola.should_receive(:instrument).with('payola.sale.refunded', sale)
+        Payola.should_receive(:instrument).with('payola.product.sale.refunded', sale)
         sale.refund!
       end
     end

@@ -80,15 +80,15 @@ TODO
 # config/initializers/payola.rb
 
 Payola.configure do |payola|
-  payola.subscribe 'payola.sale.finished' do |sale|
+  payola.subscribe 'payola.book.sale.finished' do |sale|
     SaleMailer.receipt(sale.guid).deliver
   end
 
-  payola.subscribe 'payola.sale.failed' do |sale|
+  payola.subscribe 'payola.book.sale.failed' do |sale|
     SaleMailer.admin_failed(sale.guid).deliver
   end
 
-  payola.subscribe 'payola.sale.refunded' do |sale|
+  payola.subscribe 'payola.book.sale.refunded' do |sale|
     SaleMailer.admin_refunded(sale.guid).deliver
   end
 end
@@ -98,9 +98,11 @@ end
 
 Payola wraps the StripeEvent gem for event processing and adds a few special sale-related events. Each one of these events passes the related `Sale` instance instead of a `Stripe::Event`. They are sent in-process so you don't have to wait for Stripe to send the corresponding webhooks.
 
-* `payola.sale.finished`, when a sale completes successfully
-* `payola.sale.failed`, when a charge fails
-* `payola.sale.refunded`, when a charge is refunded
+* `payola.<product_class>.sale.finished`, when a sale completes successfully
+* `payola.<product_class>.sale.failed`, when a charge fails
+* `payola.<product_class>.sale.refunded`, when a charge is refunded
+
+(In these examples, `<product_class>` is the underscore'd version of the product's class name.)
 
 ### Webhooks
 
