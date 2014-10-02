@@ -57,9 +57,9 @@ module Payola
     end
 
     def find_product_and_coupon_and_affiliate
-      @product_class = params[:product_class].camelize.constantize
+      @product_class = Payola.sellables[params[:product_class]]
 
-      raise ActionController::RoutingError.new('Not Found') unless @product_class.sellable?
+      raise ActionController::RoutingError.new('Not Found') unless @product_class && @product_class.sellable?
 
       @product = @product_class.find_by!(permalink: params[:permalink])
       coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
