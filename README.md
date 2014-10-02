@@ -8,7 +8,7 @@ Single and subscription payments with Stripe for your Rails application.
 
 ## What does this do?
 
-Payla is a drop-in Rails engine that lets you sell one or more products by just including a concern into your models. It includes:
+Payola is a drop-in Rails engine that lets you sell one or more products by just including a concern into your models. It includes:
 
 * A customizable, embedable credit card form
 * Asynchronous payments, usable with any background processing system
