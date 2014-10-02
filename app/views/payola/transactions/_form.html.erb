@@ -1,5 +1,5 @@
 <div class="well payment-well" style="margin-bottom: 0px;">
-  <%= form_tag buy_path(username: username, permalink: permalink), :class => '', :id => 'payment-form' do %>
+  <%= form_tag payola.buy_path(product_class: sale.product.product_class, permalink: permalink), :class => '', :id => 'payment-form' do %>
   <% if coupon %>
     <input type="hidden" name="coupon_code" value="<%= coupon.code %>" />
   <% end %>
@@ -29,7 +29,6 @@
     <div style="float: right; margin-right: 8px;text-align:center">
       <div class="btn btn-success btn-large" disabled="disabled" style="display: none; width: 70px; height: 20px;" id="spinner-button"><img src="<%= asset_path('green_spinner_2.gif') %>" style="height: 15px;"></div>
       <button type="submit" class="btn btn-success btn-large" id="pay-button">Pay Now</button><br>
-      <small style="font-size:0.65em">90 Day Money-Back Guarantee</small>
     </div>
   </div>
   <% end %>
@@ -50,15 +49,6 @@
 <script type="text/javascript">
   $(function(){
 
-    <% if mixpanel_enabled? %>
-    mixpanel.track("Opened Purchase Form", {
-      "product": "<%= sale.product.permalink %>",
-      "coupon": "<%= coupon.try(:code) %>",
-      "price": "<%= price %>",
-      "affiliate": "<%= @affiliate.try(:code) %>"
-    });
-    <% end %>
-  
     Stripe.setPublishableKey('<%= stripe_key %>');
 
     $('#number').payment('formatCardNumber');
@@ -115,7 +105,7 @@
         form.append($('<input type="hidden" name="stripeToken">').val(token));
         $.ajax({
           type: "POST",
-          url: "<%= payola.buy_url(product_class: product.product_class, permalink: product.permalink) %>",
+          url: "<%= payola.buy_url(product_class: sale.product.product_class, permalink: permalink) %>",
           data: $('#payment-form').serialize(),
           success: function(data) { poll(data.guid, 60) },
           error: function(data) { showError(data.responseJSON.error) }

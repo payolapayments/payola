@@ -4,7 +4,7 @@ require 'stripe_event'
 
 module Payola
   class << self
-    attr_accessor :publishable_key, :secret_key, :secret_key_retriever, :background_worker, :event_filter
+    attr_accessor :publishable_key, :secret_key, :secret_key_retriever, :background_worker, :event_filter, :support_email
 
     def configure(&block)
       raise ArgumentError, "must provide a block" unless block_given?
@@ -45,6 +45,7 @@ module Payola
       self.publishable_key = ENV['STRIPE_PUBLISHABLE_KEY']
       self.secret_key = ENV['STRIPE_SECRET_KEY']
       self.secret_key_retriever = lambda { |sale| Payola.secret_key }
+      self.support_email = 'sales@example.com'
     end
   end
 

@@ -6,7 +6,6 @@ module Payola
 
     def new
       @sale = Sale.new(product: @product)
-      set_page_title "Buy #{@product.name}"
     end
 
     def iframe
@@ -54,7 +53,7 @@ module Payola
     def find_product_and_coupon_and_affiliate
       @product_class = params[:product_class].camelize.constantize
 
-      raise ActionController::RoutingError.new('Not Found') unless @product_class.payola_sellable?
+      raise ActionController::RoutingError.new('Not Found') unless @product_class.sellable?
 
       @product = @product_class.find_by!(permalink: params[:permalink])
       coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
