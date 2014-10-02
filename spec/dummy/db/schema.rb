@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141002013701) do
+ActiveRecord::Schema.define(version: 20141002203725) do
 
   create_table "payola_affiliates", force: true do |t|
     t.string   "code"
@@ -50,12 +50,14 @@ ActiveRecord::Schema.define(version: 20141002013701) do
     t.integer  "affiliate_id"
     t.text     "customer_address"
     t.text     "business_address"
+    t.string   "stripe_customer_id"
   end
 
   add_index "payola_sales", ["coupon_id"], name: "index_payola_sales_on_coupon_id"
   add_index "payola_sales", ["email"], name: "index_payola_sales_on_email"
   add_index "payola_sales", ["guid"], name: "index_payola_sales_on_guid"
   add_index "payola_sales", ["product_id", "product_type"], name: "index_payola_sales_on_product"
+  add_index "payola_sales", ["stripe_customer_id"], name: "index_payola_sales_on_stripe_customer_id"
 
   create_table "payola_stripe_webhooks", force: true do |t|
     t.string   "stripe_id"
