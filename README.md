@@ -2,9 +2,19 @@
 
 [![Gem Version](https://badge.fury.io/rb/payola-payments.svg)](http://badge.fury.io/rb/payola-payments) [![CircleCI](https://circleci.com/gh/peterkeen/payola.svg?style=shield)](https://circleci.com/gh/peterkeen/payola) [![Dependency Status](https://gemnasium.com/peterkeen/payola.svg)](https://gemnasium.com/peterkeen/payola)
 
-One-off and subscription payments for your Rails application.
+Single and subscription payments with Stripe for your Rails application.
 
 *Note: this whole thing should be treated as alpha-level, at best. It's based on currently-running code but it hasn't had the same level of testing yet.*
+
+## What does this do?
+
+Payla is a drop-in Rails engine that lets you sell one or more products by just including a concern into your models. It includes:
+
+* A customizable, embedable credit card form
+* Asynchronous payments, usable with any background processing system
+* Full webhook integration
+* Receipt emails
+* Easy extension hooks for adding your own functionality
 
 ## Installation
 
@@ -21,16 +31,17 @@ $ rails g payola:install
 $ rake db:migrate
 ```
 
-### One-off Sales
+### Single Sales
 
-To start selling one-off products, just include `Payola::Sellable`. For example, if you have a `Book` model:
+To start selling products, just include `Payola::Sellable`. For example, if you have a `Book` model:
 
 ```ruby
 class Book < ActiveRecord::Base
   include Payola::Sellable
 
   def redirect_path(sale)
-    '/'
+    # this could also be a signed S3 url or something
+    '/some/path/to/book.pdf'
   end
 end
 ```
