@@ -24,7 +24,13 @@ module Payola
     end
 
     def create
-      @sale = CreateSale.call(sale_params, @product, @coupon, @affiliate)
+      sale_params = sale_params.merge(
+        product: @product,
+        coupon: @coupon,
+        affiliate: @affiliate
+      )
+
+      @sale = CreateSale.call(sale_params)
 
       if @sale.save
         Payola.queue(@sale)

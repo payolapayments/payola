@@ -1,6 +1,10 @@
 module Payola
   class CreateSale
-    def self.call(params, product, coupon, affiliate)
+    def self.call(params)
+      product   = params[:product]
+      affiliate = params[:affiliate]
+      coupon    = params[:coupon]
+
       Payola::Sale.new do |s|
         s.product = product
         s.email = params[:email]
