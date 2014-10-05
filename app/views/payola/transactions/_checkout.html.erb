@@ -1,0 +1,48 @@
+<%
+  button_class ||= "stripe-button-el"
+  button_text ||= "Pay Now"
+  description ||= "#{sale.product.name} (#{formatted_price(sale.product.price)})"
+  name ||= sale.product.name
+  product_image_path ||= ""
+  panel_label ||= ""
+  allow_remember_me = defined?(allow_remember_me) ? allow_remember_me : true
+  email ||= ""
+  verify_zip_code = defined?(verify_zip_code) ? verify_zip_code : false
+
+  button_id ||= "payola-button-#{sale.product.product_class}-#{sale.product.permalink}"
+  error_div_id ||= "#{button_id}-errors"
+  form_id ||= "#{button_id}-form"
+  button_text_id = "#{button_id}-span"
+  button_spinner_id = "#{button_id}-spinner"
+%>
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
+
+<%= form_tag payola.buy_path(product_class: sale.product.product_class, permalink: sale.product.permalink), id: form_id do %>
+  <button class="stripe-button-el" id="<%= button_id %>">
+    <span id="<%= button_text_id %>" style="display: block; min-height: 30px;"><%= button_text %></span>
+    <span id="<%= button_spinner_id %>" style="display:none;min-iehgt: 30px;">Please wait...</span>
+  </button>
+  <div style="display:none", id="<%= error_div_id %>"></div>
+<% end %>
+<script type="text/javascript">
+  Payola.setUpStripeCheckoutButton({
+    form_id: "<%= form_id %>",
+    button_id: "<%= button_id %>",
+    button_text_id: "<%= button_text_id %>",
+    button_spinner_id: "<%= button_spinner_id %>",
+    error_div_id: "<%= error_div_id %>",
+    product_class: "<%= sale.product.product_class %>",
+    product_permalink: "<%= sale.product.permalink %>",
+    price: <%= sale.product.price %>,
+    name: "<%= name %>",
+    description: "<%= description %>",
+    product_image_path: "<%= product_image_path %>",
+    publishable_key: "<%= Payola.publishable_key %>",
+    panel_label: "<%= panel_label %>",
+    allow_remember_me: <%= allow_remember_me %>,
+    email: "<%= email %>",
+    verify_zip_code: <%= verify_zip_code %>
+  });
+</script>

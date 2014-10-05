@@ -105,7 +105,7 @@
         form.append($('<input type="hidden" name="stripeToken">').val(token));
         $.ajax({
           type: "POST",
-          url: "<%= payola.buy_url(product_class: sale.product.product_class, permalink: permalink) %>",
+          url: "<%= payola.buy_url(product_class: sale.product.product_class, permalink: sale.product.permalink) %>",
           data: $('#payment-form').serialize(),
           success: function(data) { poll(data.guid, 60) },
           error: function(data) { showError(data.responseJSON.error) }

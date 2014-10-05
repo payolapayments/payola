@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "rails", "~> 4.1.4"
+  s.add_dependency "jquery-rails"
   s.add_dependency "stripe", "~> 1.15.0"
   s.add_dependency "aasm", "~> 3.4.0"
   s.add_dependency "stripe_event", "~> 1.3.0"
@@ -26,4 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency "stripe-ruby-mock", "~> 1.10.1.7"
+  s.add_development_dependency "sucker_punch", "~> 1.2.1"
 end

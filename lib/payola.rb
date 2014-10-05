@@ -1,6 +1,7 @@
 require "payola/engine"
 require "payola/worker"
 require 'stripe_event'
+require 'jquery-rails'
 
 module Payola
   class << self
@@ -46,10 +47,10 @@ module Payola
       self.secret_key = ENV['STRIPE_SECRET_KEY']
       self.secret_key_retriever = lambda { |sale| Payola.secret_key }
       self.support_email = 'sales@example.com'
+      self.sellables = {}
     end
 
     def register_sellable(klass)
-      sellables ||= {}
       sellables[klass.product_class] = klass
     end
   end

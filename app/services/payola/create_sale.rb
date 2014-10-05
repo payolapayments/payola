@@ -7,7 +7,7 @@ module Payola
 
       Payola::Sale.new do |s|
         s.product = product
-        s.email = params[:email]
+        s.email = params[:email] || params[:stripeEmail]
         s.stripe_token = params[:stripeToken] || params[:stripe_token]
         s.affiliate_id = affiliate.try(:id)
   

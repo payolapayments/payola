@@ -22,7 +22,13 @@ module Payola
       end
     end
 
-    class Sidekiq
+    class BaseWorker
+      def perform(guid)
+        Sale.where(guid: guid).first.process!
+      end
+    end
+
+    class Sidekiq < BaseWorker
       def self.can_run?
         defined?(::Sidekiq::Worker)
       end
@@ -33,8 +39,20 @@ module Payola
       end
     end
 
-    registry = {
-      sidekiq: Payola::Worker::Sidekiq
+    class SuckerPunch < BaseWorker
+      def self.can_run?
+        defined?(::SuckerPunch::Job)
+      end
+
+      def self.call(sale)
+        self.send(:include, ::SuckerPunch::Job)
+        self.new.async.perform(sale.guid)
+      end
+    end
+
+    self.registry = {
+      sidekiq: Payola::Worker::Sidekiq,
+      sucker_punch: Payola::Worker::SuckerPunch
     }
   end
 end

@@ -15,6 +15,8 @@ module Payola
     def show
       @sale = Sale.find_by!(guid: params[:guid])
       @product = @sale.product
+
+      redirect_to product.redirect_path(sale)
     end
 
     def status
@@ -24,16 +26,16 @@ module Payola
     end
 
     def create
-      sale_params = sale_params.merge(
+      create_params = sale_params.merge(
         product: @product,
         coupon: @coupon,
         affiliate: @affiliate
-      )
+        )
 
-      @sale = CreateSale.call(sale_params)
+      @sale = CreateSale.call(create_params)
 
       if @sale.save
-        Payola.queue(@sale)
+        Payola.queue!(@sale)
         render json: { guid: @sale.guid }
       else
         render json: { error: @sale.errors.full_messages.join(". ") }, status: 400
@@ -47,6 +49,10 @@ module Payola
       redirect_to product.redirect_path(sale)
     end
 
+    def wait
+      @guid = params[:guid]
+    end
+    
     def index
 
     end
@@ -78,6 +84,10 @@ module Payola
         cookies[:aff] = affiliate_code
       end
 
+    end
+
+    def sale_params
+      params.permit(:stripeToken, :stripe_token, :stripeTokenType, :stripeEmail)
     end
 
   end

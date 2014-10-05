@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/payola-payments.svg)](http://badge.fury.io/rb/payola-payments) [![CircleCI](https://circleci.com/gh/peterkeen/payola.svg?style=shield)](https://circleci.com/gh/peterkeen/payola) [![Dependency Status](https://gemnasium.com/peterkeen/payola.svg)](https://gemnasium.com/peterkeen/payola)
 
-Single and subscription payments with Stripe for your Rails application.
+Single payments with Stripe for your Rails application.
 
 *Note: this whole thing should be treated as alpha-level, at best. It's based on currently-running code but it hasn't had the same level of testing yet.*
 
@@ -10,10 +10,9 @@ Single and subscription payments with Stripe for your Rails application.
 
 Payola is a drop-in Rails engine that lets you sell one or more products by just including a concern into your models. It includes:
 
-* A customizable, embedable credit card form
+* An easy to embed, easy to customize, async Stripe Checkout button
 * Asynchronous payments, usable with any background processing system
 * Full webhook integration
-* Receipt emails
 * Easy extension hooks for adding your own functionality
 
 ## Installation
@@ -29,6 +28,12 @@ Run the installer and install the migrations:
 ```bash
 $ rails g payola:install:migrations
 $ rake db:migrate
+```
+
+Add Payola's javascript to your `application.js`:
+
+```javascript
+//= require payola
 ```
 
 ### Single Sales
@@ -50,29 +55,28 @@ Each sellable model requires two attributes and a method:
 
 * `permalink`, a human-readable slug that is exposed in the URL
 * `name`, a human-readable name exposed on product pages
-* `redirect_path`, a method that Payola will call with the sale object to find out where to redirect the user when they click the pickup link in their email.
+* `redirect_path`, where Payola should redirect the user after a successful sale
 
 When people buy your product, Payola records information in `Payola::Sale` records, and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 
-To sell a product, send the user to `/payola/buy/:product_class/:permalink`. For our book example, if you have a Book with the permalink `mastering-modern-payments, you would send them to:
+### Checkout Button
 
-```
-/payola/buy/book/mastering-modern-payments
-```
+To sell a product, use the `checkout` partial like this:
 
-You can provide short-cut paths in your application's routes like this:
-
-```ruby
-get '/buy/mmp', to: 'payola/transactions#new', defaults: {
-  product_class: 'book',
-  permalink: 'mastering-modern-payments'
-}
+```rhtml
+<%= render 'payola/transactions/checkout', sale: Sale.new(product: YourProductClass.first) %>
 ```
 
+This will insert a Stripe Checkout button. The `checkout` partial has a bunch of options:
 
-### Subscriptions
-
-TODO
+* `button_text`: What to put on the button. Defaults to "Pay Now"
+* `button_class`: What class to put on the actual button. Defaults to "stripe-button-el".
+* `name`: What to put at the top of the Checkout popup. Defaults to `product.name`.
+* `description`: What to show as the description in the popup. Defaults to product name + the formatted price.
+* `product_image_path`: An image to insert into the Checkout popup. Defaults to blank.
+* `panel_label`: The label of the button in the Checkout popup.
+* `allow_remember_me`: Whether to show the Remember me checkbox. Defaults to true.
+* `email`: Email address to pre-fill. Defaults to blank.
 
 ## Configuration
 
@@ -138,7 +142,8 @@ end
 
 Payola will attempt to auto-detect the job queuing system you are using. It currently supports the following systems:
 
-* Sidekiq
+* Sidekiq (`:sidekiq`)
+* SuckerPunch (`:sucker_punch`)
 
 If you want to force Payola to use a specific supported system, just set `background_worker` to the appropriate symbol. For example:
 
@@ -154,6 +159,11 @@ Payola.background_worker = lambda do |sale|
 end
 ```
 
+## TODO
+
+* Custom forms
+* Subscriptions
+
 ## License
 
 Please see the LICENSE file for licensing details.
@@ -161,3 +171,4 @@ Please see the LICENSE file for licensing details.
 ## Author
 
 Pete Keen, [@zrail](https://twitter.com/zrail), [https://www.petekeen.net](https://www.petekeen.net)
+

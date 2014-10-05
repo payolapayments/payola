@@ -1,0 +1,25 @@
+Please wait...
+
+<div id="errors" style="display:none;"></div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+  $(function() {
+    function poll(guid, num_retries_left) {
+      if (num_retries_left == 0) {
+        $('#errors').html('Taking too long...');
+      }
+      $.get("/payola/status/" + guid, function(data) {
+        if (data.status === "finished") {
+          window.location = "/payola/confirm/" + guid;
+        } else if (data.status === "errored") {
+          $('#errors').html(data.error)
+        } else {
+          setTimeout(function() { poll(guid, num_retries_left - 1) }, 500);
+        }
+      });
+    }
+    poll("<%= @guid %>", 60);
+  });
+</script>
