@@ -1,16 +1,6 @@
 module Payola
   class TransactionsController < ApplicationController
-    before_filter :strip_iframe_protection
-
-    before_filter :find_product_and_coupon_and_affiliate, only: [:iframe, :new, :create]
-
-    def new
-      @sale = Sale.new(product: @product)
-    end
-
-    def iframe
-      @sale = Sale.new(product: @product)
-    end
+    before_filter :find_product_and_coupon_and_affiliate, only: [:create]
 
     def show
       @sale = Sale.find_by!(guid: params[:guid])
@@ -42,26 +32,7 @@ module Payola
       end
     end
 
-    def pickup
-      sale = Sale.find_by!(guid: params[:guid])
-      product = sale.product
-
-      redirect_to product.redirect_path(sale)
-    end
-
-    def wait
-      @guid = params[:guid]
-    end
-    
-    def index
-
-    end
-
     private
-    def strip_iframe_protection
-      response.headers.delete('X-Frame-Options')
-    end
-
     def find_product_and_coupon_and_affiliate
       @product_class = Payola.sellables[params[:product_class]]
 
