@@ -3,8 +3,8 @@ module Payola
     before_filter :find_product_and_coupon_and_affiliate, only: [:create]
 
     def show
-      @sale = Sale.find_by!(guid: params[:guid])
-      @product = @sale.product
+      sale = Sale.find_by!(guid: params[:guid])
+      product = sale.product
 
       redirect_to product.redirect_path(sale)
     end
