@@ -1,3 +1,13 @@
+begin
+  require 'sidekiq'
+rescue LoadError
+end
+
+begin
+  require 'sucker_punch'
+rescue LoadError
+end
+
 module Payola
   module Worker
     class << self
@@ -36,7 +46,7 @@ module Payola
       end
 
       def self.call(sale)
-        self.perform_async(sale.guid)
+        perform_async(sale.guid)
       end
     end
 
@@ -48,7 +58,7 @@ module Payola
       end
 
       def self.call(sale)
-        self.new.async.perform(sale.guid)
+        new.async.perform(sale.guid)
       end
     end
 
