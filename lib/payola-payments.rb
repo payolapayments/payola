@@ -1,1 +1,1 @@
-require './payola'
+require_relative './payola'
