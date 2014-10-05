@@ -29,23 +29,25 @@ module Payola
     end
 
     class Sidekiq < BaseWorker
+      include ::Sidekiq::Worker if defined? ::Sidekiq::Worker
+
       def self.can_run?
         defined?(::Sidekiq::Worker)
       end
 
       def self.call(sale)
-        self.send(:include, ::Sidekiq::Worker)
         self.perform_async(sale.guid)
       end
     end
 
     class SuckerPunch < BaseWorker
+      include ::SuckerPunch::Job  if defined? ::SuckerPunch::Job
+
       def self.can_run?
         defined?(::SuckerPunch::Job)
       end
 
       def self.call(sale)
-        self.send(:include, ::SuckerPunch::Job)
         self.new.async.perform(sale.guid)
       end
     end

@@ -18,13 +18,6 @@ module Payola
     end
 
     describe "#call" do
-      it "should include ::Sidekiq::Worker" do
-        Payola::Worker::Sidekiq.should_receive(:include).with(::Sidekiq::Worker)
-        Payola::Worker::Sidekiq.should_receive(:perform_async)
-        sale = double()
-        sale.should_receive(:guid).and_return('blah')
-        Payola::Worker::Sidekiq.call(sale)
-      end
       it "should call perform_async" do
         Payola::Worker::Sidekiq.should_receive(:perform_async)
         sale = double()
