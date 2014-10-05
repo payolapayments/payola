@@ -23,10 +23,9 @@ Add Payola to your Gemfile:
 gem 'payola-payments'
 ```
 
-Run the installer and install the migrations:
+Install the migrations:
 
 ```bash
-$ rails g payola:install:migrations
 $ rake db:migrate
 ```
 
