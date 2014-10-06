@@ -35,6 +35,12 @@ Add Payola's javascript to your `application.js`:
 //= require payola
 ```
 
+Finally, add the helper to your `ApplicationController`:
+
+```
+helper Payola::PriceHelper
+```
+
 ### Single Sales
 
 To start selling products, just include `Payola::Sellable`. For example, if you have a `Book` model:
