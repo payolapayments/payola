@@ -13,17 +13,15 @@
   button_id = "payola-button-#{sale.product.product_class}-#{sale.product.permalink}"
   error_div_id = "#{button_id}-errors"
   form_id = "#{button_id}-form"
-  button_text_id = "#{button_id}-span"
-  button_spinner_id = "#{button_id}-spinner"
 %>
 
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
 
 <%= form_tag payola.buy_path(product_class: sale.product.product_class, permalink: sale.product.permalink), id: form_id do %>
-  <button class="<%= button_class %>" id="<%= button_id %>">
-    <span id="<%= button_text_id %>" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
-    <span id="<%= button_spinner_id %>" style="display: none; <%= button_inner_style %>">Please wait...</span>
+  <button class="<%= button_class %> payola-checkout-button" id="<%= button_id %>">
+    <span class="payola-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
+    <span class="payola-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
   </button>
   <div style="display:none", id="<%= error_div_id %>"></div>
 <% end %>

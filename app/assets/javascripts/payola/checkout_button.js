@@ -25,9 +25,9 @@ var Payola = {
         console.log(options.form_id);
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
-        $("#" + options.button_id).prop("disabled", true);
-        $("#" + options.button_text_id).hide();
-        $("#" + options.button_spinner_id).show();
+        $(".payola-checkout-button").prop("disabled", true);
+        $(".payola-checkout-button-text").hide();
+        $(".payola-checkout-button-spinner").show();
         $.ajax({
             type: "POST",
             url: "/payola/buy/" + options.product_class + "/" + options.product_permalink,
