@@ -35,7 +35,7 @@ module Payola
       end
 
       event :fail, after: :instrument_fail do
-        transitions from: :processing, to: :errored
+        transitions from: [:pending, :processing], to: :errored
       end
 
       event :refund, after: :instrument_refund do
