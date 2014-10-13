@@ -26,7 +26,7 @@ module Payola
       state :errored
       state :refunded
 
-      event :process, after: :charge_card do
+      event :process, before: :verify_charge, after: :charge_card do
         transitions from: :pending, to: :processing
       end
 
@@ -60,6 +60,15 @@ module Payola
 
     def instrument_refund
       Payola.instrument(instrument_key('refunded'), self)
+    end
+
+    def verify_charge
+      begin
+        Payola.charge_verifier.call(self)
+      rescue RuntimeError => e
+        self.error = e.message
+        self.fail!
+      end
     end
 
     def product_class
