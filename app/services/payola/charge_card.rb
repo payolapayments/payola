@@ -5,7 +5,7 @@ module Payola
       secret_key = Payola.secret_key_for_sale(sale)
 
       begin
-        Payola.charge_verifier(sale)
+        Payola.charge_verifier.call(sale)
         
         customer = Stripe::Customer.create({
           card: sale.stripe_token,
