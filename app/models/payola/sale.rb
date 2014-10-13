@@ -26,7 +26,7 @@ module Payola
       state :errored
       state :refunded
 
-      event :process, before: :verify_charge, after: :charge_card do
+      event :process, after: :charge_card do
         transitions from: :pending, to: :processing
       end
 

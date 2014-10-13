@@ -5,6 +5,8 @@ module Payola
       secret_key = Payola.secret_key_for_sale(sale)
 
       begin
+        Payola.charge_verifier(sale)
+        
         customer = Stripe::Customer.create({
           card: sale.stripe_token,
           email: sale.email
@@ -34,6 +36,9 @@ module Payola
         )
         sale.finish!
       rescue Stripe::StripeError => e
+        sale.update_attributes(error: e.message)
+        sale.fail!
+      rescue RuntimeError => e
         sale.update_attributes(error: e.message)
         sale.fail!
       end
