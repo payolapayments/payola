@@ -41,6 +41,9 @@ var Payola = {
         var error_div = $("#" + error_div_id);
         error_div.toggle();
         error_div.html(error);
+        $(".payola-checkout-button").prop("disabled", false);
+        $(".payola-checkout-button-spinner").hide();
+        $(".payola-checkout-button-text").show();
     },
 
     poll: function(guid, num_retries_left, error_div_id) {
