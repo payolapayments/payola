@@ -18,7 +18,7 @@ Payola is a drop-in Rails engine that lets you sell one or more products by just
 Add Payola to your Gemfile:
 
 ```ruby
-gem 'payola-payments', require: 'payola'
+gem 'payola-payments'
 ```
 
 Install the migrations:
