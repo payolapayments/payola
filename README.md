@@ -2,13 +2,11 @@
 
 [![Gem Version](https://badge.fury.io/rb/payola-payments.svg)](http://badge.fury.io/rb/payola-payments) [![CircleCI](https://circleci.com/gh/peterkeen/payola.svg?style=shield)](https://circleci.com/gh/peterkeen/payola) [![Dependency Status](https://gemnasium.com/peterkeen/payola.svg)](https://gemnasium.com/peterkeen/payola)
 
-Single payments with Stripe for your Rails application.
-
-*Note: this whole thing should be treated as alpha-level, at best. It's based on currently-running code but it hasn't had the same level of testing yet.*
+Payments with Stripe for your Rails application.
 
 ## What does this do?
 
-Payola is a drop-in Rails engine that lets you sell one or more products by just including a concern into your models. It includes:
+Payola is a drop-in Rails engine that lets you sell one or more products by just including a module in your models. It includes:
 
 * An easy to embed, easy to customize, async Stripe Checkout button
 * Asynchronous payments, usable with any background processing system
@@ -56,11 +54,12 @@ class Book < ActiveRecord::Base
 end
 ```
 
-Each sellable model requires two attributes and a method:
+Each sellable model requires three attributes and a method:
 
-* `permalink`, a human-readable slug that is exposed in the URL
-* `name`, a human-readable name exposed on product pages
-* `redirect_path`, where Payola should redirect the user after a successful sale
+* `price`, (attribute) an amount in USD cents
+* `permalink`, (attribute) a human-readable slug that is exposed in the URL
+* `name`, (attribute) a human-readable name exposed on product pages
+* `redirect_path`, (method, called with the sale as the only argument) where Payola should redirect the user after a successful sale
 
 When people buy your product, Payola records information in `Payola::Sale` records, and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 
@@ -112,6 +111,18 @@ Payola wraps the StripeEvent gem for event processing and adds a few special sal
 * `payola.<product_class>.sale.refunded`, when a charge is refunded
 
 (In these examples, `<product_class>` is the underscore'd version of the product's class name.)
+
+### Pre-charge Filter
+
+You can set a callback that Payola will call immediately before attempting to make a charge. You can use this to, for example, check to see if the email address has been used already. To stop Payola from making a charge, throw a `RuntimeError`. The sale will be set to `errored` state and the message attached to the runtime error will be propogated back to the user.
+
+```ruby
+Payola.configure do |payola|
+  payola.charge_verifier = lambda do |sale|
+    raise "Improper sale!" unless sale.amount > 10_000_000
+  end
+end
+```
 
 ### Webhooks
 
