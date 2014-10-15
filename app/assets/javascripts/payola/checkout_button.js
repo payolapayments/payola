@@ -38,15 +38,18 @@ var Payola = {
     },
 
     showError: function(error, error_div_id) {
+        console.log(error);
+        console.log(error_div_id);
         var error_div = $("#" + error_div_id);
-        error_div.toggle();
         error_div.html(error);
+        error_div.show();
         $(".payola-checkout-button").prop("disabled", false);
         $(".payola-checkout-button-spinner").hide();
         $(".payola-checkout-button-text").show();
     },
 
     poll: function(guid, num_retries_left, error_div_id) {
+        console.log(error_div_id);
         if (num_retries_left == 0) {
             Payola.showError("This seems to be taking too long. Please contact support and give them transaction ID: " + guid, error_div_id);
             return;
@@ -58,7 +61,7 @@ var Payola = {
             } else if (data.status === "errored") {
                 Payola.showError(data.error, error_div_id);
             } else {
-                setTimeout(function() { Payola.poll(guid, num_retries_left - 1) }, 500);
+                setTimeout(function() { Payola.poll(guid, num_retries_left - 1, error_div_id) }, 500);
             }
         });
     }

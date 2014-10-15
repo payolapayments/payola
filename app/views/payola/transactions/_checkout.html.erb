@@ -9,10 +9,19 @@
   allow_remember_me = local_assigns.fetch :allow_remember_me, true
   email = local_assigns.fetch :email, ''
   verify_zip_code = local_assigns.fetch :verify_zip_code, false
+    
 
   button_id = "payola-button-#{sale.product.product_class}-#{sale.product.permalink}"
-  error_div_id = "#{button_id}-errors"
+
   form_id = "#{button_id}-form"
+
+  error_div_id = local_assigns.fetch :error_div_id, ''
+  if error_div_id.present?
+    show_default_error_div = false
+  else
+    error_div_id = "#{button_id}-errors"
+    show_default_error_div = true
+  end
 %>
 
 <script src="https://checkout.stripe.com/checkout.js"></script>
@@ -23,7 +32,9 @@
     <span class="payola-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
     <span class="payola-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
   </button>
-  <div style="display:none", id="<%= error_div_id %>"></div>
+  <% if show_default_error_div %>
+    <div class="payola-error-target" style="display:none", id="<%= error_div_id %>"></div>
+  <% end %>
 <% end %>
 <script type="text/javascript">
   Payola.setUpStripeCheckoutButton({
