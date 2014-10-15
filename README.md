@@ -13,6 +13,8 @@ Payola is a drop-in Rails engine that lets you sell one or more products by just
 * Full webhook integration
 * Easy extension hooks for adding your own functionality
 
+To see Payola in action, check out the site for [Mastering Modern Payments: Using Stripe with Rails](https://www.masteringmodernpayments.com). Read the book to find out the whys behind Payola's design.
+
 ## Installation
 
 Add Payola to your Gemfile:
