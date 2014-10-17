@@ -17,5 +17,15 @@ module Payola
         end
       end
     end
+
+    initializer :inject_helpers do |app|
+      ActiveSupport.on_load :action_controller do
+        helper Payola::PriceHelper
+      end
+
+      ActiveSupport.on_load :action_mailer do
+        helper Payola::PriceHelper
+      end
+    end
   end
 end
