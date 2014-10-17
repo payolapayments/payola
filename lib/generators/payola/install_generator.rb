@@ -5,5 +5,12 @@ module Payola
     def install_initializer
       initializer 'payola.rb', File.read(File.expand_path('../templates/initializer.rb', __FILE__))
     end
+
+    def install_js
+      inject_into_file 'app/assets/javascripts/application.js', before: "//= require_tree .\n" do <<-'JS'
+//= require payola
+      JS
+      end
+    end
   end
 end

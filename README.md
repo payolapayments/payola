@@ -23,22 +23,11 @@ Add Payola to your Gemfile:
 gem 'payola-payments'
 ```
 
-Install the migrations:
+Run the installer and install the migrations:
 
 ```bash
+$ rails g payola:install
 $ rake db:migrate
-```
-
-Add Payola's javascript to your `application.js`:
-
-```javascript
-//= require payola
-```
-
-Finally, add the helper to your `ApplicationController`:
-
-```
-helper Payola::PriceHelper
 ```
 
 ### Single Sales
@@ -56,14 +45,15 @@ class Book < ActiveRecord::Base
 end
 ```
 
-Each sellable model requires three attributes and a method:
+Each sellable model requires three attributes:
 
 * `price`, (attribute) an amount in USD cents
 * `permalink`, (attribute) a human-readable slug that is exposed in the URL
 * `name`, (attribute) a human-readable name exposed on product pages
-* `redirect_path`, (method, called with the sale as the only argument) where Payola should redirect the user after a successful sale
 
-When people buy your product, Payola records information in `Payola::Sale` records, and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
+You can implement the method `redirect_path` to tell Payola where to redirect the buyer's browser after a successful sale. By default it will redirect to `/`.
+
+When people buy your product, Payola records information in `Payola::Sale` records and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 
 ### Checkout Button
 
@@ -143,7 +133,7 @@ Payola.configure do |payola|
 end
 ```
 
-**Payola sets `StripeEvent#event_retriever`**. If you would like to customize or filter the events that come through, use Payola's `event_filter`:
+Payola uses `StripeEvent#event_retriever` internally. If you would like to customize or filter the events that come through, use Payola's `event_filter`:
 
 ```ruby
 Payola.configure do |payola|
