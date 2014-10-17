@@ -7,6 +7,7 @@ module Payola
     included do
       validates_presence_of :name
       validates_presence_of :permalink
+      validates_presence_of :price
       validates_uniqueness_of :permalink
 
       Payola.register_sellable(self)
