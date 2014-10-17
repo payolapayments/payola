@@ -10,6 +10,7 @@ module Payola
         s.email = params[:email] || params[:stripeEmail]
         s.stripe_token = params[:stripeToken] || params[:stripe_token]
         s.affiliate_id = affiliate.try(:id)
+        s.currency = product.respond_to?(:currency) ? product.currency : 'usd'
   
         if coupon
           s.coupon = coupon

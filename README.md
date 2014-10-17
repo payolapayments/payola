@@ -47,11 +47,14 @@ end
 
 Each sellable model requires three attributes:
 
-* `price`, (attribute) an amount in USD cents
+* `price`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
 * `permalink`, (attribute) a human-readable slug that is exposed in the URL
 * `name`, (attribute) a human-readable name exposed on product pages
 
-You can implement the method `redirect_path` to tell Payola where to redirect the buyer's browser after a successful sale. By default it will redirect to `/`.
+There are also two optional methods you can implement on your sellable:
+
+* `redirect_path` takes the sale as an argument and returns a path. The buyer's browser will be redirected to that path after a successful sale.
+* `currency` returns the currency for this product. Payola will default to USD.
 
 When people buy your product, Payola records information in `Payola::Sale` records and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 

@@ -14,7 +14,7 @@ module Payola
   
         charge = Stripe::Charge.create({
           amount: sale.amount,
-          currency: "usd",
+          currency: sale.currency,
           customer: customer.id,
           description: sale.guid,
         }, secret_key)

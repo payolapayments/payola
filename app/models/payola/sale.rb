@@ -8,6 +8,7 @@ module Payola
     validates_presence_of :product_id
     validates_presence_of :product_type
     validates_presence_of :stripe_token
+    validates_presence_of :currency
 
     validates_uniqueness_of :guid
 

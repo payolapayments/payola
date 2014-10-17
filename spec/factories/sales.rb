@@ -3,5 +3,6 @@ FactoryGirl.define do
     email 'test@example.com'
     product
     stripe_token 'tok_test'
+    currency 'usd'
   end
 end
