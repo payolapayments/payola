@@ -12,5 +12,9 @@ module Payola
       JS
       end
     end
+
+    def install_route
+      route "mount Payola::Engine => '/payola'"
+    end
   end
 end
