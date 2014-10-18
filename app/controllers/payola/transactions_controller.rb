@@ -6,7 +6,7 @@ module Payola
       sale = Sale.find_by!(guid: params[:guid])
       product = sale.product
 
-      new_path = product.respond_to?(:redirect_path) ? sale.redirect_path(sale) : '/'
+      new_path = product.respond_to?(:redirect_path) ? product.redirect_path(sale) : '/'
       redirect_to new_path
     end
 
