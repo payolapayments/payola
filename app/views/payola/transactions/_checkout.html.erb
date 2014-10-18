@@ -2,8 +2,8 @@
   button_class = local_assigns.fetch :button_class, "stripe-button-el"
   button_inner_style = local_assigns.fetch :button_inner_style, 'min-height: 30px'
   button_text = local_assigns.fetch :button_text, "Pay Now"
-  description = local_assigns.fetch :description, "#{sale.product.name} (#{formatted_price(sale.product.price)})"
-  name = local_assigns.fetch :name, sale.product.name
+  description = local_assigns.fetch :description, "#{sellable.name} (#{formatted_price(sellable.price)})"
+  name = local_assigns.fetch :name, sellable.name
   product_image_path = local_assigns.fetch :product_image_path , ''
   panel_label = local_assigns.fetch :panel_label, ''
   allow_remember_me = local_assigns.fetch :allow_remember_me, true
@@ -11,7 +11,7 @@
   verify_zip_code = local_assigns.fetch :verify_zip_code, false
     
 
-  button_id = "payola-button-#{sale.product.product_class}-#{sale.product.permalink}"
+  button_id = "payola-button-#{sellable.product_class}-#{sellable.permalink}"
 
   form_id = "#{button_id}-form"
 
@@ -27,7 +27,7 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
 
-<%= form_tag payola.buy_path(product_class: sale.product.product_class, permalink: sale.product.permalink), id: form_id do %>
+<%= form_tag payola.buy_path(product_class: sellable.product_class, permalink: sellable.permalink), id: form_id do %>
   <button class="<%= button_class %> payola-checkout-button" id="<%= button_id %>">
     <span class="payola-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
     <span class="payola-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
@@ -41,9 +41,9 @@
     form_id: "<%= form_id %>",
     button_id: "<%= button_id %>",
     error_div_id: "<%= error_div_id %>",
-    product_class: "<%= sale.product.product_class %>",
-    product_permalink: "<%= sale.product.permalink %>",
-    price: <%= sale.product.price %>,
+    product_class: "<%= sellable.product_class %>",
+    product_permalink: "<%= sellable.permalink %>",
+    price: <%= sellable.price %>,
     name: "<%= name %>",
     description: "<%= description %>",
     product_image_path: "<%= product_image_path %>",

@@ -63,7 +63,7 @@ When people buy your product, Payola records information in `Payola::Sale` recor
 To sell a product, use the `checkout` partial like this:
 
 ```rhtml
-<%= render 'payola/transactions/checkout', sale: Sale.new(product: YourProductClass.first) %>
+<%= render 'payola/transactions/checkout', sellable: YourProductClass.first %>
 ```
 
 This will insert a Stripe Checkout button. The `checkout` partial has a bunch of options:
