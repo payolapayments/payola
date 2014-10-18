@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    payola-payments (1.0.4)
+    payola-payments (1.0.5)
       aasm (~> 3.4.0)
       jquery-rails
       rails (~> 4.1.4)
