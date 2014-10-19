@@ -37,11 +37,6 @@ To start selling products, just include `Payola::Sellable`. For example, if you 
 ```ruby
 class Book < ActiveRecord::Base
   include Payola::Sellable
-
-  def redirect_path(sale)
-    # this could also be a signed S3 url or something
-    '/some/path/to/book.pdf'
-  end
 end
 ```
 
@@ -53,8 +48,8 @@ Each sellable model requires three attributes:
 
 There are also two optional methods you can implement on your sellable:
 
-* `redirect_path` takes the sale as an argument and returns a path. The buyer's browser will be redirected to that path after a successful sale.
-* `currency` returns the currency for this product. Payola will default to USD.
+* `redirect_path` takes the sale as an argument and returns a path. The buyer's browser will be redirected to that path after a successful sale. This defaults to `/`.
+* `currency` returns the currency for this product. Payola will default to `usd`.
 
 When people buy your product, Payola records information in `Payola::Sale` records and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 
@@ -68,6 +63,7 @@ To sell a product, use the `checkout` partial like this:
 
 This will insert a Stripe Checkout button. The `checkout` partial has a bunch of options:
 
+* `sellable`: The product to sell. Required.
 * `button_text`: What to put on the button. Defaults to "Pay Now"
 * `button_class`: What class to put on the actual button. Defaults to "stripe-button-el".
 * `name`: What to put at the top of the Checkout popup. Defaults to `product.name`.
