@@ -170,6 +170,8 @@ end
 
 * Custom forms
 * Subscriptions
+* Affiliate tracking
+* Coupon codes
 
 ## License
 
