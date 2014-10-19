@@ -19,6 +19,7 @@ module Payola
         expect(sale.product_id).to eq @product.id
         expect(sale.product).to eq @product
         expect(sale.product_type).to eq 'Product'
+        expect(sale.currency).to eq 'usd'
       end
             
       it "should include the affiliate if given" do
