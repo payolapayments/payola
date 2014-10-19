@@ -1,0 +1,285 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Payola</title>
+  <meta name="description" content="Drop-in Rails engine for accepting payments with Stripe">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Payola</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Drop-in Rails engine for accepting payments with Stripe</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/peterkeen/payola/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/peterkeen/payola/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/peterkeen/payola" class="code">View Payola on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>
+<a name="payola" class="anchor" href="#payola"><span class="octicon octicon-link"></span></a>Payola</h1>
+
+<p><a href="http://badge.fury.io/rb/payola-payments"><img src="https://badge.fury.io/rb/payola-payments.svg" alt="Gem Version"></a> <a href="https://circleci.com/gh/peterkeen/payola"><img src="https://circleci.com/gh/peterkeen/payola.svg?style=shield" alt="CircleCI"></a> <a href="https://gemnasium.com/peterkeen/payola"><img src="https://gemnasium.com/peterkeen/payola.svg" alt="Dependency Status"></a></p>
+
+<p>Payments with Stripe for your Rails application.</p>
+
+<h2>
+<a name="what-does-this-do" class="anchor" href="#what-does-this-do"><span class="octicon octicon-link"></span></a>What does this do?</h2>
+
+<p>Payola is a drop-in Rails engine that lets you sell one or more products by just including a module in your models. It includes:</p>
+
+<ul>
+<li>An easy to embed, easy to customize, async Stripe Checkout button</li>
+<li>Asynchronous payments, usable with any background processing system</li>
+<li>Full webhook integration</li>
+<li>Easy extension hooks for adding your own functionality</li>
+</ul>
+
+<p>To see Payola in action, check out the site for <a href="https://www.masteringmodernpayments.com">Mastering Modern Payments: Using Stripe with Rails</a>. Read the book to find out the whys behind Payola's design.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add Payola to your Gemfile:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s1">'payola-payments'</span>
+</pre></div>
+
+<p>Run the installer and install the migrations:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>rails g payola:install
+<span class="nv">$ </span>rake db:migrate
+</pre></div>
+
+<h3>
+<a name="single-sales" class="anchor" href="#single-sales"><span class="octicon octicon-link"></span></a>Single Sales</h3>
+
+<p>To start selling products, just include <code>Payola::Sellable</code>. For example, if you have a <code>Book</code> model:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">Book</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="kp">include</span> <span class="no">Payola</span><span class="o">::</span><span class="no">Sellable</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Each sellable model requires three attributes:</p>
+
+<ul>
+<li>
+<code>price</code>, (attribute) an amount in the format that Stripe expects. For USD this is cents.</li>
+<li>
+<code>permalink</code>, (attribute) a human-readable slug that is exposed in the URL</li>
+<li>
+<code>name</code>, (attribute) a human-readable name exposed on product pages</li>
+</ul>
+
+<p>There are also two optional methods you can implement on your sellable:</p>
+
+<ul>
+<li>
+<code>redirect_path</code> takes the sale as an argument and returns a path. The buyer's browser will be redirected to that path after a successful sale. This defaults to <code>/</code>.</li>
+<li>
+<code>currency</code> returns the currency for this product. Payola will default to <code>usd</code>.</li>
+</ul>
+
+<p>When people buy your product, Payola records information in <code>Payola::Sale</code> records and will record history if you have the <code>paper_trail</code> gem installed. <strong>It is highly recommended to install paper_trail</strong>.</p>
+
+<h3>
+<a name="checkout-button" class="anchor" href="#checkout-button"><span class="octicon octicon-link"></span></a>Checkout Button</h3>
+
+<p>To sell a product, use the <code>checkout</code> partial like this:</p>
+
+<div class="highlight highlight-rhtml"><pre><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s1">'payola/transactions/checkout'</span><span class="p">,</span> <span class="ss">sellable</span><span class="p">:</span> <span class="no">YourProductClass</span><span class="o">.</span><span class="n">first</span> <span class="cp">%&gt;</span>
+</pre></div>
+
+<p>This will insert a Stripe Checkout button. The <code>checkout</code> partial has a bunch of options:</p>
+
+<ul>
+<li>
+<code>sellable</code>: The product to sell. Required.</li>
+<li>
+<code>button_text</code>: What to put on the button. Defaults to "Pay Now"</li>
+<li>
+<code>button_class</code>: What class to put on the actual button. Defaults to "stripe-button-el".</li>
+<li>
+<code>name</code>: What to put at the top of the Checkout popup. Defaults to <code>product.name</code>.</li>
+<li>
+<code>description</code>: What to show as the description in the popup. Defaults to product name + the formatted price.</li>
+<li>
+<code>product_image_path</code>: An image to insert into the Checkout popup. Defaults to blank.</li>
+<li>
+<code>panel_label</code>: The label of the button in the Checkout popup.</li>
+<li>
+<code>allow_remember_me</code>: Whether to show the Remember me checkbox. Defaults to true.</li>
+<li>
+<code>email</code>: Email address to pre-fill. Defaults to blank.</li>
+</ul>
+
+<h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># config/initializers/payola.rb</span>
+
+<span class="no">Payola</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">payola</span><span class="o">|</span>
+  <span class="n">payola</span><span class="o">.</span><span class="n">subscribe</span> <span class="s1">'payola.book.sale.finished'</span> <span class="k">do</span> <span class="o">|</span><span class="n">sale</span><span class="o">|</span>
+    <span class="no">SaleMailer</span><span class="o">.</span><span class="n">receipt</span><span class="p">(</span><span class="n">sale</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+  <span class="k">end</span>
+
+  <span class="n">payola</span><span class="o">.</span><span class="n">subscribe</span> <span class="s1">'payola.book.sale.failed'</span> <span class="k">do</span> <span class="o">|</span><span class="n">sale</span><span class="o">|</span>
+    <span class="no">SaleMailer</span><span class="o">.</span><span class="n">admin_failed</span><span class="p">(</span><span class="n">sale</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+  <span class="k">end</span>
+
+  <span class="n">payola</span><span class="o">.</span><span class="n">subscribe</span> <span class="s1">'payola.book.sale.refunded'</span> <span class="k">do</span> <span class="o">|</span><span class="n">sale</span><span class="o">|</span>
+    <span class="no">SaleMailer</span><span class="o">.</span><span class="n">admin_refunded</span><span class="p">(</span><span class="n">sale</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>
+<a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h3>
+
+<p>Payola wraps the StripeEvent gem for event processing and adds a few special sale-related events. Each one of these events passes the related <code>Sale</code> instance instead of a <code>Stripe::Event</code>. They are sent in-process so you don't have to wait for Stripe to send the corresponding webhooks.</p>
+
+<ul>
+<li>
+<code>payola.&lt;product_class&gt;.sale.finished</code>, when a sale completes successfully</li>
+<li>
+<code>payola.&lt;product_class&gt;.sale.failed</code>, when a charge fails</li>
+<li>
+<code>payola.&lt;product_class&gt;.sale.refunded</code>, when a charge is refunded</li>
+</ul>
+
+<p>(In these examples, <code>&lt;product_class&gt;</code> is the underscore'd version of the product's class name.)</p>
+
+<h3>
+<a name="pre-charge-filter" class="anchor" href="#pre-charge-filter"><span class="octicon octicon-link"></span></a>Pre-charge Filter</h3>
+
+<p>You can set a callback that Payola will call immediately before attempting to make a charge. You can use this to, for example, check to see if the email address has been used already. To stop Payola from making a charge, throw a <code>RuntimeError</code>. The sale will be set to <code>errored</code> state and the message attached to the runtime error will be propogated back to the user.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Payola</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">payola</span><span class="o">|</span>
+  <span class="n">payola</span><span class="o">.</span><span class="n">charge_verifier</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">sale</span><span class="o">|</span>
+    <span class="k">raise</span> <span class="s2">"Improper sale!"</span> <span class="k">unless</span> <span class="n">sale</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">10_000_000</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>
+<a name="webhooks" class="anchor" href="#webhooks"><span class="octicon octicon-link"></span></a>Webhooks</h3>
+
+<p>You can subscribe to any webhook events you want as well. Payola will dedupe events as they come in. Make sure to set your webhook address in Stripe's management interface to:</p>
+
+<p><code>https://www.example.com/payola/events</code></p>
+
+<p>To subscribe to a webhook event:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Payola</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">payola</span><span class="o">|</span>
+  <span class="n">payola</span><span class="o">.</span><span class="n">subscribe</span> <span class="s1">'charge.succeeded'</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+    <span class="n">sale</span> <span class="o">=</span> <span class="no">Sale</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">stripe_id</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="no">SaleMailer</span><span class="o">.</span><span class="n">admin_receipt</span><span class="p">(</span><span class="n">sale</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Payola uses <code>StripeEvent#event_retriever</code> internally. If you would like to customize or filter the events that come through, use Payola's <code>event_filter</code>:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Payola</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">payola</span><span class="o">|</span>
+  <span class="n">payola</span><span class="o">.</span><span class="n">event_filter</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+    <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">event</span><span class="o">.</span><span class="n">blah?</span>
+    <span class="n">event</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<p><code>event_filter</code> takes an event and returns either <code>nil</code> or an event. If you return nil, the event ID will be recorded in the database but no further action will be taken. Returning the event allows processing to continue.</p>
+
+<h3>
+<a name="background-jobs" class="anchor" href="#background-jobs"><span class="octicon octicon-link"></span></a>Background Jobs</h3>
+
+<p>Payola will attempt to auto-detect the job queuing system you are using. It currently supports the following systems:</p>
+
+<ul>
+<li>Sidekiq (<code>:sidekiq</code>)</li>
+<li>SuckerPunch (<code>:sucker_punch</code>)</li>
+</ul>
+
+<p>If you want to force Payola to use a specific supported system, just set <code>background_worker</code> to the appropriate symbol. For example:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Payola</span><span class="o">.</span><span class="n">background_worker</span> <span class="o">=</span> <span class="ss">:sidekiq</span>
+</pre></div>
+
+<p>You can also set this to anything with a <code>call</code> method, for complete control over how Payola's jobs get queued. For example, you can run transactions in-process like this:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Payola</span><span class="o">.</span><span class="n">background_worker</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">sale</span><span class="o">|</span>
+  <span class="n">sale</span><span class="o">.</span><span class="n">process!</span>
+<span class="k">end</span>
+</pre></div>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Custom forms</li>
+<li>Subscriptions</li>
+</ul>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Please see the LICENSE file for licensing details.</p>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p>Pete Keen, <a href="https://twitter.com/zrail">@zrail</a>, <a href="https://www.petekeen.net">https://www.petekeen.net</a></p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/peterkeen" class="avatar"><img src="https://avatars2.githubusercontent.com/u/13977?v=2&amp;s=60" width="48" height="48"></a> <a href="https://github.com/peterkeen">peterkeen</a> maintains <a href="https://github.com/peterkeen/payola">Payola</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/peterkeen/payola/tarball/master" class="tar">tar</a><a href="https://github.com/peterkeen/payola/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-5663087-17");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+</body>
+</html>
