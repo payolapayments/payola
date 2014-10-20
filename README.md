@@ -149,10 +149,11 @@ end
 
 Payola will attempt to auto-detect the job queuing system you are using. It currently supports the following systems:
 
+* ActiveJob (`:active_job`)
 * Sidekiq (`:sidekiq`)
 * SuckerPunch (`:sucker_punch`)
 
-If you want to force Payola to use a specific supported system, just set `background_worker` to the appropriate symbol. For example:
+Payola will attempt ActiveJob *first* and then move on to try autodetecting other systems. If you want to force Payola to use a specific supported system, just set `background_worker` to the appropriate symbol. For example:
 
 ```ruby
 Payola.background_worker = :sidekiq
