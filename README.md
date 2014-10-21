@@ -79,6 +79,9 @@ This will insert a Stripe Checkout button. The `checkout` partial has a bunch of
 # config/initializers/payola.rb
 
 Payola.configure do |payola|
+  payola.secret_key = 'sk_live_iwillnevertell'
+  payola.publishable_key = 'pk_live_iguessicantell'
+
   payola.subscribe 'payola.book.sale.finished' do |sale|
     SaleMailer.receipt(sale.guid).deliver
   end
@@ -92,6 +95,13 @@ Payola.configure do |payola|
   end
 end
 ```
+
+### Keys
+
+You can set your Stripe keys in two ways:
+
+1. By setting `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` environment variables to their corresponding values.
+2. By setting the `secret_key` and `publishable_key` settings in your Payola config initializer as shown above.
 
 ### Events
 
