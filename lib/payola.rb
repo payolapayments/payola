@@ -6,6 +6,7 @@ require 'jquery-rails'
 module Payola
   class << self
     attr_accessor :publishable_key,
+      :publishable_key_retriever,
       :secret_key,
       :secret_key_retriever,
       :background_worker,
@@ -21,6 +22,10 @@ module Payola
 
     def secret_key_for_sale(sale)
       return secret_key_retriever.call(sale)
+    end
+
+    def publishable_key_for_sale(sale)
+      return publishable_key_retriever.call(sale)
     end
 
     def subscribe(name, callable = Proc.new)
@@ -54,6 +59,7 @@ module Payola
       self.publishable_key = ENV['STRIPE_PUBLISHABLE_KEY']
       self.secret_key = ENV['STRIPE_SECRET_KEY']
       self.secret_key_retriever = lambda { |sale| Payola.secret_key }
+      self.publishable_key_retriever = lambda { |sale| Payola.publishable_key }
       self.support_email = 'sales@example.com'
       self.sellables = {}
     end

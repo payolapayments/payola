@@ -9,7 +9,8 @@
   allow_remember_me = local_assigns.fetch :allow_remember_me, true
   email = local_assigns.fetch :email, ''
   verify_zip_code = local_assigns.fetch :verify_zip_code, false
-    
+
+  sale = Payola::Sale.new(product: sellable)
 
   button_id = "payola-button-#{sellable.product_class}-#{sellable.permalink}"
 
@@ -47,7 +48,7 @@
     name: "<%= name %>",
     description: "<%= description %>",
     product_image_path: "<%= product_image_path %>",
-    publishable_key: "<%= Payola.publishable_key %>",
+    publishable_key: "<%= Payola.publishable_key_for_sale(sale) %>",
     panel_label: "<%= panel_label %>",
     allow_remember_me: <%= allow_remember_me %>,
     email: "<%= email %>",

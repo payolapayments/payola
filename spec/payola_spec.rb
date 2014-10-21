@@ -90,4 +90,11 @@ module Payola
       expect(Payola.secret_key_for_sale('blah')).to eq 'foo'
     end
   end
+
+  describe "#publishable_key_retriever" do
+    it "should get called" do
+      Payola.publishable_key_retriever = lambda { |sale| 'foo' }
+      expect(Payola.publishable_key_for_sale('blah')).to eq 'foo'
+    end
+  end
 end
