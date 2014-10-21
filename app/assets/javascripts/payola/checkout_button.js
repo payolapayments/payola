@@ -30,17 +30,15 @@ var Payola = {
         $(".payola-checkout-button-spinner").show();
         $.ajax({
             type: "POST",
-            url: "/payola/buy/" + options.product_class + "/" + options.product_permalink,
+            url: options.base_path + "/buy/" + options.product_class + "/" + options.product_permalink,
             data: form.serialize(),
-            success: function(data) { Payola.poll(data.guid, 60, options.error_div_id) },
-            error: function(data) { Payola.showError(data.responseJSON.error, options.error_div_id) }
+            success: function(data) { Payola.poll(data.guid, 60, options) },
+            error: function(data) { Payola.showError(data.responseJSON.error, options) }
         });
     },
 
-    showError: function(error, error_div_id) {
-        console.log(error);
-        console.log(error_div_id);
-        var error_div = $("#" + error_div_id);
+    showError: function(error, options) {
+        var error_div = $("#" + options.error_div_id);
         error_div.html(error);
         error_div.show();
         $(".payola-checkout-button").prop("disabled", false);
@@ -48,20 +46,19 @@ var Payola = {
         $(".payola-checkout-button-text").show();
     },
 
-    poll: function(guid, num_retries_left, error_div_id) {
-        console.log(error_div_id);
+    poll: function(guid, num_retries_left, options) {
         if (num_retries_left == 0) {
-            Payola.showError("This seems to be taking too long. Please contact support and give them transaction ID: " + guid, error_div_id);
+            Payola.showError("This seems to be taking too long. Please contact support and give them transaction ID: " + guid, options);
             return;
         }
 
-        $.get("/payola/status/" + guid, function(data) {
+        $.get(options.base_path + "/status/" + guid, function(data) {
             if (data.status === "finished") {
-                window.location = "/payola/confirm/" + guid;
+                window.location = options.base_path + "/confirm/" + guid;
             } else if (data.status === "errored") {
-                Payola.showError(data.error, error_div_id);
+                Payola.showError(data.error, options);
             } else {
-                setTimeout(function() { Payola.poll(guid, num_retries_left - 1, error_div_id) }, 500);
+                setTimeout(function() { Payola.poll(guid, num_retries_left - 1, options) }, 500);
             }
         });
     }

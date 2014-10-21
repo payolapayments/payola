@@ -14,7 +14,7 @@ module Payola
     end
 
     def install_route
-      route "mount Payola::Engine => '/payola'"
+      route "mount Payola::Engine => '/payola', as: :payola"
     end
   end
 end
