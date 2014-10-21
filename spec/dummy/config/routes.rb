@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
   resources :buy
-  mount Payola::Engine => "/payola"
+  mount Payola::Engine => "/subdir/payola", as: :payola
 end
