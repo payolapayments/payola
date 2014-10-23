@@ -59,7 +59,7 @@ module Payola
     end
 
     def sale_params
-      params.permit(:stripeToken, :stripe_token, :stripeTokenType, :stripeEmail)
+      params.slice(:stripeToken, :stripe_token, :stripeTokenType, :stripeEmail, :product_class, :permalink)
     end
 
   end
