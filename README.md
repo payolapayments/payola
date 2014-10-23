@@ -188,6 +188,14 @@ end
 
 Please see the LICENSE file for licensing details.
 
+## Contributing
+
+1. Fork the project
+2. Make your changes, including tests that exercise the code
+3. Make a pull request
+
+Version announcements happen on the [Payola Payments Google group](https://groups.google.com/forum/#!forum/payola-payments).
+
 ## Author
 
 Pete Keen, [@zrail](https://twitter.com/zrail), [https://www.petekeen.net](https://www.petekeen.net)
