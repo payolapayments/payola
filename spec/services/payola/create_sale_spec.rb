@@ -9,7 +9,7 @@ module Payola
     describe "#call" do
       it "should create a sale" do
         sale = CreateSale.call(
-          email: 'pete@bugsplat.info',
+          stripeEmail: 'pete@bugsplat.info',
           stripeToken: 'test_tok',
           product: @product
         )

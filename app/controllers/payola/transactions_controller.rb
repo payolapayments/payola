@@ -17,11 +17,11 @@ module Payola
     end
 
     def create
-      create_params = sale_params.merge(
+      create_params = params.permit!.merge(
         product: @product,
         coupon: @coupon,
         affiliate: @affiliate
-        )
+      )
 
       @sale = CreateSale.call(create_params)
 
@@ -56,10 +56,6 @@ module Payola
         cookies[:aff] = affiliate_code
       end
 
-    end
-
-    def sale_params
-      params.permit(:stripeToken, :stripe_token, :stripeTokenType, :stripeEmail)
     end
 
   end

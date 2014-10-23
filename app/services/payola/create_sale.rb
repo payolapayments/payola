@@ -7,8 +7,8 @@ module Payola
 
       Payola::Sale.new do |s|
         s.product = product
-        s.email = params[:email] || params[:stripeEmail]
-        s.stripe_token = params[:stripeToken] || params[:stripe_token]
+        s.email = params[:stripeEmail]
+        s.stripe_token = params[:stripeToken]
         s.affiliate_id = affiliate.try(:id)
         s.currency = product.respond_to?(:currency) ? product.currency : 'usd'
   
