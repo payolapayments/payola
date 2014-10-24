@@ -1,9 +1,9 @@
-var Payola = {
+var PayolaCheckout = {
     setUpStripeCheckoutButton: function(options) {
         var handler = StripeCheckout.configure({
             key: options.publishable_key,
             image: options.product_image_path,
-            token: function(token) { Payola.tokenHandler(token, options) }
+            token: function(token) { PayolaCheckout.tokenHandler(token, options) }
         });
 
         document.getElementById(options.button_id).addEventListener('click', function(e) {
@@ -32,8 +32,8 @@ var Payola = {
             type: "POST",
             url: options.base_path + "/buy/" + options.product_class + "/" + options.product_permalink,
             data: form.serialize(),
-            success: function(data) { Payola.poll(data.guid, 60, options) },
-            error: function(data) { Payola.showError(data.responseJSON.error, options) }
+            success: function(data) { PayolaCheckout.poll(data.guid, 60, options) },
+            error: function(data) { PayolaCheckout.showError(data.responseJSON.error, options) }
         });
     },
 
@@ -48,7 +48,7 @@ var Payola = {
 
     poll: function(guid, num_retries_left, options) {
         if (num_retries_left == 0) {
-            Payola.showError("This seems to be taking too long. Please contact support and give them transaction ID: " + guid, options);
+            PayolaCheckout.showError("This seems to be taking too long. Please contact support and give them transaction ID: " + guid, options);
             return;
         }
 
@@ -56,9 +56,9 @@ var Payola = {
             if (data.status === "finished") {
                 window.location = options.base_path + "/confirm/" + guid;
             } else if (data.status === "errored") {
-                Payola.showError(data.error, options);
+                PayolaCheckout.showError(data.error, options);
             } else {
-                setTimeout(function() { Payola.poll(guid, num_retries_left - 1, options) }, 500);
+                setTimeout(function() { PayolaCheckout.poll(guid, num_retries_left - 1, options) }, 500);
             }
         });
     }
