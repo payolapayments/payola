@@ -10,7 +10,7 @@ var Payola = {
             handler.open({
                 name: options.name,
                 description: options.description,
-                amount: options.amount,
+                amount: options.price,
                 panelLabel: options.panel_label,
                 allowRememberMe: options.allow_remember_me,
                 zipCode: options.verify_zip_code,
