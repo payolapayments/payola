@@ -5,27 +5,27 @@ module Payola
       secret_key = Payola.secret_key_for_sale(sale)
 
       begin
-        Payola.charge_verifier.call(sale)
-        
+        sale.verify_charge!
+
         customer = Stripe::Customer.create({
           card: sale.stripe_token,
           email: sale.email
         }, secret_key)
-  
+
         charge = Stripe::Charge.create({
           amount: sale.amount,
           currency: sale.currency,
           customer: customer.id,
           description: sale.guid,
         }, secret_key)
-  
+
         if charge.respond_to?(:fee)
           fee = charge.fee
         else
           balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction, secret_key)
           fee = balance.fee
         end
-  
+
         sale.update_attributes(
           stripe_id:          charge.id,
           stripe_customer_id: customer.id,

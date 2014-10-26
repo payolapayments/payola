@@ -44,6 +44,22 @@ module Payola
       end
     end
 
+    def verifier
+      @verifier ||= ActiveSupport::MessageVerifier.new(Payola.secret_key_for_sale(self), digest: 'SHA256')
+    end
+
+    def verify_charge
+      begin
+        self.verify_charge!
+      rescue RuntimeError => e
+        self.error = e.message
+        self.fail!
+      end
+    end
+
+    def verify_charge!
+      Payola.charge_verifier.call(self, (verifier.verify(self.custom_fields) rescue {}))
+    end
 
     private
 
@@ -61,15 +77,6 @@ module Payola
 
     def instrument_refund
       Payola.instrument(instrument_key('refunded'), self)
-    end
-
-    def verify_charge
-      begin
-        Payola.charge_verifier.call(self)
-      rescue RuntimeError => e
-        self.error = e.message
-        self.fail!
-      end
     end
 
     def product_class
