@@ -177,9 +177,52 @@ Payola.background_worker = lambda do |sale|
 end
 ```
 
+## Custom Forms
+
+Payola's custom form support is basic but functional. Setting up a custom form has two steps. First, include the `stripe_header` partial in your layout's `<head>` tag:
+
+```rhtml
+<%= render 'payola/transactions/stripe_header' %>
+```
+
+Now, to set up your form, give you need to give it the class `payola-payment-form` and set a few data attributes:
+
+```rhtml
+<%= form_for @whatever,
+    html: {
+      class: 'payola-payment-form',
+      'data-payola-base-path' => main_app.payola_path,
+      'data-payola-product' => @product.product_class,
+      'data-payola-permalink' => @product.permalink
+    } do |f| %>
+  <span class="payola-payment-error"></span>
+  Email:<br>
+  <input type="email" name="stripeEmail"
+    data-payola="email"></input><br>
+  Card Number<br>
+  <input type="text" data-stripe="number"></input><br>
+  Exp Month<br>
+  <input type="text" data-stripe="exp_month"></input><br>
+  Exp Year<br>
+  <input type="text" data-stripe="exp_year"></input><br>
+  CVC<br>
+  <input type="text" data-stripe="cvc"></input><br>
+  <input type="submit"></input>
+<% end %>
+```
+
+You need to set these three data attributes:
+
+* `data-payola-base-path`: should always be set to `main_app.payola_path`
+* `data-payola-product`: the `product_class` of the sellable you're selling
+* `data-payola-permalink`: the permalink for this specific sellable
+
+In addition, you should mark up the `email` input in your form with `data-payola="email"` in order for it to be set up in your `Payola::Sale` properly.
+
+After that, you should mark up your card fields as laid out in the [Stripe docs](https://stripe.com/docs/stripe.js). Ensure that these fields do not have `name` attributes because you do not want them to be submitted to your application.
+
 ## TODO
 
-* Custom forms
 * Subscriptions
 * Affiliate tracking
 * Coupon codes
