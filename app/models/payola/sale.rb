@@ -58,12 +58,11 @@ module Payola
     end
 
     def verify_charge!
-      if Payola.charge_verifier.arity > 1
-        custom_fields = verifier.verify(self.custom_fields) rescue {}
-        Payola.charge_verifier.call(self, custom_fields)
-      else
-        Payola.charge_verifier.call(self)
-      end
+      Payola.charge_verifier.call(self)
+    end
+
+    def custom_fields
+      verifier.verify(self.signed_custom_fields) rescue {}
     end
 
     private

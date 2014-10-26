@@ -55,6 +55,6 @@
     allow_remember_me: <%= allow_remember_me %>,
     email: "<%= email %>",
     verify_zip_code: <%= verify_zip_code %>,
-    custom_fields: "<%= sale.verifier.generate(custom_fields) %>"
+    signed_custom_fields: "<%= sale.verifier.generate(custom_fields) %>"
   });
 </script>

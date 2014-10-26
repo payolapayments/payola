@@ -55,7 +55,7 @@ module Payola
 
       self.background_worker = nil
       self.event_filter = lambda { |event| event }
-      self.charge_verifier = lambda { |event, custom_fields| true }
+      self.charge_verifier = lambda { |event| true }
       self.publishable_key = ENV['STRIPE_PUBLISHABLE_KEY']
       self.secret_key = ENV['STRIPE_SECRET_KEY']
       self.secret_key_retriever = lambda { |sale| Payola.secret_key }

@@ -71,10 +71,10 @@ module Payola
     describe "#verifier" do
       it "should store and recall verified custom fields" do
         sale = create(:sale)
-        sale.custom_fields = sale.verifier.generate({"field" => "value"})
+        sale.signed_custom_fields = sale.verifier.generate({"field" => "value"})
         sale.save!
         sale.reload
-        expect(sale.verifier.verify(sale.custom_fields)["field"]).to eq "value"
+        expect(sale.custom_fields["field"]).to eq "value"
       end
     end
   end

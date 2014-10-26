@@ -25,7 +25,7 @@ var PayolaCheckout = {
         console.log(options.form_id);
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
-        form.append($('<input type="hidden" name="custom_fields">').val(options.custom_fields));
+        form.append($('<input type="hidden" name="signed_custom_fields">').val(options.signed_custom_fields));
 
         $(".payola-checkout-button").prop("disabled", true);
         $(".payola-checkout-button-text").hide();

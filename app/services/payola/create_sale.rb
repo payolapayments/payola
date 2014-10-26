@@ -11,7 +11,7 @@ module Payola
         s.stripe_token = params[:stripeToken]
         s.affiliate_id = affiliate.try(:id)
         s.currency = product.respond_to?(:currency) ? product.currency : 'usd'
-        s.custom_fields = params[:custom_fields]
+        s.signed_custom_fields = params[:signed_custom_fields]
 
         if coupon
           s.coupon = coupon
