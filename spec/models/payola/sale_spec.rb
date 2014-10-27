@@ -2,6 +2,11 @@ require 'spec_helper'
 
 module Payola
   describe Sale do
+
+    before do
+      Payola.secret_key = 'sk_test_12345'
+    end
+
     describe "validations" do
       it "should validate" do
         sale = build(:sale)

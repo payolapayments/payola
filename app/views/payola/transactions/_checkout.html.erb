@@ -9,7 +9,7 @@
   allow_remember_me = local_assigns.fetch :allow_remember_me, true
   email = local_assigns.fetch :email, ''
   verify_zip_code = local_assigns.fetch :verify_zip_code, false
-  custom_fields = local_assigns.fetch :custom_fields, {}
+  custom_fields = local_assigns.fetch :custom_fields, nil
 
   sale = Payola::Sale.new(product: sellable)
 
@@ -54,7 +54,9 @@
     panel_label: "<%= panel_label %>",
     allow_remember_me: <%= allow_remember_me %>,
     email: "<%= email %>",
-    verify_zip_code: <%= verify_zip_code %>,
-    signed_custom_fields: "<%= sale.verifier.generate(custom_fields) %>"
+    verify_zip_code: <%= verify_zip_code %>
+    <% if custom_fields %>
+    ,signed_custom_fields: "<%= sale.verifier.generate(custom_fields) %>"
+    <% end %>
   });
 </script>
