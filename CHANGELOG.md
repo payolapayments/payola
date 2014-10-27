@@ -1,5 +1,11 @@
 # Payola Changelog
 
+* v1.0.8 - 2014-10-27
+  - Add basic support for custom forms
+  - Allow passing signed data from checkout button into the charge verifier
+  - Correctly pass the price into the Checkout button, which allows the `{{amount}}` macro to work properly
+  - I18n the formatted_price helper
+
 * v1.0.7 - 2014-10-21
   - Add support for ActiveJob workers
   - Document how to set Stripe keys
