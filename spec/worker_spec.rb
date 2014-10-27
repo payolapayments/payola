@@ -2,6 +2,12 @@ require 'spec_helper'
 
 module Payola
 
+  class TestService
+    def self.call(thing)
+      thing.guid
+    end
+  end
+
   describe Worker::Sidekiq do
     before do
       module ::Sidekiq
@@ -21,9 +27,7 @@ module Payola
     describe "#call" do
       it "should call perform_async" do
         Payola::Worker::Sidekiq.should_receive(:perform_async)
-        sale = double()
-        sale.should_receive(:guid).and_return('blah')
-        Payola::Worker::Sidekiq.call(sale)
+        Payola::Worker::Sidekiq.call(Payola::TestService, double)
       end
     end
   end
@@ -44,9 +48,7 @@ module Payola
     describe "#call" do
       it "should call perform_later" do
         Payola::Worker::ActiveJob.should_receive(:perform_later)
-        sale = double()
-        sale.should_receive(:guid).and_return('blah')
-        Payola::Worker::ActiveJob.call(sale)
+        Payola::Worker::ActiveJob.call(Payola::TestService, double)
       end
     end
   end

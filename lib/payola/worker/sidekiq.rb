@@ -12,8 +12,8 @@ module Payola
         defined?(::Sidekiq::Worker)
       end
 
-      def self.call(sale)
-        perform_async(sale.guid)
+      def self.call(klass, *args)
+        perform_async(klass, *args)
       end
     end
   end

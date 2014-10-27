@@ -12,8 +12,8 @@ module Payola
         defined?(::SuckerPunch::Job)
       end
 
-      def self.call(sale)
-        new.async.perform(sale.guid)
+      def self.call(klass, *args)
+        new.async.perform(klass, *args)
       end
     end
   end

@@ -9,12 +9,12 @@ module Payola
         defined?(::ActiveJob::Core)
       end
 
-      def self.call(sale)
-        perform_later(sale.guid)
+      def self.call(klass, *args)
+        perform_later(klass, *args)
       end
   
-      def perform(guid)
-        Sale.where(guid: guid).first.process!
+      def perform(klass, *args)
+        klass.call(*args)
       end
     end
   end

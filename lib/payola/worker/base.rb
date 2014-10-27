@@ -1,8 +1,8 @@
 module Payola
   module Worker
     class BaseWorker
-      def perform(guid)
-        Sale.where(guid: guid).first.process!
+      def perform(klass, *args)
+        klass.call(*args)
       end
     end
   end

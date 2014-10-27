@@ -26,7 +26,7 @@ module Payola
       @sale = CreateSale.call(create_params)
 
       if @sale.save
-        Payola.queue!(@sale)
+        Payola.queue!(Payola::ProcessSale, @sale.guid)
         render json: { guid: @sale.guid }
       else
         render json: { error: @sale.errors.full_messages.join(". ") }, status: 400
