@@ -72,6 +72,7 @@ This will insert a Stripe Checkout button. The `checkout` partial has a bunch of
 * `panel_label`: The label of the button in the Checkout popup.
 * `allow_remember_me`: Whether to show the Remember me checkbox. Defaults to true.
 * `email`: Email address to pre-fill. Defaults to blank.
+* `custom_fields`: Data to pass to the `charge_verifier` (see below)
 
 ## Configuration
 
@@ -124,6 +125,22 @@ Payola.configure do |payola|
   end
 end
 ```
+
+You can optionally pass some data through the checkout button partial using the `custom_fields` option. This will be presented as a second argument to `charge_verifier`. For example:
+
+```rhtml
+<%= render 'payola/transactions/checkout', custom_data: {'hi' => 'there'} %>
+```
+
+```ruby
+Payola.configure do |payola|
+  payola.charge_verifier = lambda do |sale, custom_data|
+    raise "Rude charge did not say hi!" unless custom_data['hi']
+  end
+end
+```
+
+Whatever data you pass through the `custom_data` option will be serialized and then signed with your Stripe secret key. You should stick to simple types like numbers, string, and hashes here, and try to minimize what you pass because it will end up both in the HTML you send to the user as well as the database.
 
 ### Webhooks
 
