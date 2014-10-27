@@ -40,13 +40,13 @@ module Payola
       StripeEvent.all(callable)
     end
 
-    def queue!(sale)
+    def queue!(klass, *args)
       if background_worker.is_a? Symbol
-        Payola::Worker.find(background_worker).call(sale)
+        Payola::Worker.find(background_worker).call(klass, *args)
       elsif background_worker.respond_to?(:call)
-        background_worker.call(sale)
+        background_worker.call(klass, *args)
       else
-        Payola::Worker.autofind.call(sale)
+        Payola::Worker.autofind.call(klass, *args)
       end
     end
 

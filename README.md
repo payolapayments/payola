@@ -186,11 +186,11 @@ Payola will attempt ActiveJob *first* and then move on to try autodetecting othe
 Payola.background_worker = :sidekiq
 ```
 
-You can also set this to anything with a `call` method, for complete control over how Payola's jobs get queued. For example, you can run transactions in-process like this:
+You can also set this to anything with a `call` method, for complete control over how Payola's jobs get queued. For example, you can run jobs in-process like this:
 
 ```ruby
-Payola.background_worker = lambda do |sale|
-  sale.process!
+Payola.background_worker = lambda do |klass, *args|
+  klass.call(*args)
 end
 ```
 
