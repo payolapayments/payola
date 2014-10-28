@@ -17,6 +17,8 @@
 
   form_id = "#{button_id}-form"
 
+  currency = sellable.respond_to?(:currency) ? sellable.currency : 'usd'
+
   error_div_id = local_assigns.fetch :error_div_id, ''
   if error_div_id.present?
     show_default_error_div = false
@@ -49,7 +51,7 @@
     price: <%= sellable.price %>,
     name: "<%= name %>",
     description: "<%= description %>",
-    currency: "<%= sellable.currency %>",
+    currency: "<%= currency %>",
     product_image_path: "<%= product_image_path %>",
     publishable_key: "<%= Payola.publishable_key_for_sale(sale) %>",
     panel_label: "<%= panel_label %>",
