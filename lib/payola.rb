@@ -13,7 +13,8 @@ module Payola
       :event_filter,
       :support_email,
       :sellables,
-      :charge_verifier
+      :charge_verifier,
+      :default_currency
 
     def configure(&block)
       raise ArgumentError, "must provide a block" unless block_given?
@@ -61,6 +62,7 @@ module Payola
       self.secret_key_retriever = lambda { |sale| Payola.secret_key }
       self.publishable_key_retriever = lambda { |sale| Payola.publishable_key }
       self.support_email = 'sales@example.com'
+      self.default_currency = 'usd'
       self.sellables = {}
     end
 

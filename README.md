@@ -49,7 +49,7 @@ Each sellable model requires three attributes:
 There are also two optional methods you can implement on your sellable:
 
 * `redirect_path` takes the sale as an argument and returns a path. The buyer's browser will be redirected to that path after a successful sale. This defaults to `/`.
-* `currency` returns the currency for this product. Payola will default to `usd`.
+* `currency` returns the currency for this product. Payola will default to `usd`, which can be changed with the `default_currency` config setting.
 
 When people buy your product, Payola records information in `Payola::Sale` records and will record history if you have the `paper_trail` gem installed. **It is highly recommended to install paper_trail**.
 
@@ -82,6 +82,8 @@ This will insert a Stripe Checkout button. The `checkout` partial has a bunch of
 Payola.configure do |payola|
   payola.secret_key = 'sk_live_iwillnevertell'
   payola.publishable_key = 'pk_live_iguessicantell'
+
+  # payola.default_currency = 'gbp'
 
   payola.subscribe 'payola.book.sale.finished' do |sale|
     SaleMailer.receipt(sale.guid).deliver
