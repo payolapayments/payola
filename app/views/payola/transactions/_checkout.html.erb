@@ -26,12 +26,39 @@
     error_div_id = "#{button_id}-errors"
     show_default_error_div = true
   end
+
+  raw_data = {
+    base_path: main_app.payola_path,
+    form_id: form_id,
+    button_id: button_id,
+    error_div_id: error_div_id,
+    product_class: sellable.product_class,
+    product_permalink: sellable.permalink,
+    price: sellable.price,
+    name: name,
+    description: description,
+    currency: currency,
+    product_image_path: product_image_path,
+    publishable_key: Payola.publishable_key_for_sale(sale),
+    panel_label: panel_label,
+    allow_remember_me: allow_remember_me,
+    email: email,
+    verify_zip_code: verify_zip_code
+  }
+
+  raw_data[:signed_custom_fields] = sale.verifier.generate(custom_fields) if custom_fields
+
+  html_hash = {}
+  raw_data.each do |k,v|
+    html_hash["data-#{k}"] = v
+  end
+  html_hash["id"] = form_id
 %>
 
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
 
-<%= form_tag payola.buy_path(product_class: sellable.product_class, permalink: sellable.permalink), id: form_id do %>
+<%= form_tag payola.buy_path(product_class: sellable.product_class, permalink: sellable.permalink), html_hash do %>
   <button class="<%= button_class %> payola-checkout-button" id="<%= button_id %>">
     <span class="payola-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
     <span class="payola-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
@@ -40,26 +67,3 @@
     <div class="payola-error-target" style="display:none", id="<%= error_div_id %>"></div>
   <% end %>
 <% end %>
-<script type="text/javascript">
-  PayolaCheckout.setUpStripeCheckoutButton({
-    base_path: "<%= main_app.payola_path %>",
-    form_id: "<%= form_id %>",
-    button_id: "<%= button_id %>",
-    error_div_id: "<%= error_div_id %>",
-    product_class: "<%= sellable.product_class %>",
-    product_permalink: "<%= sellable.permalink %>",
-    price: <%= sellable.price %>,
-    name: "<%= name %>",
-    description: "<%= description %>",
-    currency: "<%= currency %>",
-    product_image_path: "<%= product_image_path %>",
-    publishable_key: "<%= Payola.publishable_key_for_sale(sale) %>",
-    panel_label: "<%= panel_label %>",
-    allow_remember_me: <%= allow_remember_me %>,
-    email: "<%= email %>",
-    verify_zip_code: <%= verify_zip_code %>
-    <% if custom_fields %>
-    ,signed_custom_fields: "<%= sale.verifier.generate(custom_fields) %>"
-    <% end %>
-  });
-</script>

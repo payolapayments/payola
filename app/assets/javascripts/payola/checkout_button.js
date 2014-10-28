@@ -1,23 +1,30 @@
 var PayolaCheckout = {
-    setUpStripeCheckoutButton: function(options) {
+    initialize: function() {
+        $(document).on('click', '.payola-checkout-button', function(e) {
+            e.preventDefault();
+            PayolaCheckout.handleCheckoutButtonClick($(this));
+        });
+    },
+
+    handleCheckoutButtonClick: function(button) {
+        form = button.parent('form');
+        options = form.data();
+
         var handler = StripeCheckout.configure({
             key: options.publishable_key,
             image: options.product_image_path,
             token: function(token) { PayolaCheckout.tokenHandler(token, options) }
         });
 
-        document.getElementById(options.button_id).addEventListener('click', function(e) {
-            handler.open({
-                name: options.name,
-                description: options.description,
-                amount: options.price,
-                panelLabel: options.panel_label,
-                allowRememberMe: options.allow_remember_me,
-                zipCode: options.verify_zip_code,
-                currency: options.currency,
-                email: options.email || undefined
-            });
-            e.preventDefault();
+        handler.open({
+            name: options.name,
+            description: options.description,
+            amount: options.price,
+            panelLabel: options.panel_label,
+            allowRememberMe: options.allow_remember_me,
+            zipCode: options.verify_zip_code,
+            currency: options.currency,
+            email: options.email || undefined
         });
     },
 
@@ -68,3 +75,4 @@ var PayolaCheckout = {
         });
     }
 }
+PayolaCheckout.initialize();
