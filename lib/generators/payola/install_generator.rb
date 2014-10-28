@@ -7,7 +7,7 @@ module Payola
     end
 
     def install_js
-      inject_into_file 'app/assets/javascripts/application.js', before: "//= require_tree .\n" do <<-'JS'
+      inject_into_file 'app/assets/javascripts/application.js', after: "//= require jquery\n" do <<-'JS'
 //= require payola
       JS
       end
