@@ -14,6 +14,7 @@ var PayolaCheckout = {
                 panelLabel: options.panel_label,
                 allowRememberMe: options.allow_remember_me,
                 zipCode: options.verify_zip_code,
+                currency: options.currency,
                 email: options.email || undefined
             });
             e.preventDefault();
