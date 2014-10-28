@@ -1,15 +1,6 @@
 module Payola
   class TransactionsController < ApplicationController
     before_filter :find_product_and_coupon_and_affiliate, only: [:create]
-
-    def show
-      sale = Sale.find_by!(guid: params[:guid])
-      product = sale.product
-
-      new_path = product.respond_to?(:redirect_path) ? product.redirect_path(sale) : '/'
-      redirect_to new_path
-    end
-
     def status
       @sale = Sale.where(guid: params[:guid]).first
       render nothing: true, status: 404 and return unless @sale
