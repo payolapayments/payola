@@ -17,6 +17,10 @@ module Payola
       self.class.product_class
     end
 
+    def currency
+      'usd'
+    end
+
     module ClassMethods
       def sellable?
         true
