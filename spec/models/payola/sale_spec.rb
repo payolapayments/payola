@@ -82,5 +82,18 @@ module Payola
         expect(sale.custom_fields["field"]).to eq "value"
       end
     end
+
+    describe "#owner" do
+      it "should store and recall owner" do
+        sale = create(:sale)
+        owner = Owner.create
+
+        sale.owner = owner
+        sale.save!
+
+        expect(sale.owner_id).to eq owner.id
+        expect(sale.owner_type).to eq 'Owner'
+      end
+    end
   end
 end
