@@ -11,7 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141026144800) do
+ActiveRecord::Schema.define(version: 20141029140518) do
+
+  create_table "owners", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "payola_affiliates", force: true do |t|
     t.string   "code"
@@ -53,11 +58,14 @@ ActiveRecord::Schema.define(version: 20141026144800) do
     t.string   "stripe_customer_id"
     t.string   "currency"
     t.text     "signed_custom_fields"
+    t.integer  "owner_id"
+    t.string   "owner_type"
   end
 
   add_index "payola_sales", ["coupon_id"], name: "index_payola_sales_on_coupon_id"
   add_index "payola_sales", ["email"], name: "index_payola_sales_on_email"
   add_index "payola_sales", ["guid"], name: "index_payola_sales_on_guid"
+  add_index "payola_sales", ["owner_id", "owner_type"], name: "index_payola_sales_on_owner_id_and_owner_type"
   add_index "payola_sales", ["product_id", "product_type"], name: "index_payola_sales_on_product"
   add_index "payola_sales", ["stripe_customer_id"], name: "index_payola_sales_on_stripe_customer_id"
 
