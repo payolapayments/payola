@@ -1,5 +1,5 @@
 module Payola
-  class CreateStripeSubscription
+  class StartSubscription
 
     def self.call(subscription)
       subscription.save!
@@ -30,7 +30,7 @@ module Payola
         subscription.fail!
       end
 
-      subscription
+      subscription, customer
     end
   end
 end

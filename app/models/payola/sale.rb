@@ -70,7 +70,7 @@ module Payola
         verifier.verify(self.signed_custom_fields)
       else
         nil
-      end      
+      end 
     end
 
     private
