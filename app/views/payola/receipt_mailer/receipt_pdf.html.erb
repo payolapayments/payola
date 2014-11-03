@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>PDF Receipt</title>
+<style type="text/css">
+body {
+  font-family:Tahoma, sans-serif;
+  font-size: 0.75em;
+}
+
+img {
+  border:0;
+}
+
+#address {
+  height:181px;
+}
+
+table {
+  width:100%;
+}
+
+td {
+  padding:5px;
+}
+
+tr.odd {
+  background:#e1ffe1;
+}
+</style>
+</head>
+<body>
+<div id="page">
+  <div id="address">
+    <p>
+    Transaction # <%= @sale.guid %><br />
+    Created on <%= @sale.created_at.strftime('%Y-%m-%d') %><br />
+    </p>
+  </div><!--end address-->
+
+  <div id="content">
+    <p>
+      <strong>Customer Details</strong><br />
+      Email: <%= @sale.email %><br />
+      Payment Method:
+      <% if @sale.stripe_id %>
+        <%= @sale.card_type %> ending in <%= @sale.card_last4 %>
+      <% else %>
+        <%= @sale.stripe_token %>
+      <% end %>
+      <% if @sale.customer_address %>
+        <br><br>
+        <%= @sale.customer_address.html_safe %>
+      <% end %>
+    </p>
+    <hr>
+    <table>
+      <tr>
+        <td colspan="2"><strong>Description</strong></td>
+        <td><strong>Price</strong></td>
+        <td><strong>Amount</strong></td>
+      </tr>
+      <tr class="odd">
+        <td colspan="2"><%= truncate(@product.name, length: 50) %></td>
+        <td><%= formatted_price(@product.price) %></td>
+        <td><%= formatted_price(@sale.amount) %></td>
+      </tr>
+      <tr>
+        <td colspan="2">&nbsp;</td>
+        <td><strong>Total</strong></td>
+        <td><strong><%= formatted_price(@sale.amount) %></strong></td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+      Thank you for your order! If you have any questions please email <%= Payola.support_email %>.
+    </p>
+  </div><!--end content-->
+</div><!--end page-->
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+<p>Thank you for buying <%= @product.name %></p>
+<p>Your transaction ID is: <b><%= @sale.guid %></p>
+<p><%= link_to "Click here to pick up your product", payola.confirm_url(guid: @sale.guid) %></p>
+<p>Attached you'll find a PDF receipt for your records.</p>

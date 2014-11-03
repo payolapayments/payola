@@ -1,0 +1,8 @@
+<!doctype html>
+<html>
+  <body>
+    <p>
+      This email confirms that your purchase has been refunded. <%= formatted_price(@sale.amount) %> will be returned to your <%= @sale.card_type %> ending in <%= @sale.card_last4 %> within 5-10 business days.
+    </p>
+  </body>
+</html>

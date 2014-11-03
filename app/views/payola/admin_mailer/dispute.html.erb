@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+  <body>
+    <p>Dispute! Boo!</p>
+    <p>To: <%= @sale.email %></p>
+    <p>Guid: <%= @sale.guid %></p>
+    <p>Product: <%= @product.name %></p>
+    <p>Amount: <%= formatted_price(@sale.amount) %></p>
+  </body>
+</html>

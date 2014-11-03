@@ -82,22 +82,29 @@ module Payola
 
     def instrument_finish
       Payola.instrument(instrument_key('finished'), self)
+      Payola.instrument(instrument_key('finished', false), self)
     end
 
     def instrument_fail
       Payola.instrument(instrument_key('failed'), self)
+      Payola.instrument(instrument_key('failed', false), self)
     end
 
     def instrument_refund
       Payola.instrument(instrument_key('refunded'), self)
+      Payola.instrument(instrument_key('refunded', false), self)
     end
 
     def product_class
       product.product_class
     end
 
-    def instrument_key(instrument_type)
-      "payola.#{product_class}.sale.#{instrument_type}"
+    def instrument_key(instrument_type, include_class=true)
+      if include_class
+        "payola.#{product_class}.sale.#{instrument_type}"
+      else
+        "payola.sale.#{instrument_type}"
+      end
     end
 
     def populate_guid

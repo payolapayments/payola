@@ -84,6 +84,38 @@ module Payola
     end
   end
 
+  describe "#send_mail" do
+    before do
+      Payola.reset!
+
+      class FakeWorker; end
+      Payola::Worker.registry ||= {}
+      Payola::Worker.registry[:fake] = FakeWorker
+      Payola.background_worker = :fake
+    end
+
+    it "should queue the SendMail service" do
+      class FakeMailer < ActionMailer::Base
+        def receipt(first, second)
+        end
+      end
+
+      FakeWorker.should_receive(:call).with(Payola::SendMail, FakeMailer, :receipt, 1, 2)
+      Payola.send_mail(FakeMailer, :receipt, 1, 2)
+    end
+  end
+
+  describe '#auto_emails' do
+    before do
+      Payola.reset!
+    end
+
+    it "should set up listeners for auto emails" do
+      Payola.should_receive(:subscribe).with('payola.sale.finished').at_least(2)
+      Payola.send_email_for :receipt, :admin_receipt
+    end
+  end
+
   describe "#secret_key_retriever" do
     it "should get called" do
       Payola.secret_key_retriever = lambda { |sale| 'foo' }

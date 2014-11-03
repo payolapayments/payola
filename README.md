@@ -12,6 +12,7 @@ Payola is a drop-in Rails engine that lets you sell one or more products by just
 * Asynchronous payments, usable with any background processing system
 * Full webhook integration
 * Easy extension hooks for adding your own functionality
+* Customizable emails
 
 To see Payola in action, check out the site for [Mastering Modern Payments: Using Stripe with Rails](https://www.masteringmodernpayments.com). Read the book to find out the whys behind Payola's design.
 
@@ -116,6 +117,12 @@ Payola wraps the StripeEvent gem for event processing and adds a few special sal
 
 (In these examples, `<product_class>` is the underscore'd version of the product's class name.)
 
+You can also subscribe to generic events that do not have the `product_class` included in them. Those are:
+
+* `payola.sale.finished`, when a sale completes successfully
+* `payola.sale.failed`, when a charge fails
+* `payola.sale.refunded`, when a charge is refunded
+
 ### Pre-charge Filter
 
 You can set a callback that Payola will call immediately before attempting to make a charge. You can use this to, for example, check to see if the email address has been used already. To stop Payola from making a charge, throw a `RuntimeError`. The sale will be set to `errored` state and the message attached to the runtime error will be propogated back to the user.
@@ -195,6 +202,34 @@ Payola.background_worker = lambda do |klass, *args|
   klass.call(*args)
 end
 ```
+
+### Emails
+
+Payola includes basic emails that you can optionally send to your customers and yourself. Opt into them like this:
+
+```ruby
+Payola.configure do |config|
+  config.send_email_for :receipt, :admin_receipt
+end
+```
+
+Possible emails include:
+
+* `:receipt`
+* `:refund`
+* `:admin_receipt`
+* `:admin_dispute`
+* `:admin_refund`
+* `:admin_failure`
+
+`:receipt` and `:refund` both send to the email address on the
+`Payola::Sale` instance from the `support_email` address. All of
+the `:admin` messages are sent from and to the `support_email`
+address.
+
+To customize the content of the emails, copy the appropriate views ([receipt](app/views/payola/receipt_mailer), [admin](app/views/payola/admin_mailer)) into your app at the same path (`app/views/payola/<whatever>`) and modify them as you like. You have access to `@sale` and `@product`, which is just a shortcut to `@sale.product`.
+
+You can include a PDF with your receipt by setting the `include_pdf_receipt` option to `true`. This will send the `receipt_pdf.html` template to [Docverter](http://www.docverter.com) for conversion to PDF. See the [Docverter README](https://github.com/docverter/docverter) for installation instructions if you would like to run your own instance.
 
 ## Custom Forms
 

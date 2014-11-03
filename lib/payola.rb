@@ -14,7 +14,8 @@ module Payola
       :support_email,
       :sellables,
       :charge_verifier,
-      :default_currency
+      :default_currency,
+      :pdf_receipt
 
     def configure(&block)
       raise ArgumentError, "must provide a block" unless block_given?
@@ -51,6 +52,10 @@ module Payola
       end
     end
 
+    def send_mail(mailer, method, *args)
+      Payola.queue!(Payola::SendMail, mailer, method, *args)
+    end
+
     def reset!
       StripeEvent.event_retriever = Retriever
 
@@ -64,10 +69,31 @@ module Payola
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
+      self.pdf_receipt = false
     end
 
     def register_sellable(klass)
       sellables[klass.product_class] = klass
+    end
+
+    def send_email_for(*emails)
+      possible_emails = {
+        receipt:       [ 'payola.sale.finished', Payola::ReceiptMailer, :receipt ],
+        refund:        [ 'charge.refunded',      Payola::ReceiptMailer, :refund  ],
+        admin_receipt: [ 'payola.sale.finished', Payola::AdminMailer,   :receipt ],
+        admin_dispute: [ 'dispute.created',      Payola::AdminMailer,   :dispute ],
+        admin_refund:  [ 'payola.sale.refunded', Payola::AdminMailer,   :refund  ],
+        admin_failure: [ 'payola.sale.failed',   Payola::AdminMailer,   :failure ],
+      }
+
+      emails.each do |email|
+        spec = possible_emails[email].dup
+        if spec
+          Payola.subscribe(spec.shift) do |sale|
+            Payola.send_mail(*(spec + [sale.guid]))
+          end
+        end
+      end
     end
   end
 
