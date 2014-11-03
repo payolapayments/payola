@@ -13,7 +13,7 @@ module Payola
       end
 
       def self.call(klass, *args)
-        perform_async(klass, *args)
+        perform_async(klass.to_s, *args)
       end
     end
   end
