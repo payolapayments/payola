@@ -1,5 +1,12 @@
 # Payola Changelog
 
+* v1.1.0 - 2014-11-03
+  - Add customizable mailers
+  - Pass currency through properly and add a `default_currency` config option
+  - Use data attributes to set up the checkout button instead of a JS snippet
+  - Add a polymorphic `owner` association on `Payola::Sale`.
+  - Allow the price to be overridden on the Checkout form
+
 * v1.0.8 - 2014-10-27
   - Add basic support for custom forms
   - Allow passing signed data from checkout button into the charge verifier

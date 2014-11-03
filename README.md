@@ -275,6 +275,21 @@ In addition, you should mark up the `email` input in your form with `data-payola
 
 After that, you should mark up your card fields as laid out in the [Stripe docs](https://stripe.com/docs/stripe.js). Ensure that these fields do not have `name` attributes because you do not want them to be submitted to your application.
 
+## Owner Association
+
+`Payola::Sale` has a polymorphic `belongs_to :owner` association which you can use to assign a sale to a particular business object in your application. One way to do this is in the `charge_verifier`:
+
+```ruby
+Payola.configure do |config|
+  config.charge_verifier = lambda do |sale, custom_fields|
+    sale.owner = User.find(custom_fields[:user_id])
+    sale.save!
+  end
+end
+```
+
+In this example you would have set the `user_id` custom field in the Checkout partial to the proper ID.
+
 ## TODO
 
 * Subscriptions
