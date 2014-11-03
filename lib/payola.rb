@@ -53,7 +53,7 @@ module Payola
     end
 
     def send_mail(mailer, method, *args)
-      Payola.queue!(Payola::SendMail, mailer.to_s, method, *args)
+      Payola.queue!(Payola::SendMail, mailer.to_s, method.to_s, *args)
     end
 
     def reset!

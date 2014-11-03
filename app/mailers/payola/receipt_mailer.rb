@@ -1,6 +1,7 @@
 module Payola
   class ReceiptMailer < ActionMailer::Base
     add_template_helper ::ApplicationHelper
+    helper Payola::PriceHelper
 
     def receipt(sale_guid)
       ActiveRecord::Base.connection_pool.with_connection do

@@ -1,5 +1,7 @@
 module Payola
   class AdminMailer < ActionMailer::Base
+    helper Payola::PriceHelper
+
     def receipt(sale_guid)
       ActiveRecord::Base.connection_pool.with_connection do
         @sale = Payola::Sale.find_by(guid: sale_guid)
