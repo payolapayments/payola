@@ -100,7 +100,7 @@ module Payola
         end
       end
 
-      FakeWorker.should_receive(:call).with(Payola::SendMail, FakeMailer, :receipt, 1, 2)
+      FakeWorker.should_receive(:call).with(Payola::SendMail, 'Payola::FakeMailer', 'receipt', 1, 2)
       Payola.send_mail(FakeMailer, :receipt, 1, 2)
     end
   end
