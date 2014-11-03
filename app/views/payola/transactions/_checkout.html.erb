@@ -10,6 +10,7 @@
   email = local_assigns.fetch :email, ''
   verify_zip_code = local_assigns.fetch :verify_zip_code, false
   custom_fields = local_assigns.fetch :custom_fields, nil
+  price = local_assigns.fetch :price, sellable.price
 
   sale = Payola::Sale.new(product: sellable)
 
@@ -34,7 +35,7 @@
     error_div_id: error_div_id,
     product_class: sellable.product_class,
     product_permalink: sellable.permalink,
-    price: sellable.price,
+    price: price,
     name: name,
     description: description,
     currency: currency,
