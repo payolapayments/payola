@@ -14,6 +14,8 @@ module Payola
       validates_uniqueness_of :stripe_id
 
       before_save :create_stripe_plan, on: :create
+
+      has_many :subscriptions, :class_name => "Payola::Subscription"
     end
 
     def create_stripe_plan
