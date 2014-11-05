@@ -12,6 +12,13 @@ module Payola
       validates_presence_of :name
 
       validates_uniqueness_of :stripe_id
+
+      before_save :create_stripe_plan, on: :create
     end
+
+    def create_stripe_plan
+      Payola::CreatePlan.call(self)
+    end
+
   end
 end
