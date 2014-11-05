@@ -290,6 +290,31 @@ end
 
 In this example you would have set the `user_id` custom field in the Checkout partial to the proper ID.
 
+## Subscription Plans
+
+To create a subscription you first need a `SubscriptionPlan` model, which should include`Payola::Plan`.
+
+```ruby
+class SubscriptionPlan < ActiveRecord::Base
+  include Payola::Plan
+end
+```
+
+A plan model requires a few attributes:
+
+* `amount`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
+* `interval`, (attribute) one of `'day'`,`'week'`,`'month'`, or `'year'`
+* `interval_count`, (attribute) the number of intervals between each
+  subscription
+* `stripe_id`, (attribute) a unique identifier used at Stripe to
+  identify this plan
+* `name`, (attribute) a name describing this plan that will appear on
+  customer invoices
+* `trial_period_days`, (attribute) *optional* the number of days for
+  the trial period on this plan
+
+
+
 ## TODO
 
 * Subscriptions
