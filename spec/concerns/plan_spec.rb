@@ -35,7 +35,7 @@ module Payola
 
     it "should queue creation of the plan at stripe after the model is created" do
       subscription_plan = build(:subscription_plan)
-      Payola.should_receive(:queue!)
+      Payola::CreatePlan.should_receive(:call)
       subscription_plan.save!
     end
 

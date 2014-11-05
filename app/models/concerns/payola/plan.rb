@@ -13,14 +13,11 @@ module Payola
 
       validates_uniqueness_of :stripe_id
 
-      after_save :queue_create_stripe_plan, on: :create
+      before_save :queue_create_stripe_plan, on: :create
     end
 
     def queue_create_stripe_plan
-      Payola.queue!(Payola::CreatePlan, {
-        plan_class: self.class.to_s,
-        plan_id: self.id
-      })
+      Payola::CreatePlan.call(self)
     end
 
   end
