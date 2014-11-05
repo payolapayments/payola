@@ -3,7 +3,7 @@ module Payola
     def self.call(params)
       klass = params[:plan_class]
       id    = params[:plan_id]
-      subscription_plan = klass.find(id)
+      subscription_plan = klass.safe_constantize.find(id)
 
       begin
         plan = Stripe::Plan.create(

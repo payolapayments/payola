@@ -9,7 +9,7 @@ module Payola
     describe "#call" do
       it "should create a plan at Stripe" do
         plan = CreatePlan.call(
-          plan_class: @subscription_plan.class,
+          plan_class: @subscription_plan.class.to_s,
           plan_id: @subscription_plan.id
         )
         expect(plan.name).to eq @subscription_plan.name

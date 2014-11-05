@@ -18,12 +18,9 @@ module Payola
 
     def queue_create_stripe_plan
       Payola.queue!(Payola::CreatePlan, {
-        plan_class: self.class,
+        plan_class: self.class.to_s,
         plan_id: self.id
       })
-    end
-
-    module ClassMethods
     end
 
   end
