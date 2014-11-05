@@ -12,6 +12,16 @@ module Payola
       validates_presence_of :name
 
       validates_uniqueness_of :stripe_id
+
+      after_save :queue_create_stripe_plan, on: :create
     end
+
+    def queue_create_stripe_plan
+      Payola.queue!(Payola::CreatePlan, self.class, id)
+    end
+
+    module ClassMethods
+    end
+
   end
 end

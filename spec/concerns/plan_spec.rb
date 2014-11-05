@@ -33,5 +33,11 @@ module Payola
       expect(subscription_plan.valid?).to be false
     end
 
+    it "should queue creation of the plan at stripe after the model is created" do
+      subscription_plan = build(:subscription_plan)
+      Payola.should_receive(:queue!)
+      subscription_plan.save!
+    end
+
   end
 end
