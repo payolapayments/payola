@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029140518) do
+ActiveRecord::Schema.define(version: 20141105010234) do
 
   create_table "owners", force: true do |t|
     t.datetime "created_at"
@@ -79,6 +79,17 @@ ActiveRecord::Schema.define(version: 20141029140518) do
     t.string   "name"
     t.string   "permalink"
     t.integer  "price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscription_plans", force: true do |t|
+    t.integer  "amount"
+    t.string   "interval"
+    t.integer  "interval_count"
+    t.string   "name"
+    t.string   "stripe_id"
+    t.integer  "trial_period_days"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
