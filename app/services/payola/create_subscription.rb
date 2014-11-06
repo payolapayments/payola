@@ -1,7 +1,7 @@
 module Payola
   class CreateSubscription
     def self.call(params)
-      product   = params[:product]
+      plan = params[:plan]
       affiliate = params[:affiliate]
       coupon    = params[:coupon]
 
@@ -17,7 +17,7 @@ module Payola
           s.coupon = coupon
           s.amount = product.price * (1 - s.coupon.percent_off / 100.0)
         else
-          s.amount = product.price
+          s.amount = plan.amount
         end
       end
     end
