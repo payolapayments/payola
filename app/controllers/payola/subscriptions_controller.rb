@@ -1,6 +1,6 @@
 module Payola
   class SubscriptionsController < ApplicationController
-    before_filter :find_product_and_coupon_and_affiliate, only: [:create]
+    before_filter :find_plan_and_coupon_and_affiliate, only: [:create]
 
     def show
       #sale = Sale.find_by!(guid: params[:guid])
@@ -17,29 +17,29 @@ module Payola
     end
 
     def create
-      #create_params = params.permit!.merge(
-        #product: @product,
-        #coupon: @coupon,
-        #affiliate: @affiliate
-      #)
+      create_params = params.permit!.merge(
+        product: @product,
+        coupon: @coupon,
+        affiliate: @affiliate
+      )
 
-      #@sale = CreateSale.call(create_params)
+      @subscription = CreateSubscription.call(create_params)
 
-      #if @sale.save
-        #Payola.queue!(Payola::ProcessSale, @sale.guid)
-        #render json: { guid: @sale.guid }
-      #else
-        #render json: { error: @sale.errors.full_messages.join(". ") }, status: 400
-      #end
+      if @subscription.save
+        Payola.queue!(Payola::StartSubscription, @subscription.id)
+        render json: { id: @subscription.id }
+      else
+        render json: { error: @subscription.errors.full_messages.join(". ") }, status: 400
+      end
     end
 
     private
-    def find_product_and_coupon_and_affiliate
-      #@product_class = Payola.sellables[params[:product_class]]
+    def find_plan_and_coupon_and_affiliate
+      @plan_class = Payola.subscribables[params[:plan_class]]
 
-      #raise ActionController::RoutingError.new('Not Found') unless @product_class && @product_class.sellable?
+      raise ActionController::RoutingError.new('Not Found') unless @plan_class && @plan_class.subscribable?
 
-      #@product = @product_class.find_by!(permalink: params[:permalink])
+      @plan = @plan_class.find_by!(id: params[:plan_id])
       #coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
 
       #@coupon = Coupon.where('lower(code) = lower(?)', coupon_code).first
