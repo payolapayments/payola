@@ -13,6 +13,7 @@ module Payola
       :event_filter,
       :support_email,
       :sellables,
+      :subscribables,
       :charge_verifier,
       :default_currency,
       :pdf_receipt
@@ -69,11 +70,16 @@ module Payola
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
+      self.subscribables = {}
       self.pdf_receipt = false
     end
 
     def register_sellable(klass)
       sellables[klass.product_class] = klass
+    end
+
+    def register_subscribable(klass)
+      subscribables[klass.plan_class] = klass
     end
 
     def send_email_for(*emails)
