@@ -1,5 +1,11 @@
 # Payola Changelog
 
+* v1.1.2 - 2014-11-06
+  - Default the `From` address on receipt emails to `Payola.support_email`
+
+* v1.1.1 - 2014-11-03
+  - ActiveJob can't serialize a class or a symbol so we have to `to_s` them
+
 * v1.1.0 - 2014-11-03
   - Add customizable mailers
   - Pass currency through properly and add a `default_currency` config option

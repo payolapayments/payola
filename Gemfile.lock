@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    payola-payments (1.1.1)
+    payola-payments (1.1.2)
       aasm (~> 3.4.0)
       jquery-rails
       rails (>= 4.1)
@@ -105,7 +105,7 @@ GEM
       rspec-core (~> 2.99.0)
       rspec-expectations (~> 2.99.0)
       rspec-mocks (~> 2.99.0)
-    sprockets (2.12.2)
+    sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
