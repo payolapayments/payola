@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency "stripe-ruby-mock", "~> 1.10.1.7"
   s.add_development_dependency "sucker_punch", "~> 1.2.1"
+  s.add_development_dependency "debugger2"
 
   s.post_install_message = <<-HERE
 Please ensure that your Payola route has 'as: :payola' included. Prior to v1.0.7 this was not added automatically.

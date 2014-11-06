@@ -18,7 +18,7 @@ module Payola
 
     def create
       create_params = params.permit!.merge(
-        product: @product,
+        plan: @plan,
         coupon: @coupon,
         affiliate: @affiliate
       )
