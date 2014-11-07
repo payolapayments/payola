@@ -1,5 +1,10 @@
 # Payola Changelog
 
+* v1.1.3 - 2014-11-07
+  - Add options for requesting billing and shipping addresses via Checkout
+  - Add a callable to add additional attributes to a Stripe::Charge
+  - Only talk about PDFs if PDFs are enabled
+
 * v1.1.2 - 2014-11-06
   - Default the `From` address on receipt emails to `Payola.support_email`
 
