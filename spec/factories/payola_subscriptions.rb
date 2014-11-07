@@ -16,6 +16,9 @@ FactoryGirl.define do
     trial_start "2014-11-04 22:34:39"
     trial_end "2014-11-04 22:34:39"
     canceled_at "2014-11-04 22:34:39"
+    email "jeremy@octolabs.com"
+    stripe_token "yyz123"
+    currency 'usd'
     quantity 1
   end
 end

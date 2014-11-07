@@ -3,15 +3,18 @@ require 'aasm'
 module Payola
   class Subscription < ActiveRecord::Base
 
+    validates_presence_of :email
     validates_presence_of :plan_id
     validates_presence_of :plan_type
+    validates_presence_of :stripe_token
+    validates_presence_of :currency
 
     validates_uniqueness_of :guid
 
     before_save :populate_guid
 
     belongs_to :plan, :polymorphic => true
-
+    belongs_to :owner, polymorphic: true
 
     include AASM
 
