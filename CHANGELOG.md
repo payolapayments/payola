@@ -1,5 +1,9 @@
 # Payola Changelog
 
+* v1.1.4 - 2014-11-07
+  - Pass the created customer to `additional_charge_attributes`
+  - Add Payola Pro license
+
 * v1.1.3 - 2014-11-07
   - Add options for requesting billing and shipping addresses via Checkout
   - Add a callable to add additional attributes to a Stripe::Charge
