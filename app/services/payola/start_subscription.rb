@@ -1,8 +1,7 @@
 module Payola
   class StartSubscription
-    def self.call(subscription_id)
-      subscription = Payola::Subscription.find(subscription_id)
-      #subscription.save!
+    def self.call(subscription)
+      subscription.save!
       secret_key = Payola.secret_key_for_sale(subscription)
 
       begin

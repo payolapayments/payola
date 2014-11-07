@@ -3,17 +3,17 @@ module Payola
     before_filter :find_plan_and_coupon_and_affiliate, only: [:create]
 
     def show
-      #sale = Sale.find_by!(guid: params[:guid])
-      #product = sale.product
+      subscription = Subscription.find_by!(guid: params[:guid])
+      plan = subscription.plan
 
-      #new_path = product.respond_to?(:redirect_path) ? product.redirect_path(sale) : '/'
-      #redirect_to new_path
+      new_path = plan.respond_to?(:redirect_path) ? plan.redirect_path(subscription) : '/'
+      redirect_to new_path
     end
 
     def status
-      #@sale = Sale.where(guid: params[:guid]).first
-      #render nothing: true, status: 404 and return unless @sale
-      #render json: {guid: @sale.guid, status: @sale.state, error: @sale.error}
+      @subscription = Subscription.where(guid: params[:guid]).first
+      render nothing: true, status: 404 and return unless @subscription
+      render json: {guid: @subscription.guid, status: @subscription.state, error: @subscription.error}
     end
 
     def create
@@ -26,8 +26,8 @@ module Payola
       @subscription = CreateSubscription.call(create_params)
 
       if @subscription.save
-        Payola.queue!(Payola::StartSubscription, @subscription.id)
-        render json: { id: @subscription.id }
+        Payola.queue!(Payola::ProcessSubscription, @subscription.guid)
+        render json: { guid: @subscription.guid }
       else
         render json: { error: @subscription.errors.full_messages.join(". ") }, status: 400
       end

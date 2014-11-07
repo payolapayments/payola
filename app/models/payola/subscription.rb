@@ -3,11 +3,18 @@ require 'aasm'
 module Payola
   class Subscription < ActiveRecord::Base
 
+    validates_presence_of :email
     validates_presence_of :plan_id
     validates_presence_of :plan_type
+    validates_presence_of :stripe_token
+    validates_presence_of :currency
+
+    validates_uniqueness_of :guid
+
+    before_save :populate_guid
 
     belongs_to :plan, :polymorphic => true
-
+    belongs_to :owner, polymorphic: true
 
     include AASM
 
@@ -18,7 +25,7 @@ module Payola
       state :errored
       state :refunded
 
-      event :process, after: :charge_card do
+      event :process, after: :start_subscription do
         transitions from: :pending, to: :processing
       end
 
@@ -62,14 +69,14 @@ module Payola
         verifier.verify(self.signed_custom_fields)
       else
         nil
-      end      
+      end
     end
 
 
     private
 
-    def charge_card
-      Payola::ChargeCard.call(self)
+    def start_subscription
+      Payola::StartSubscription.call(self)
     end
 
     def instrument_finish
@@ -92,6 +99,14 @@ module Payola
         "payola.#{plan_type}.subscription.#{instrument_type}"
       else
         "payola.subscription.#{instrument_type}"
+      end
+    end
+
+    def populate_guid
+      if new_record?
+        while !valid? || self.guid.nil?
+          self.guid = SecureRandom.random_number(1_000_000_000).to_s(32)
+        end
       end
     end
 
