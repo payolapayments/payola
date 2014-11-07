@@ -44,7 +44,7 @@ var PayolaSubscriptionForm = {
         if (num_retries_left == 0) {
             PayolaSubscriptionForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid)
         }
-        $.get(base_path + '/status/' + guid, function(data) {
+        $.get(base_path + '/subscription_status/' + guid, function(data) {
             if (data.status === "finished") {
                 form.append($('<input type="hidden" name="payola_sale_guid"></input>').val(guid));
                 form.get(0).submit();

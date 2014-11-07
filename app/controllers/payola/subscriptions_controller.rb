@@ -26,8 +26,8 @@ module Payola
       @subscription = CreateSubscription.call(create_params)
 
       if @subscription.save
-        Payola.queue!(Payola::StartSubscription, @subscription.id)
-        render json: { id: @subscription.id }
+        Payola.queue!(Payola::ProcessSubscription, @subscription.guid)
+        render json: { guid: @subscription.guid }
       else
         render json: { error: @subscription.errors.full_messages.join(". ") }, status: 400
       end

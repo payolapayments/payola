@@ -11,7 +11,7 @@ module Payola
       it "should pass args to CreateSubscription and queue the job" do
         subscription = double
         subscription.should_receive(:save).and_return(true)
-        subscription.should_receive(:id).at_least(1).times.and_return(1)
+        subscription.should_receive(:guid).at_least(1).times.and_return(1)
 
         CreateSubscription.should_receive(:call).and_return(subscription)
         Payola.should_receive(:queue!)
@@ -19,7 +19,7 @@ module Payola
 
         expect(response.status).to eq 200
         parsed_body = JSON.load(response.body)
-        expect(parsed_body['id']).to eq 1
+        expect(parsed_body['guid']).to eq 1
       end
 
       describe "with an error" do

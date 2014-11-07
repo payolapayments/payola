@@ -22,7 +22,7 @@ module Payola
       state :errored
       state :refunded
 
-      event :process, after: :charge_card do
+      event :process, after: :start_subscription do
         transitions from: :pending, to: :processing
       end
 
@@ -66,14 +66,14 @@ module Payola
         verifier.verify(self.signed_custom_fields)
       else
         nil
-      end      
+      end
     end
 
 
     private
 
-    def charge_card
-      Payola::ChargeCard.call(self)
+    def start_subscription
+      Payola::StartSubscription.call(self)
     end
 
     def instrument_finish
