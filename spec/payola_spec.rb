@@ -132,7 +132,8 @@ module Payola
 
   describe '#additional_charge_attributes' do
     it "should return a hash" do
-      expect(Payola.additional_charge_attributes.call).to eq({})
+      sale = double
+      expect(Payola.additional_charge_attributes.call(sale)).to eq({})
     end
   end
 end
