@@ -2,7 +2,7 @@
 
 <hr>
 
-<%= form_for @plan, url: '/', method: :post, html: { class: 'payola-subscription-form', 'data-payola-base-path' => '/subdir/payola', 'data-payola-plan-type' => @plan.class.name, 'data-payola-plan-id' => @plan.id } do |f| %>
+<%= form_for @plan, url: '/', method: :post, html: { class: 'payola-subscription-form', 'data-payola-base-path' => '/subdir/payola', 'data-payola-plan-type' => @plan.plan_class, 'data-payola-plan-id' => @plan.id } do |f| %>
   <span class="payola-payment-error"></span>
   Email:<br>
   <input type="email" name="stripeEmail" data-payola="email"></input><br>

@@ -1,3 +1,5 @@
+require 'aasm'
+
 module Payola
   class Subscription < ActiveRecord::Base
 
