@@ -6,6 +6,10 @@ module Payola
     validates_presence_of :plan_id
     validates_presence_of :plan_type
 
+    validates_uniqueness_of :guid
+
+    before_save :populate_guid
+
     belongs_to :plan, :polymorphic => true
 
 
@@ -92,6 +96,14 @@ module Payola
         "payola.#{plan_type}.subscription.#{instrument_type}"
       else
         "payola.subscription.#{instrument_type}"
+      end
+    end
+
+    def populate_guid
+      if new_record?
+        while !valid? || self.guid.nil?
+          self.guid = SecureRandom.random_number(1_000_000_000).to_s(32)
+        end
       end
     end
 
