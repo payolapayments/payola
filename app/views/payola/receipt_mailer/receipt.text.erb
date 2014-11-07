@@ -2,6 +2,8 @@ Thanks for buying <%= @product.name %>.
 
 Your transaction ID is: <%= @sale.guid %>
 
-Click here to read the book: <%= payola.confirm_url(guid: @sale.guid) %>
+Click here to pick up your product: <%= payola.confirm_url(guid: @sale.guid) %>
 
+<% if Payola.pdf_receipt %>
 Attached you'll find a PDF receipt for your records.
+<% end %>
