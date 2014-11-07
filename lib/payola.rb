@@ -15,6 +15,7 @@ module Payola
       :sellables,
       :charge_verifier,
       :default_currency,
+      :additional_charge_attributes,
       :pdf_receipt
 
     def configure(&block)
@@ -69,6 +70,7 @@ module Payola
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
+      self.additional_charge_attributes = lambda { |sale| { } }
       self.pdf_receipt = false
     end
 
