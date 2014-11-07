@@ -17,7 +17,7 @@ module Payola
           currency: sale.currency,
           customer: customer.id,
           description: sale.guid,
-        }.merge(Payola.additional_charge_attributes.call(sale))
+        }.merge(Payola.additional_charge_attributes.call(sale, customer))
 
         charge = Stripe::Charge.create(charge_attributes, secret_key)
 

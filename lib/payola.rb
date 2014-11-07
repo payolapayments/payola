@@ -70,7 +70,7 @@ module Payola
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
-      self.additional_charge_attributes = lambda { |sale| { } }
+      self.additional_charge_attributes = lambda { |sale, customer| { } }
       self.pdf_receipt = false
     end
 
