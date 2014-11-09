@@ -81,6 +81,7 @@ module Payola
       self.trial_start          = Time.at(stripe_sub.trial_start) if stripe_sub.trial_start
       self.trial_end            = Time.at(stripe_sub.trial_end) if stripe_sub.trial_end
       self.quantity             = stripe_sub.quantity
+      self.stripe_status        = stripe_sub.status
 
       self.save!
       self
