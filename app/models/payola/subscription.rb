@@ -72,6 +72,17 @@ module Payola
       end
     end
 
+    def sync_with!(stripe_sub)
+      self.current_period_start = Time.at(stripe_sub.current_period_start)
+      self.current_period_end   = Time.at(stripe_sub.current_period_end)
+      self.ended_at             = Time.at(stripe_sub.ended_at) if stripe_sub.ended_at
+      self.trial_start          = Time.at(stripe_sub.trial_start) if stripe_sub.trial_start
+      self.trial_end            = Time.at(stripe_sub.trial_end) if stripe_sub.trial_end
+      self.quantity             = stripe_sub.quantity
+
+      self.save!
+      self
+    end
 
     private
 
@@ -110,7 +121,5 @@ module Payola
       end
     end
 
-
-    
   end
 end
