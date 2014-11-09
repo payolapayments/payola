@@ -2,11 +2,11 @@
 
 FactoryGirl.define do
   factory :subscription, :class => 'Payola::Subscription' do
-    plan_type "MyString"
+    plan_type "SubscriptionPlan"
     plan_id 1
     start "2014-11-04 22:34:39"
     status "MyString"
-    owner_type "MyString"
+    owner_type "Owner"
     owner_id 1
     stripe_customer_id "MyString"
     cancel_at_period_end false
@@ -20,5 +20,6 @@ FactoryGirl.define do
     stripe_token "yyz123"
     currency 'usd'
     quantity 1
+    stripe_id 'sub_123456'
   end
 end

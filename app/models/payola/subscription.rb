@@ -13,8 +13,10 @@ module Payola
 
     before_save :populate_guid
 
-    belongs_to :plan, :polymorphic => true
+    belongs_to :plan,  polymorphic: true
     belongs_to :owner, polymorphic: true
+
+    has_many :sales, class_name: 'Payola::Sale'
 
     include AASM
 

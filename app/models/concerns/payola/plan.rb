@@ -28,6 +28,10 @@ module Payola
       self.class.plan_class
     end
 
+    def product_class
+      plan_class
+    end
+
     module ClassMethods
       def subscribable?
         true
