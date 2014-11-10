@@ -7,8 +7,6 @@ module Payola
 
       subscription = Payola::Subscription.find_by!(stripe_id: invoice.subscription)
 
-      p subscription.plan
-
       sale = Payola::Sale.new do |s|
         s.email = subscription.email
         s.state = 'processing'
