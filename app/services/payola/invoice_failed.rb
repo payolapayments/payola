@@ -3,7 +3,7 @@ module Payola
     def self.call(event)
       invoice = event.data.object
 
-      subscription = Payola::Subscription.find_by(stripe_id: invoice.subscription)
+      subscription = Payola::Subscription.find_by!(stripe_id: invoice.subscription)
 
       sale = Payola::Sale.new do |s|
         s.email = subscription.email
