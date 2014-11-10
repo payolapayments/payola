@@ -27,5 +27,12 @@ module Payola
         helper Payola::PriceHelper
       end
     end
+
+    initializer :configure_subscription_listeners do |app|
+      Payola.configure do |config|
+        config.subscribe 'invoice.payment_suceeded', Payola::InvoicePaid
+        config.subscribe 'invoice.payment_failed',   Payola::InvoiceFailed
+      end
+    end
   end
 end
