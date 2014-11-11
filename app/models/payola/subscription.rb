@@ -76,6 +76,9 @@ module Payola
       end
     end
 
+    def to_param
+      guid
+    end
 
     private
 
