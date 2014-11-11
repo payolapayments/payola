@@ -39,10 +39,6 @@ module Payola
       end
     end
 
-    def cancel
-      @subscription = Subscription.find_by!(guid: params[:guid])
-    end
-
     def destroy
       subscription = Subscription.find_by!(guid: params[:guid])
       subscription.cancel!
