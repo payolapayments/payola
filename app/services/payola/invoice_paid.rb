@@ -6,6 +6,8 @@ module Payola
       return unless invoice.charge
 
       subscription = Payola::Subscription.find_by!(stripe_id: invoice.subscription)
+      stripe_sub = Stripe::Customer.retrieve(subscription.stripe_customer_id).subscriptions.retrieve(invoice.subscription)
+      subscription.sync_with!(stripe_sub)
 
       sale = Payola::Sale.new do |s|
         s.email = subscription.email
