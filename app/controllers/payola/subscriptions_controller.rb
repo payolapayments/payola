@@ -41,7 +41,7 @@ module Payola
 
     def destroy
       subscription = Subscription.find_by!(guid: params[:guid])
-      subscription.cancel!
+      Payola::CancelSubscription.call(subscription)
       redirect_to subscription_path(subscription)
     end
 

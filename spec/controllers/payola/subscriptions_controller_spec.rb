@@ -75,10 +75,9 @@ module Payola
       before :each do
         @subscription = create(:subscription, :state => :active)
       end
-      it "call Payola::CancelSubscription and set the state to 'canceled'" do
+      it "call Payola::CancelSubscription and redirect" do
         Payola::CancelSubscription.should_receive(:call)
         delete :destroy, :guid => @subscription.guid, use_route: :payola
-        expect(@subscription.reload.state).to eq 'canceled'
         # TODO : Figure out why this needs to be a hardcoded path.
         # Why doesn't subscription_path(@subscription) work?
         expect(response).to redirect_to "/subdir/payola/subscription/#{@subscription.guid}"

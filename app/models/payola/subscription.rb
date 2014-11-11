@@ -33,7 +33,7 @@ module Payola
         transitions from: :processing, to: :active
       end
 
-      event :cancel, before: :cancel_subscription, after: :instrument_canceled do
+      event :cancel, after: :instrument_canceled do
         transitions from: :active, to: :canceled
       end
 
@@ -84,10 +84,6 @@ module Payola
 
     def start_subscription
       Payola::StartSubscription.call(self)
-    end
-
-    def cancel_subscription
-      Payola::CancelSubscription.call(self)
     end
 
     def instrument_finish
