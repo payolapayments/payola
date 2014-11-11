@@ -86,11 +86,6 @@ module Payola
       Payola::StartSubscription.call(self)
     end
 
-    def instrument_finish
-      Payola.instrument(instrument_key('finished'), self)
-      Payola.instrument(instrument_key('finished', false), self)
-    end
-
     def instrument_activate
       Payola.instrument(instrument_key('active'), self)
       Payola.instrument(instrument_key('active', false), self)
