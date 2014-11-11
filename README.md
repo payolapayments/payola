@@ -43,11 +43,33 @@ end
 
 Each sellable model requires three attributes:
 
-* `price`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
-* `permalink`, (attribute) a human-readable slug that is exposed in the URL
-* `name`, (attribute) a human-readable name exposed on product pages
+* `price:integer`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
+* `permalink:string`, (attribute) a human-readable slug that is exposed in the URL
+* `name:string`, (attribute) a human-readable name exposed on product pages
 
-There are also two optional methods you can implement on your sellable:
+For example, to create a 'Book' model:
+
+```bash
+$ rails g model Book price:integer permalink:string name:string
+$ rake db:migrate
+```
+
+Add the concern:
+
+```ruby
+class Book < ActiveRecord::Base
+  include Payola::Sellable
+end
+```
+
+Finally, add a book to the database:
+
+```bash
+$ rails console
+irb(main):001:0> Book.create(name: 'The Book', permalink: 'the-book', price: 1000)
+```
+
+There are two optional methods you can implement on your sellable:
 
 * `redirect_path` takes the sale as an argument and returns a path. The buyer's browser will be redirected to that path after a successful sale. This defaults to `/`.
 * `currency` returns the currency for this product. Payola will default to `usd`, which can be changed with the `default_currency` config setting.
