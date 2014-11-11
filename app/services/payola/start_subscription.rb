@@ -21,7 +21,7 @@ module Payola
           card_expiration:    Date.new(card.exp_year, card.exp_month, 1),
           card_type:          card.respond_to?(:brand) ? card.brand : card.type
         )
-        subscription.finish!
+        subscription.activate!
       rescue Stripe::StripeError => e
         subscription.update_attributes(error: e.message)
         subscription.fail!

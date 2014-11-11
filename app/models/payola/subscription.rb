@@ -21,16 +21,20 @@ module Payola
     aasm column: 'state', skip_validation_on_save: true do
       state :pending, initial: true
       state :processing
-      state :finished
+      state :active
+      state :canceled
       state :errored
-      state :refunded
 
       event :process, after: :start_subscription do
         transitions from: :pending, to: :processing
       end
 
-      event :finish, after: :instrument_finish do
-        transitions from: :processing, to: :finished
+      event :activate, after: :instrument_activate do
+        transitions from: :processing, to: :active
+      end
+
+      event :cancel, after: :instrument_canceled do
+        transitions from: :active, to: :canceled
       end
 
       event :fail, after: :instrument_fail do
@@ -84,15 +88,24 @@ module Payola
       self
     end
 
+    def to_param
+      guid
+    end
+
     private
 
     def start_subscription
       Payola::StartSubscription.call(self)
     end
 
-    def instrument_finish
-      Payola.instrument(instrument_key('finished'), self)
-      Payola.instrument(instrument_key('finished', false), self)
+    def instrument_activate
+      Payola.instrument(instrument_key('active'), self)
+      Payola.instrument(instrument_key('active', false), self)
+    end
+
+    def instrument_canceled
+      Payola.instrument(instrument_key('canceled'), self)
+      Payola.instrument(instrument_key('canceled', false), self)
     end
 
     def instrument_fail
