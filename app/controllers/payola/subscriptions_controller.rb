@@ -3,6 +3,12 @@ module Payola
     before_filter :find_plan_and_coupon_and_affiliate, only: [:create]
 
     def show
+      @subscription = Subscription.find_by!(guid: params[:guid])
+      @plan = @subscription.plan
+    end
+
+    # TODO : Do we actually need this?
+    def confirm
       subscription = Subscription.find_by!(guid: params[:guid])
       plan = subscription.plan
 
@@ -31,6 +37,12 @@ module Payola
       else
         render json: { error: @subscription.errors.full_messages.join(". ") }, status: 400
       end
+    end
+
+    def destroy
+      subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::CancelSubscription.call(subscription)
+      redirect_to subscription_path(subscription)
     end
 
     private
