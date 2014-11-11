@@ -15,16 +15,6 @@ module Payola
         CancelSubscription.call(@subscription)
         expect(@subscription.reload.state).to eq 'canceled'
       end
-      #describe "on error" do
-        #it "should update the error attribute" do
-          #StripeMock.prepare_card_error(:card_declined)
-          #plan = create(:subscription_plan)
-          #subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token)
-          #StartSubscription.call(subscription)
-          #expect(subscription.reload.error).to_not be_nil
-          #expect(subscription.errored?).to be true
-        #end
-      #end
     end
   end
 end
