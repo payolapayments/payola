@@ -33,6 +33,13 @@ module Payola
       end
     end
 
+
+    def destroy
+      subscription = Subscription.find_by!(guid: params[:guid])
+      subscription.cancel!
+      render json: { guid: subscription.guid }
+    end
+
     private
     def find_plan_and_coupon_and_affiliate
       @plan_class = Payola.subscribables[params[:plan_class]]

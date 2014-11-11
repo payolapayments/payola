@@ -70,5 +70,19 @@ module Payola
         expect(response).to redirect_to '/'
       end
     end
+
+    describe '#destroy' do
+      before :each do
+        @subscription = create(:subscription, :state => :active)
+      end
+      it "call Payola::CancelSubscription and set the state to 'canceled'" do
+        Payola::CancelSubscription.should_receive(:call)
+        delete :destroy, :guid => @subscription.guid, use_route: :payola
+        expect(@subscription.reload.state).to eq 'canceled'
+      end
+    end
+
+
+
   end
 end
