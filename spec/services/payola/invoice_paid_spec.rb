@@ -2,10 +2,18 @@ require 'spec_helper'
 
 module Payola
   describe InvoicePaid do
+    let(:stripe_helper) { StripeMock.create_test_helper }
     it "should do nothing if the invoice has no charge" do
       # create a Payola::Subscription
       plan = create(:subscription_plan)
-      sub = create(:subscription, plan: plan)
+
+      customer = Stripe::Customer.create(
+        email: 'foo',
+        card: stripe_helper.generate_card_token,
+        plan: plan.stripe_id
+      )
+
+      sub = create(:subscription, plan: plan, stripe_customer_id: customer.id, stripe_id: customer.subscriptions.first.id)
 
       event = StripeMock.mock_webhook_event('invoice.payment_succeeded', subscription: sub.stripe_id, charge: nil)
 
@@ -18,7 +26,14 @@ module Payola
 
     it "should create a sale" do
       plan = create(:subscription_plan)
-      sub = create(:subscription, plan: plan)
+      customer = Stripe::Customer.create(
+        email: 'foo',
+        card: stripe_helper.generate_card_token,
+        plan: plan.stripe_id
+      )
+
+      sub = create(:subscription, plan: plan, stripe_customer_id: customer.id, stripe_id: customer.subscriptions.first.id)
+
       charge = Stripe::Charge.create
       event = StripeMock.mock_webhook_event('invoice.payment_succeeded', subscription: sub.stripe_id, charge: charge.id)
 
