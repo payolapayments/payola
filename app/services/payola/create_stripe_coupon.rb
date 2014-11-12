@@ -1,16 +1,21 @@
 module Payola
   class CreateStripeCoupon
     def self.call(coupon)
-      #secret_key = Payola.secret_key_for_sale(subscription_plan)
-      #Stripe::Plan.create({
-        #:id => subscription_plan.stripe_id,
-        #:amount => subscription_plan.amount,
-        #:interval => subscription_plan.interval,
-        #:interval_count => subscription_plan.interval_count,
-        #:currency => subscription_plan.respond_to?(:currency) ? subscription_plan.currency : Payola.default_currency,
-        #:name => subscription_plan.name,
-        #:trial_period_days => subscription_plan.trial_period_days
-      #},secret_key)
+      secret_key = Payola.secret_key_for_sale(coupon)
+      params = {
+        :id => coupon.stripe_id,
+        :currency => coupon.respond_to?(:currency) ? coupon.currency : Payola.default_currency,
+        :duration => coupon.duration,
+        :duration_in_months => coupon.duration_in_months,
+        :max_redemptions => coupon.max_redemptions,
+        :redeem_by => coupon.redeem_by
+      }
+      if coupon.amount_off.present?
+        params[:amount_off] = coupon.amount_off
+      else
+        params[:percent_off] = coupon.percent_off
+      end
+      Stripe::Coupon.create(params,secret_key)
     end
   end
 end
