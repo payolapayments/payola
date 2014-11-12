@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141109203101) do
+ActiveRecord::Schema.define(version: 20141112041651) do
+
+  create_table "app_coupons", force: true do |t|
+    t.integer  "percent_off"
+    t.integer  "amount_off"
+    t.string   "currency"
+    t.string   "duration"
+    t.integer  "duration_in_months"
+    t.string   "stripe_id"
+    t.integer  "max_redemptions"
+    t.datetime "redeem_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "owners", force: true do |t|
     t.datetime "created_at"
@@ -105,9 +118,8 @@ ActiveRecord::Schema.define(version: 20141109203101) do
     t.integer  "amount"
     t.string   "guid"
     t.string   "stripe_status"
+    t.integer  "affiliate_id"
   end
-
-  add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid"
 
   create_table "products", force: true do |t|
     t.string   "name"

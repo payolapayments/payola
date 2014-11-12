@@ -14,6 +14,7 @@ module Payola
       :support_email,
       :sellables,
       :subscribables,
+      :saveables,
       :charge_verifier,
       :default_currency,
       :pdf_receipt
@@ -71,6 +72,7 @@ module Payola
       self.default_currency = 'usd'
       self.sellables = {}
       self.subscribables = {}
+      self.saveables = {}
       self.pdf_receipt = false
     end
 
@@ -80,6 +82,10 @@ module Payola
 
     def register_subscribable(klass)
       subscribables[klass.plan_class] = klass
+    end
+
+    def register_saveable(klass)
+      saveables[klass.coupon_class] = klass
     end
 
     def send_email_for(*emails)

@@ -1,0 +1,49 @@
+<%= form_for(@app_coupon) do |f| %>
+  <% if @app_coupon.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@app_coupon.errors.count, "error") %> prohibited this app_coupon from being saved:</h2>
+
+      <ul>
+      <% @app_coupon.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :percent_off %><br>
+    <%= f.number_field :percent_off %>
+  </div>
+  <div class="field">
+    <%= f.label :amount_off %><br>
+    <%= f.number_field :amount_off %>
+  </div>
+  <div class="field">
+    <%= f.label :currency %><br>
+    <%= f.text_field :currency %>
+  </div>
+  <div class="field">
+    <%= f.label :duration %><br>
+    <%= f.text_field :duration %>
+  </div>
+  <div class="field">
+    <%= f.label :duration_in_months %><br>
+    <%= f.number_field :duration_in_months %>
+  </div>
+  <div class="field">
+    <%= f.label :stripe_id %><br>
+    <%= f.text_field :stripe_id %>
+  </div>
+  <div class="field">
+    <%= f.label :max_redemptions %><br>
+    <%= f.number_field :max_redemptions %>
+  </div>
+  <div class="field">
+    <%= f.label :redeem_by %><br>
+    <%= f.datetime_select :redeem_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
