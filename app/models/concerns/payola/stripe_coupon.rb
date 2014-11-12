@@ -5,14 +5,14 @@ module Payola
     extend ActiveSupport::Concern
 
     included do
-      validate :amount_off_or_percent_of_present
+      validate :amount_off_or_percent_off_present
       validates_presence_of :duration
       validates :duration, inclusion: { in: %w(once forever repeating),
                                         message: "%{value} is not a valid duration." }
       validate :duration_in_months_conditional
       validates_presence_of :stripe_id
 
-      def amount_off_or_percent_of_present
+      def amount_off_or_percent_off_present
         if amount_off.blank? && percent_off.blank?
           errors.add(:amount_off, "or percent_off must be present.")
         elsif amount_off.present? && percent_off.present?
