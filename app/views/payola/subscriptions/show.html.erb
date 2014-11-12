@@ -1,9 +1,0 @@
-<h1>Subscription #<%= link_to @subscription.guid, subscription_path(@subscription) %></h1>
-
-<h3>Status : <%= @subscription.state %></h3>
-
-<% if @subscription.active? %>
-  <%= form_tag cancel_subscription_path(@subscription.guid), :method => :delete do %>
-    <%= submit_tag "Cancel this subscription" %>
-  <% end %>
-<% end %>

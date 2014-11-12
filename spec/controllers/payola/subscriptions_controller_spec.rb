@@ -61,11 +61,11 @@ module Payola
       end
     end
 
-    describe '#confirm' do
+    describe '#show' do
       it "should redirect to the product's redirect path" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, :plan => plan)
-        get :confirm, guid: subscription.guid, use_route: :payola
+        get :show, guid: subscription.guid, use_route: :payola
 
         expect(response).to redirect_to '/'
       end
@@ -80,7 +80,7 @@ module Payola
         delete :destroy, :guid => @subscription.guid, use_route: :payola
         # TODO : Figure out why this needs to be a hardcoded path.
         # Why doesn't subscription_path(@subscription) work?
-        expect(response).to redirect_to "/subdir/payola/subscription/#{@subscription.guid}"
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
       end
     end
 
