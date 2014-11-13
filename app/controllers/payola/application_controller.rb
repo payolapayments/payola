@@ -1,6 +1,5 @@
 module Payola
-  class ApplicationController < ActionController::Base
-    helper ApplicationHelper
+  class ApplicationController < ::ApplicationController
     helper PriceHelper
   end
 end

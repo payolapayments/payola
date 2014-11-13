@@ -290,7 +290,11 @@ end
 
 In this example you would have set the `user_id` custom field in the Checkout partial to the proper ID.
 
-## Subscription Plans
+## Subscriptions
+
+Payola has comprehensive support for Stripe subscriptions.
+
+### Subscription Plans
 
 To create a subscription you first need a `SubscriptionPlan` model, which should include`Payola::Plan`.
 
@@ -313,11 +317,65 @@ A plan model requires a few attributes:
 * `trial_period_days`, (attribute) *optional* the number of days for
   the trial period on this plan
 
+### Forms
+
+Currently we only support custom subscription forms. Here's an example:
+
+```rhtml
+<%= form_for @plan, url: '/', method: :post, html: {
+      class: 'payola-subscription-form',
+      'data-payola-base-path' => '/payola',
+      'data-payola-plan-type' => @plan.plan_class,
+      'data-payola-plan-id' => @plan.id
+  } do |f| %>
+  <span class="payola-payment-error"></span>
+  Email:<br>
+  <input type="email" name="stripeEmail" data-payola="email"></input><br>
+  Card Number<br>
+  <input type="text" data-stripe="number"></input><br>
+  Exp Month<br>
+  <input type="text" data-stripe="exp_month"></input><br>
+  Exp Year<br>
+  <input type="text" data-stripe="exp_year"></input><br>
+  CVC<br>
+  <input type="text" data-stripe="cvc"></input><br>
+  <input type="submit"></input>
+<% end %>
+```
+
+You trigger the subscription behavior by setting the class `payola-subscription-form` and configure it with `data` attributes. There are currently three data attributes that all must be present:
+
+* `payola-base-path` is the path where you've mounted Payola in your routes, which is usually `/payola`.
+* `payola-plan-type` is the value returned by `plan_type` on the object that includes `Payola::Plan`.
+* `payola-plan-id` is the value returned by `id` on the object that includes `Payola::Plan`.
+
+When you submit the form Payola takes over, contacting Stripe to generate a token from the `data-stripe` inputs. When Payola is done processing, it will submit the form to the original URL which will receive a param named `payola_subscription_guid`. You can look up the corresponding `Payola::Subscription` like this:
+
+```ruby
+subscription = Payola::Subscription.find_by(guid: params[:payola_subscription_guid])
+```
+
+In this action you should set the subscription's `owner` attribute to something useful, like `current_user` for Devise.
+
+### Canceling Subscriptions
+
+You can add a button to cancel a subscription like this:
+
+```rhtml
+<%= render 'payola/subscriptions/cancel', subscription: @subscription %>
+```
+
+**Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to cancel the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_cancel_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
+
+```ruby
+def payola_can_cancel_subscription?(subscription)
+  subscription.owner == current_user
+end
+```
 
 
 ## TODO
 
-* Subscriptions
 * Affiliate tracking
 * Coupon codes
 

@@ -35,6 +35,14 @@ module Payola
 
     def destroy
       subscription = Subscription.find_by!(guid: params[:guid])
+
+      if self.respond_to?(:payola_can_cancel_subscription?)
+        redirect_to(
+          confirm_subscription_path(subscription),
+          alert: "You cannot cancel this subscription."
+        ) and return unless self.payola_can_cancel_subscription?(subscription)
+      end
+
       Payola::CancelSubscription.call(subscription)
       redirect_to confirm_subscription_path(subscription)
     end
