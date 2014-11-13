@@ -365,14 +365,25 @@ You can add a button to cancel a subscription like this:
 <%= render 'payola/subscriptions/cancel', subscription: @subscription %>
 ```
 
-**Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to cancel the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_cancel_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
+**Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to cancel the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_modify_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
 
 ```ruby
-def payola_can_cancel_subscription?(subscription)
+def payola_can_modify_subscription?(subscription)
   subscription.owner == current_user
 end
 ```
 
+### Upgrades / Downgrades
+
+You can upgrade and downgrade subscriptions by POSTing to `payola.change_subscription_plan_path(subscription)` and passing `plan_class` and `plan_id` for the new plan as params. Payola provides a partial for you:
+
+```rhtml
+<%= render 'payola/subscriptions/change_plan',
+    subscription: @subscription,
+    new_plan: @new_plan %>
+```
+
+**Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to modify the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_modify_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
 
 ## TODO
 
