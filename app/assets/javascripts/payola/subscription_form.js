@@ -47,6 +47,7 @@ var PayolaSubscriptionForm = {
         $.get(base_path + '/subscription_status/' + guid, function(data) {
             if (data.status === "active") {
                 form.append($('<input type="hidden" name="payola_subscription_guid"></input>').val(guid));
+                form.append($('<input type="hidden" name="authenticity_token"></input>').val($('meta[name="csrf-token"]').attr("content")));
                 form.get(0).submit();
             } else if (data.status === "errored") {
                 PayolaSubscriptionForm.showError(form, data.error);
