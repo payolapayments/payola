@@ -85,11 +85,11 @@ module Payola
 
       it "should redirect with an error if it can't cancel the subscription" do
         expect(Payola::CancelSubscription).to_not receive(:call)
-        expect_any_instance_of(::ApplicationController).to receive(:payola_can_cancel_subscription?).and_return(false)
+        expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
         delete :destroy, :guid => @subscription.guid, use_route: :payola
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
-        expect(request.flash[:alert]).to eq 'You cannot cancel this subscription.'
+        expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
     end
 
@@ -106,6 +106,15 @@ module Payola
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:notice]).to eq 'Subscription plan updated'
+      end
+
+      it "should redirect with an error if it can't cancel the subscription" do
+        expect(Payola::CancelSubscription).to_not receive(:call)
+        expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
+
+        delete :destroy, :guid => @subscription.guid, use_route: :payola
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
     end
 
