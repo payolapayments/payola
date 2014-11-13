@@ -15,6 +15,7 @@ module Payola
 
     belongs_to :plan,  polymorphic: true
     belongs_to :owner, polymorphic: true
+    belongs_to :affiliate
 
     has_many :sales, class_name: 'Payola::Sale'
 

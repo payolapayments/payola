@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141109203101) do
+ActiveRecord::Schema.define(version: 20141112024805) do
 
   create_table "owners", force: true do |t|
     t.datetime "created_at"
@@ -105,9 +105,8 @@ ActiveRecord::Schema.define(version: 20141109203101) do
     t.integer  "amount"
     t.string   "guid"
     t.string   "stripe_status"
+    t.integer  "affiliate_id"
   end
-
-  add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid"
 
   create_table "products", force: true do |t|
     t.string   "name"

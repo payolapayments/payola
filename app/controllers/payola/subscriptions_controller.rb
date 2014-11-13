@@ -56,11 +56,11 @@ module Payola
         #@price = @product.price
       #end
 
-      #affiliate_code = cookies[:aff] || params[:aff]
-      #@affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first
-      #if @affiliate
-        #cookies[:aff] = affiliate_code
-      #end
+      affiliate_code = cookies[:aff] || params[:aff]
+      @affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first
+      if @affiliate
+        cookies[:aff] = affiliate_code
+      end
 
     end
 

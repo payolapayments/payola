@@ -22,17 +22,17 @@ module Payola
         expect(sale.currency).to eq 'usd'
       end
             
-      #it "should include the affiliate if given" do
-        #affiliate = create(:payola_affiliate)
-        #sale = CreateSubscription.call(
-          #email: 'pete@bugsplat.info',
-          #stripeToken: 'test_tok',
-          #plan: @plan,
-          #affiliate: affiliate
-        #)
+      it "should include the affiliate if given" do
+        affiliate = create(:payola_affiliate)
+        sale = CreateSubscription.call(
+          email: 'pete@bugsplat.info',
+          stripeToken: 'test_tok',
+          plan: @plan,
+          affiliate: affiliate
+        )
 
-        #expect(sale.affiliate).to eq affiliate
-      #end
+        expect(sale.affiliate).to eq affiliate
+      end
 
       #describe "with coupon" do
         #it "should include the coupon" do
