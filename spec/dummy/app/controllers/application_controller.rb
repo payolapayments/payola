@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  def payola_can_cancel_subscription?(subscription)
+  def payola_can_modify_subscription?(subscription)
     true
   end
 end

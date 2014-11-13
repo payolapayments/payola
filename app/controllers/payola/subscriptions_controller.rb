@@ -1,6 +1,7 @@
 module Payola
   class SubscriptionsController < ApplicationController
-    before_filter :find_plan_and_coupon_and_affiliate, only: [:create]
+    before_filter :find_plan_and_coupon_and_affiliate, only: [:create, :change_plan]
+    before_filter :check_modify_permissions, only: [:destroy, :change_plan]
 
     def show
       subscription = Subscription.find_by!(guid: params[:guid])
@@ -35,16 +36,19 @@ module Payola
 
     def destroy
       subscription = Subscription.find_by!(guid: params[:guid])
-
-      if self.respond_to?(:payola_can_cancel_subscription?)
-        redirect_to(
-          confirm_subscription_path(subscription),
-          alert: "You cannot cancel this subscription."
-        ) and return unless self.payola_can_cancel_subscription?(subscription)
-      end
-
       Payola::CancelSubscription.call(subscription)
       redirect_to confirm_subscription_path(subscription)
+    end
+
+    def change_plan
+      subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::ChangeSubscriptionPlan.call(subscription, @plan)
+
+      if subscription.valid?
+        redirect_to confirm_subscription_path(subscription), notice: "Subscription plan updated"
+      else
+        redirect_to confirm_subscription_path(subscription), alert: subscription.errors.full_messages.to_sentence
+      end
     end
 
     private
@@ -72,5 +76,14 @@ module Payola
 
     end
 
+    def check_modify_permissions
+      subscription = Subscription.find_by!(guid: params[:guid])
+      if self.respond_to?(:payola_can_modify_subscription?)
+        redirect_to(
+          confirm_subscription_path(subscription),
+          alert: "You cannot modify this subscription."
+        ) and return unless self.payola_can_modify_subscription?(subscription)
+      end
+    end
   end
 end
