@@ -1,7 +1,7 @@
 module Payola
   class SubscriptionsController < ApplicationController
     before_filter :find_plan_and_coupon_and_affiliate, only: [:create, :change_plan]
-    before_filter :check_modify_permissions, only: [:destroy, :change_plan]
+    before_filter :check_modify_permissions, only: [:destroy, :change_plan, :update_card]
 
     def show
       subscription = Subscription.find_by!(guid: params[:guid])
@@ -51,7 +51,19 @@ module Payola
       end
     end
 
+    def update_card
+      subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::UpdateCard.call(subscription, params[:stripeToken])
+
+      if subscription.valid?
+        redirect_to confirm_subscription_path(subscription), notice: "Card updated"
+      else
+        redirect_to confirm_subscription_path(subscription), alert: subscription.errors.full_messages.to_sentence
+      end
+    end
+
     private
+
     def find_plan_and_coupon_and_affiliate
       @plan_class = Payola.subscribables[params[:plan_class]]
 

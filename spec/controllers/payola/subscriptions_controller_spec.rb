@@ -118,5 +118,31 @@ module Payola
       end
     end
 
+    describe "#update_card" do
+      before :each do
+        @subscription = create(:subscription, state: :active)
+        @plan = create(:subscription_plan)
+      end
+
+      it "should call UpdateCard and redirect" do
+        expect(Payola::UpdateCard).to receive(:call).with(@subscription, 'tok_1234')
+
+        post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234', use_route: :payola
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:notice]).to eq 'Card updated'
+      end
+
+      it "should redirect with an error" do
+        expect(Payola::UpdateCard).to receive(:call).never
+        expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
+
+        post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234', use_route: :payola
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
+      end
+    end
+
   end
 end
