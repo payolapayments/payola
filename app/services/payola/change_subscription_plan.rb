@@ -8,7 +8,10 @@ module Payola
         customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
         sub = customer.subscriptions.retrieve(subscription.stripe_id)
 
+        prorate = plan.respond_to?(:should_prorate?) ? plan.should_prorate?(subscription) : true
+
         sub.plan = plan.stripe_id
+        sub.prorate = prorate
         sub.save
 
         subscription.plan = plan
