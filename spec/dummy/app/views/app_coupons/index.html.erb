@@ -1,0 +1,39 @@
+<h1>Listing app_coupons</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Percent off</th>
+      <th>Amount off</th>
+      <th>Currency</th>
+      <th>Duration</th>
+      <th>Duration in months</th>
+      <th>Stripe</th>
+      <th>Max redemptions</th>
+      <th>Redeem by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @app_coupons.each do |app_coupon| %>
+      <tr>
+        <td><%= app_coupon.percent_off %></td>
+        <td><%= app_coupon.amount_off %></td>
+        <td><%= app_coupon.currency %></td>
+        <td><%= app_coupon.duration %></td>
+        <td><%= app_coupon.duration_in_months %></td>
+        <td><%= app_coupon.stripe_id %></td>
+        <td><%= app_coupon.max_redemptions %></td>
+        <td><%= app_coupon.redeem_by %></td>
+        <td><%= link_to 'Show', app_coupon %></td>
+        <td><%= link_to 'Edit', edit_app_coupon_path(app_coupon) %></td>
+        <td><%= link_to 'Destroy', app_coupon, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New App coupon', new_app_coupon_path %>

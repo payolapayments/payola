@@ -46,9 +46,13 @@ module Payola
       raise ActionController::RoutingError.new('Not Found') unless @plan_class && @plan_class.subscribable?
 
       @plan = @plan_class.find_by!(id: params[:plan_id])
-      #coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
+      coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
 
-      #@coupon = Coupon.where('lower(code) = lower(?)', coupon_code).first
+      @coupon = nil
+      Payola.saveables.each_pair do |name,klass|
+        @coupon = klass.where('stripe_id = ?', coupon_code).first
+        break if @coupon.present?
+      end
       #if @coupon
         #cookies[:cc] = coupon_code
         #@price = @product.price * (1 - @coupon.percent_off / 100.0)

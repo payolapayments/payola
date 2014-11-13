@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Percent off:</strong>
+  <%= @app_coupon.percent_off %>
+</p>
+
+<p>
+  <strong>Amount off:</strong>
+  <%= @app_coupon.amount_off %>
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= @app_coupon.currency %>
+</p>
+
+<p>
+  <strong>Duration:</strong>
+  <%= @app_coupon.duration %>
+</p>
+
+<p>
+  <strong>Duration in months:</strong>
+  <%= @app_coupon.duration_in_months %>
+</p>
+
+<p>
+  <strong>Stripe:</strong>
+  <%= @app_coupon.stripe_id %>
+</p>
+
+<p>
+  <strong>Max redemptions:</strong>
+  <%= @app_coupon.max_redemptions %>
+</p>
+
+<p>
+  <strong>Redeem by:</strong>
+  <%= @app_coupon.redeem_by %>
+</p>
+
+<%= link_to 'Edit', edit_app_coupon_path(@app_coupon) %> |
+<%= link_to 'Back', app_coupons_path %>
