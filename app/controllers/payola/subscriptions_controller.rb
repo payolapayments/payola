@@ -1,6 +1,6 @@
 module Payola
   class SubscriptionsController < ApplicationController
-    before_filter :find_plan_and_coupon_and_affiliate, only: [:create]
+    before_filter :find_plan_and_coupon_and_affiliate, only: [:create, :change_plan]
 
     def show
       subscription = Subscription.find_by!(guid: params[:guid])
@@ -45,6 +45,17 @@ module Payola
 
       Payola::CancelSubscription.call(subscription)
       redirect_to confirm_subscription_path(subscription)
+    end
+
+    def change_plan
+      subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::ChangeSubscriptionPlan.call(subscription, @plan)
+
+      if subscription.valid?
+        redirect_to confirm_subscription_path(subscription), notice: "Subscription plan updated"
+      else
+        redirect_to confirm_subscription_path(subscription), alert: subscription.errors.full_messages.to_sentence
+      end
     end
 
     private

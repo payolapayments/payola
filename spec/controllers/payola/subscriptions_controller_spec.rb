@@ -93,5 +93,21 @@ module Payola
       end
     end
 
+    describe '#change_plan' do
+      before :each do
+        @subscription = create(:subscription, state: :active)
+        @plan = create(:subscription_plan)
+      end
+
+      it "should call Payola::ChangeSubscriptionPlan and redirect" do
+        expect(Payola::ChangeSubscriptionPlan).to receive(:call).with(@subscription, @plan)
+
+        post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id, use_route: :payola
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:notice]).to eq 'Subscription plan updated'
+      end
+    end
+
   end
 end

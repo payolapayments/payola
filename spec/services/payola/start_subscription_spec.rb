@@ -33,6 +33,3 @@ module Payola
     end
   end
 end
-
-
-

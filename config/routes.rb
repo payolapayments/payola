@@ -8,5 +8,7 @@ Payola::Engine.routes.draw do
   match '/subscription_status/:guid'      => 'subscriptions#status',   via: :get,    as: :subscription_status
   match '/cancel_subscription/:guid'      => 'subscriptions#destroy',  via: :delete, as: :cancel_subscription
 
+  match '/change_plan/:guid/:plan_class/:plan_id' => 'subscriptions#change_plan', via: :post, as: :change_subscription_plan
+
   mount StripeEvent::Engine => '/events'
 end

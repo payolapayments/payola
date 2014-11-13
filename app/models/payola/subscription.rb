@@ -96,6 +96,11 @@ module Payola
       guid
     end
 
+    def instrument_plan_changed
+      Payola.instrument(instrument_key('plan_changed'), self)
+      Payola.instrument(instrument_key('plan_changed', false), self)
+    end
+
     private
 
     def start_subscription
