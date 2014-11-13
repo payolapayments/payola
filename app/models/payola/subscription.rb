@@ -21,6 +21,8 @@ module Payola
 
     include AASM
 
+    attr_accessor :old_plan
+
     aasm column: 'state', skip_validation_on_save: true do
       state :pending, initial: true
       state :processing
@@ -96,7 +98,8 @@ module Payola
       guid
     end
 
-    def instrument_plan_changed
+    def instrument_plan_changed(old_plan)
+      self.old_plan = old_plan
       Payola.instrument(instrument_key('plan_changed'), self)
       Payola.instrument(instrument_key('plan_changed', false), self)
     end
