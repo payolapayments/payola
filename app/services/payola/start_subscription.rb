@@ -6,13 +6,15 @@ module Payola
 
       begin
         subscription.verify_charge!
-        customer = Stripe::Customer.create({
-          card: subscription.stripe_token,
-          email: subscription.email,
-          plan: subscription.plan.stripe_id,
-          coupon: subscription.coupon
-        }, secret_key)
 
+        create_params = {
+          card:  subscription.stripe_token,
+          email: subscription.email,
+          plan:  subscription.plan.stripe_id,
+        }
+        create_params[:coupon] = subscription.coupon if subscription.coupon.present?
+
+        customer = Stripe::Customer.create(create_params, secret_key)
 
         card = customer.cards.data.first
         subscription.update_attributes(
