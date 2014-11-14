@@ -63,8 +63,10 @@ var PayolaSubscriptionForm = {
         var error_selector = form.data('payola-error-selector');
         if (error_selector) {
             $(error_selector).text(message);
+            $(error_selector).show();
         } else {
             form.find('.payola-payment-error').text(message);
+            form.find('.payola-payment-error').show();
         }
     }
 };
