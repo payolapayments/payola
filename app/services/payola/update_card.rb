@@ -1,14 +1,15 @@
 module Payola
   class UpdateCard
     def self.call(subscription, token)
+      secret_key = Payola.secret_key_for_sale(subscription)
       begin
-        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
 
         customer.card = token
         customer.save
 
-        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
-        card = customer.cards.retrieve(customer.default_card)
+        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
+        card = customer.cards.retrieve(customer.default_card, secret_key)
 
         subscription.update_attributes(
           card_type: card.brand,

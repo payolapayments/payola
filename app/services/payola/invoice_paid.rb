@@ -6,7 +6,9 @@ module Payola
       return unless invoice.charge
 
       subscription = Payola::Subscription.find_by!(stripe_id: invoice.subscription)
-      stripe_sub = Stripe::Customer.retrieve(subscription.stripe_customer_id).subscriptions.retrieve(invoice.subscription)
+
+      secret_key = Payola.secret_key_for_sale(subscription)
+      stripe_sub = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key).subscriptions.retrieve(invoice.subscription, secret_key)
       subscription.sync_with!(stripe_sub)
 
       sale = Payola::Sale.new do |s|
@@ -19,7 +21,7 @@ module Payola
         s.currency = invoice.currency
       end
 
-      charge = Stripe::Charge.retrieve(invoice.charge, Payola.secret_key_for_sale(sale))
+      charge = Stripe::Charge.retrieve(invoice.charge, secret_key)
 
       sale.stripe_id  = charge.id
       sale.card_type  = charge.card.respond_to?(:brand) ? charge.card.brand : charge.card.type
