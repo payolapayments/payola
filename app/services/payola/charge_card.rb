@@ -12,12 +12,14 @@ module Payola
           email: sale.email
         }, secret_key)
 
-        charge = Stripe::Charge.create({
+        charge_attributes = {
           amount: sale.amount,
           currency: sale.currency,
           customer: customer.id,
           description: sale.guid,
-        }, secret_key)
+        }.merge(Payola.additional_charge_attributes.call(sale, customer))
+
+        charge = Stripe::Charge.create(charge_attributes, secret_key)
 
         if charge.respond_to?(:fee)
           fee = charge.fee

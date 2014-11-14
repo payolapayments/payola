@@ -129,4 +129,12 @@ module Payola
       expect(Payola.publishable_key_for_sale('blah')).to eq 'foo'
     end
   end
+
+  describe '#additional_charge_attributes' do
+    it "should return a hash" do
+      sale = double
+      customer = double
+      expect(Payola.additional_charge_attributes.call(sale, customer)).to eq({})
+    end
+  end
 end

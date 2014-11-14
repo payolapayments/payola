@@ -13,19 +13,20 @@ var PayolaCheckout = {
         var handler = StripeCheckout.configure({
             key: options.publishable_key,
             image: options.product_image_path,
-            token: function(token) { PayolaCheckout.tokenHandler(token, options) }
-        });
-
-        handler.open({
+            token: function(token) { PayolaCheckout.tokenHandler(token, options) },
             name: options.name,
             description: options.description,
             amount: options.price,
             panelLabel: options.panel_label,
             allowRememberMe: options.allow_remember_me,
             zipCode: options.verify_zip_code,
+            billingAddress: options.billing_address,
+            shippingAddress: options.shipping_address,
             currency: options.currency,
             email: options.email || undefined
         });
+
+        handler.open();
     },
 
     tokenHandler: function(token, options) {

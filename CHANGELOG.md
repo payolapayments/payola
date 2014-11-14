@@ -1,5 +1,20 @@
 # Payola Changelog
 
+* v1.1.4 - 2014-11-07
+  - Pass the created customer to `additional_charge_attributes`
+  - Add Payola Pro license
+
+* v1.1.3 - 2014-11-07
+  - Add options for requesting billing and shipping addresses via Checkout
+  - Add a callable to add additional attributes to a Stripe::Charge
+  - Only talk about PDFs if PDFs are enabled
+
+* v1.1.2 - 2014-11-06
+  - Default the `From` address on receipt emails to `Payola.support_email`
+
+* v1.1.1 - 2014-11-03
+  - ActiveJob can't serialize a class or a symbol so we have to `to_s` them
+
 * v1.1.0 - 2014-11-03
   - Add customizable mailers
   - Pass currency through properly and add a `default_currency` config option
