@@ -20,16 +20,17 @@ module Payola
         expect(subscription.reload.card_expiration).to_not be_nil
         expect(subscription.reload.card_type).to_not be_nil
       end
-      #describe "on error" do
-        #it "should update the error attribute" do
-          #StripeMock.prepare_card_error(:card_declined)
-          #plan = create(:subscription_plan)
-          #subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token)
-          #StartSubscription.call(subscription)
-          #expect(subscription.reload.error).to_not be_nil
-          #expect(subscription.errored?).to be true
-        #end
-      #end
+      describe "on error" do
+        it "should update the error attribute" do
+          StripeMock.prepare_card_error(:card_declined, :new_customer)
+          plan = create(:subscription_plan)
+          subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token)
+          StartSubscription.call(subscription)
+          expect(subscription.reload.error).to_not be_nil
+          expect(subscription.errored?).to be true
+        end
+      end
+
     end
   end
 end

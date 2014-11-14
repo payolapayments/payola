@@ -20,6 +20,7 @@ var PayolaSubscriptionForm = {
             form.find(':submit').prop('disabled', false);
         } else {
             var email = form.find("[data-payola='email']").val();
+            var coupon = form.find("[data-payola='coupon']").val();
 
             var base_path = form.data('payola-base-path');
             var plan_type = form.data('payola-plan-type');
@@ -28,8 +29,8 @@ var PayolaSubscriptionForm = {
             var data_form = $('<form></form>');
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
+            data_form.append($('<input type="hidden" name="coupon">').val(coupon));
             data_form.append(form.find('input[name="authenticity_token"]'));
-            
             $.ajax({
                 type: "POST",
                 url: base_path + "/subscribe/" + plan_type + "/" + plan_id,
