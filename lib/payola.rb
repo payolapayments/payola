@@ -98,6 +98,11 @@ module Payola
         spec = possible_emails[email].dup
         if spec
           Payola.subscribe(spec.shift) do |sale|
+
+            if sale.is_a?(Stripe::Event)
+              sale = Payola::Sale.find_by!(stripe_id: sale.data.object.id)
+            end
+
             Payola.send_mail(*(spec + [sale.guid]))
           end
         end
