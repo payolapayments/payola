@@ -70,15 +70,8 @@ module Payola
       raise ActionController::RoutingError.new('Not Found') unless @plan_class && @plan_class.subscribable?
 
       @plan = @plan_class.find_by!(id: params[:plan_id])
-      #coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
-
-      #@coupon = Coupon.where('lower(code) = lower(?)', coupon_code).first
-      #if @coupon
-        #cookies[:cc] = coupon_code
-        #@price = @product.price * (1 - @coupon.percent_off / 100.0)
-      #else
-        #@price = @product.price
-      #end
+      
+      @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
 
       affiliate_code = cookies[:aff] || params[:aff]
       @affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112024805) do
+ActiveRecord::Schema.define(version: 20141114032013) do
 
   create_table "owners", force: true do |t|
     t.datetime "created_at"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20141112024805) do
     t.string   "guid"
     t.string   "stripe_status"
     t.integer  "affiliate_id"
+    t.string   "coupon"
   end
 
   create_table "products", force: true do |t|

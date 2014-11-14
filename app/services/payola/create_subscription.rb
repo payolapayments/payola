@@ -3,7 +3,6 @@ module Payola
     def self.call(params)
       plan = params[:plan]
       affiliate = params[:affiliate]
-      coupon    = params[:coupon]
 
       Payola::Subscription.new do |s|
         s.plan = plan
@@ -11,14 +10,10 @@ module Payola
         s.stripe_token = params[:stripeToken]
         s.affiliate_id = affiliate.try(:id)
         s.currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
+        s.coupon = params[:coupon]
         #s.signed_custom_fields = params[:signed_custom_fields]
 
-        if coupon
-          s.coupon = coupon
-          s.amount = product.price * (1 - s.coupon.percent_off / 100.0)
-        else
-          s.amount = plan.amount
-        end
+        s.amount = plan.amount
       end
     end
   end

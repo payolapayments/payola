@@ -9,7 +9,8 @@ module Payola
         customer = Stripe::Customer.create({
           card: subscription.stripe_token,
           email: subscription.email,
-          plan: subscription.plan.stripe_id
+          plan: subscription.plan.stripe_id,
+          coupon: subscription.coupon
         }, secret_key)
 
 
