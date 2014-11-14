@@ -6,7 +6,7 @@ var PayolaSubscriptionForm = {
     },
 
     handleSubmit: function(form) {
-        form.find(':submit').prop('disabled', true);
+        $(':submit').prop('disabled', true);
         $('.payola-spinner').show();
         Stripe.card.createToken(form, function(status, response) {
             PayolaSubscriptionForm.stripeResponseHandler(form, status, response);
@@ -17,7 +17,7 @@ var PayolaSubscriptionForm = {
     stripeResponseHandler: function(form, status, response) {
         if (response.error) {
             PayolaSubscriptionForm.showError(form, response.error.message);
-            form.find(':submit').prop('disabled', false);
+            $(':submit').prop('disabled', false);
         } else {
             var email = form.find("[data-payola='email']").val();
             var coupon = form.find("[data-payola='coupon']").val();
