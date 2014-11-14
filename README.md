@@ -385,10 +385,15 @@ You can upgrade and downgrade subscriptions by POSTing to `payola.change_subscri
 
 **Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to modify the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_modify_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
 
+### Subscription Coupons
+
+You can pass a coupon code to Payola by adding a `data-stripe="coupon"` input to your form. The coupon code will be passed directly to Stripe and attached to the subscription.
+
 ## TODO
 
+* Multiple subscriptions per customer
 * Affiliate tracking
-* Coupon codes
+* Easy metered billing
 
 ## License
 
