@@ -51,6 +51,17 @@ module Payola
       end
     end
 
+    def name
+      self.plan.name
+    end
+
+    def price
+      self.plan.price
+    end
+
+    def redirect_path(sale)
+      self.plan.redirect_path(self)
+    end
 
     def verifier
       @verifier ||= ActiveSupport::MessageVerifier.new(Payola.secret_key_for_sale(self), digest: 'SHA256')

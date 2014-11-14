@@ -19,7 +19,10 @@ module Payola
 
       charge = Stripe::Charge.retrieve(invoice.charge, Payola.secret_key_for_sale(sale))
 
-      sale.stripe_id = charge.id
+      sale.stripe_id  = charge.id
+      sale.card_type  = charge.card.respond_to?(:brand) ? charge.card.brand : charge.card.type,
+      sale.card_last4 = charge.card.last4
+
       if charge.respond_to?(:fee)
         sale.fee_amount = charge.fee
       else
