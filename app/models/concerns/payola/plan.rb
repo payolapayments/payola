@@ -32,6 +32,10 @@ module Payola
       plan_class
     end
 
+    def price
+      amount
+    end
+
     module ClassMethods
       def subscribable?
         true
