@@ -56,7 +56,7 @@ module Payola
     end
 
     def price
-      self.plan.price
+      self.plan.amount
     end
 
     def redirect_path(sale)
