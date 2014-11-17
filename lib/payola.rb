@@ -13,6 +13,7 @@ module Payola
       :event_filter,
       :support_email,
       :sellables,
+      :subscribables,
       :charge_verifier,
       :default_currency,
       :additional_charge_attributes,
@@ -70,12 +71,17 @@ module Payola
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
+      self.subscribables = {}
       self.additional_charge_attributes = lambda { |sale, customer| { } }
       self.pdf_receipt = false
     end
 
     def register_sellable(klass)
       sellables[klass.product_class] = klass
+    end
+
+    def register_subscribable(klass)
+      subscribables[klass.plan_class] = klass
     end
 
     def send_email_for(*emails)
@@ -92,6 +98,11 @@ module Payola
         spec = possible_emails[email].dup
         if spec
           Payola.subscribe(spec.shift) do |sale|
+
+            if sale.is_a?(Stripe::Event)
+              sale = Payola::Sale.find_by!(stripe_id: sale.data.object.id)
+            end
+
             Payola.send_mail(*(spec + [sale.guid]))
           end
         end

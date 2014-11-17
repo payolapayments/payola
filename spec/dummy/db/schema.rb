@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029140518) do
+ActiveRecord::Schema.define(version: 20141114163841) do
 
   create_table "owners", force: true do |t|
     t.datetime "created_at"
@@ -75,10 +75,60 @@ ActiveRecord::Schema.define(version: 20141029140518) do
     t.datetime "updated_at"
   end
 
+  create_table "payola_subscriptions", force: true do |t|
+    t.string   "plan_type"
+    t.integer  "plan_id"
+    t.datetime "start"
+    t.string   "status"
+    t.string   "owner_type"
+    t.integer  "owner_id"
+    t.string   "stripe_customer_id"
+    t.boolean  "cancel_at_period_end"
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "ended_at"
+    t.datetime "trial_start"
+    t.datetime "trial_end"
+    t.datetime "canceled_at"
+    t.integer  "quantity"
+    t.string   "stripe_id"
+    t.string   "stripe_token"
+    t.string   "card_last4"
+    t.date     "card_expiration"
+    t.string   "card_type"
+    t.text     "error"
+    t.string   "state"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "currency"
+    t.integer  "amount"
+    t.string   "guid"
+    t.string   "stripe_status"
+    t.integer  "affiliate_id"
+    t.string   "coupon"
+    t.text     "signed_custom_fields"
+    t.text     "customer_address"
+    t.text     "business_address"
+  end
+
+  add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid"
+
   create_table "products", force: true do |t|
     t.string   "name"
     t.string   "permalink"
     t.integer  "price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscription_plans", force: true do |t|
+    t.integer  "amount"
+    t.string   "interval"
+    t.integer  "interval_count"
+    t.string   "name"
+    t.string   "stripe_id"
+    t.integer  "trial_period_days"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

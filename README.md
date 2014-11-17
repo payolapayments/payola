@@ -312,11 +312,110 @@ end
 
 In this example you would have set the `user_id` custom field in the Checkout partial to the proper ID.
 
+## Subscriptions
+
+Payola has comprehensive support for Stripe subscriptions.
+
+### Subscription Plans
+
+To create a subscription you first need a `SubscriptionPlan` model, which should include`Payola::Plan`.
+
+```ruby
+class SubscriptionPlan < ActiveRecord::Base
+  include Payola::Plan
+end
+```
+
+A plan model requires a few attributes:
+
+* `amount`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
+* `interval`, (attribute) one of `'day'`,`'week'`,`'month'`, or `'year'`
+* `interval_count`, (attribute) the number of intervals between each
+  subscription
+* `stripe_id`, (attribute) a unique identifier used at Stripe to
+  identify this plan
+* `name`, (attribute) a name describing this plan that will appear on
+  customer invoices
+* `trial_period_days`, (attribute) *optional* the number of days for
+  the trial period on this plan
+
+### Forms
+
+Currently we only support custom subscription forms. Here's an example:
+
+```rhtml
+<%= form_for @plan, url: '/', method: :post, html: {
+      class: 'payola-subscription-form',
+      'data-payola-base-path' => '/payola',
+      'data-payola-plan-type' => @plan.plan_class,
+      'data-payola-plan-id' => @plan.id
+  } do |f| %>
+  <span class="payola-payment-error"></span>
+  Email:<br>
+  <input type="email" name="stripeEmail" data-payola="email"></input><br>
+  Card Number<br>
+  <input type="text" data-stripe="number"></input><br>
+  Exp Month<br>
+  <input type="text" data-stripe="exp_month"></input><br>
+  Exp Year<br>
+  <input type="text" data-stripe="exp_year"></input><br>
+  CVC<br>
+  <input type="text" data-stripe="cvc"></input><br>
+  <input type="submit"></input>
+<% end %>
+```
+
+You trigger the subscription behavior by setting the class `payola-subscription-form` and configure it with `data` attributes. There are currently three data attributes that all must be present:
+
+* `payola-base-path` is the path where you've mounted Payola in your routes, which is usually `/payola`.
+* `payola-plan-type` is the value returned by `plan_type` on the object that includes `Payola::Plan`.
+* `payola-plan-id` is the value returned by `id` on the object that includes `Payola::Plan`.
+
+When you submit the form Payola takes over, contacting Stripe to generate a token from the `data-stripe` inputs. When Payola is done processing, it will submit the form to the original URL which will receive a param named `payola_subscription_guid`. You can look up the corresponding `Payola::Subscription` like this:
+
+```ruby
+subscription = Payola::Subscription.find_by(guid: params[:payola_subscription_guid])
+```
+
+In this action you should set the subscription's `owner` attribute to something useful, like `current_user` for Devise.
+
+### Canceling Subscriptions
+
+You can add a button to cancel a subscription like this:
+
+```rhtml
+<%= render 'payola/subscriptions/cancel', subscription: @subscription %>
+```
+
+**Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to cancel the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_modify_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
+
+```ruby
+def payola_can_modify_subscription?(subscription)
+  subscription.owner == current_user
+end
+```
+
+### Upgrades / Downgrades
+
+You can upgrade and downgrade subscriptions by POSTing to `payola.change_subscription_plan_path(subscription)` and passing `plan_class` and `plan_id` for the new plan as params. Payola provides a partial for you:
+
+```rhtml
+<%= render 'payola/subscriptions/change_plan',
+    subscription: @subscription,
+    new_plan: @new_plan %>
+```
+
+**Important Note**: by default, Payola does *no checking* to verify that the current user actually has permission to modify the given subscription. To add that, implement a method in your `ApplicationController` named `payola_can_modify_subscription`, which takes the subscription in question and returns true or false. For Devise this should look something like:
+
+### Subscription Coupons
+
+You can pass a coupon code to Payola by adding a `data-stripe="coupon"` input to your form. The coupon code will be passed directly to Stripe and attached to the subscription.
+
 ## TODO
 
-* Subscriptions
+* Multiple subscriptions per customer
 * Affiliate tracking
-* Coupon codes
+* Easy metered billing
 
 ## License
 

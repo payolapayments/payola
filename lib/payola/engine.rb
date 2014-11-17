@@ -27,5 +27,13 @@ module Payola
         ::ActionMailer::Base.send(:helper, Payola::PriceHelper)
       end
     end
+
+    initializer :configure_subscription_listeners do |app|
+      Payola.configure do |config|
+        config.subscribe 'invoice.payment_succeeded',     Payola::InvoicePaid
+        config.subscribe 'invoice.payment_failed',        Payola::InvoiceFailed
+        config.subscribe 'customer.subscription.updated', Payola::SyncSubscription
+      end
+    end
   end
 end

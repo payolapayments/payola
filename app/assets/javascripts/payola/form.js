@@ -47,6 +47,7 @@ var PayolaPaymentForm = {
         $.get(base_path + '/status/' + guid, function(data) {
             if (data.status === "finished") {
                 form.append($('<input type="hidden" name="payola_sale_guid"></input>').val(guid));
+                form.append($('<input type="hidden" name="authenticity_token"></input>').val($('meta[name="csrf-token"]').attr("content")));
                 form.get(0).submit();
             } else if (data.status === "errored") {
                 PayolaPaymentForm.showError(form, data.error);

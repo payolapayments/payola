@@ -1,0 +1,4 @@
+<h1>Subscription #<%= @subscription.guid %></h1>
+<% if @subscription.active? %>
+  <%= render 'payola/subscriptions/cancel', :subscription => @subscription %>
+<% end %>

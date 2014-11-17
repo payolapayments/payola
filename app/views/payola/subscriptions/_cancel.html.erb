@@ -1,0 +1,10 @@
+<%
+  button_class = local_assigns.fetch :button_class, 'stripe-button-el'
+  button_text = local_assigns.fetch :button_text, "Cancel Subscription"
+  confirm_text = local_assigns.fetch :confirm_text, "Are you sure?"
+  disabled = subscription.active?
+%>
+
+<%= form_tag payola.cancel_subscription_path(subscription.guid), :method => :delete do %>
+  <%= submit_tag button_text, html: { disabled: disabled, class: button_class }, data: { confirm: confirm_text } %>
+<% end %>
