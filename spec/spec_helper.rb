@@ -1,10 +1,13 @@
 require 'simplecov'
+require 'coveralls'
 if ENV['CIRCLE_ARTIFACTS']
-
   dir = File.join("..", "..", "..", ENV['CIRCLE_ARTIFACTS'], "coverage")
   SimpleCov.coverage_dir(dir)
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 end
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  add_filter 'app/secrets'
+end
 
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'

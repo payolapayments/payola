@@ -13,3 +13,4 @@ gemspec
 # To use debugger
 # gem 'debugger'
 gem 'simplecov', :require => false, :group => :test
+gem 'coveralls', require: false
