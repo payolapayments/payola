@@ -1,11 +1,9 @@
 require 'simplecov'
-require 'coveralls'
 require "codeclimate-test-reporter"
 
 if ENV['CIRCLE_ARTIFACTS']
   dir = File.join("..", "..", "..", ENV['CIRCLE_ARTIFACTS'], "coverage")
   SimpleCov.coverage_dir(dir)
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
   CodeClimate::TestReporter.start
 end
 SimpleCov.start 'rails' do
