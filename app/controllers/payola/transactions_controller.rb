@@ -1,38 +1,33 @@
 module Payola
   class TransactionsController < ApplicationController
     include Payola::AffiliateBehavior
+    include Payola::AsyncBehavior
 
     before_filter :find_product_and_coupon, only: [:create]
 
     def show
-      sale = Sale.find_by!(guid: params[:guid])
-      product = sale.product
-
-      new_path = product.respond_to?(:redirect_path) ? product.redirect_path(sale) : '/'
-      redirect_to new_path
+      show_object(Sale)
     end
 
     def status
-      @sale = Sale.where(guid: params[:guid]).first
-      render nothing: true, status: 404 and return unless @sale
-      render json: {guid: @sale.guid, status: @sale.state, error: @sale.error}
+      object_status(Sale)
     end
 
     def create
-      create_params = params.permit!.merge(
-        product: @product,
-        coupon: @coupon,
-        affiliate: @affiliate
-      )
+      create_object(Sale, CreateSale, ProcessSale)
+    end
 
-      @sale = CreateSale.call(create_params)
 
-      if @sale.save
-        Payola.queue!(Payola::ProcessSale, @sale.guid)
-        render json: { guid: @sale.guid }
-      else
-        render json: { error: @sale.errors.full_messages.join(". ") }, status: 400
-      end
+    def object_class
+      Sale
+    end
+
+    def object_creator_class
+      CreateSale
+    end
+
+    def object_processor_class
+      ProcessSale
     end
 
     private

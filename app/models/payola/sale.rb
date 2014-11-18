@@ -72,6 +72,10 @@ module Payola
       end      
     end
 
+    def redirector
+      product
+    end
+
     private
 
     def charge_card

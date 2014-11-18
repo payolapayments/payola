@@ -116,6 +116,10 @@ module Payola
       Payola.instrument(instrument_key('plan_changed', false), self)
     end
 
+    def redirector
+      plan
+    end
+
     private
 
     def start_subscription
