@@ -97,8 +97,10 @@ module Payola
       self.ended_at             = Time.at(stripe_sub.ended_at) if stripe_sub.ended_at
       self.trial_start          = Time.at(stripe_sub.trial_start) if stripe_sub.trial_start
       self.trial_end            = Time.at(stripe_sub.trial_end) if stripe_sub.trial_end
+      self.canceled_at          = Time.at(stripe_sub.canceled_at) if stripe_sub.canceled_at
       self.quantity             = stripe_sub.quantity
       self.stripe_status        = stripe_sub.status
+      self.cancel_at_period_end = stripe_sub.cancel_at_period_end
 
       self.save!
       self
