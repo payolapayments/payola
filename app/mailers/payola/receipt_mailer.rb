@@ -9,6 +9,8 @@ module Payola
         @product = @sale.product
 
         if Payola.pdf_receipt
+          require 'docverter'
+
           pdf = Docverter::Conversion.run do |c|
             c.from = 'html'
             c.to = 'pdf'
