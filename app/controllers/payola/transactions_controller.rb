@@ -35,13 +35,21 @@ module Payola
 
     private
     def find_product_and_coupon_and_affiliate
+      find_product
+      find_coupon
+      find_affiliate
+    end
+
+    def find_product
       @product_class = Payola.sellables[params[:product_class]]
 
       raise ActionController::RoutingError.new('Not Found') unless @product_class && @product_class.sellable?
 
       @product = @product_class.find_by!(permalink: params[:permalink])
-      coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
+    end
 
+    def find_coupon
+      coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
       @coupon = Coupon.where('lower(code) = lower(?)', coupon_code).first
       if @coupon
         cookies[:cc] = coupon_code
@@ -49,13 +57,14 @@ module Payola
       else
         @price = @product.price
       end
+    end
 
+    def find_affiliate
       affiliate_code = cookies[:aff] || params[:aff]
       @affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first
       if @affiliate
         cookies[:aff] = affiliate_code
       end
-
     end
 
   end

@@ -65,20 +65,29 @@ module Payola
     private
 
     def find_plan_and_coupon_and_affiliate
+      find_plan
+      find_coupon
+      find_affiliate
+    end
+
+    def find_plan
       @plan_class = Payola.subscribables[params[:plan_class]]
 
       raise ActionController::RoutingError.new('Not Found') unless @plan_class && @plan_class.subscribable?
 
       @plan = @plan_class.find_by!(id: params[:plan_id])
-      
-      @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
+    end
 
+    def find_coupon
+      @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
+    end
+
+    def find_affiliate
       affiliate_code = cookies[:aff] || params[:aff]
       @affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first
       if @affiliate
         cookies[:aff] = affiliate_code
       end
-
     end
 
     def check_modify_permissions
