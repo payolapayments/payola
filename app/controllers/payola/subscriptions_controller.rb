@@ -1,6 +1,8 @@
 module Payola
   class SubscriptionsController < ApplicationController
-    before_filter :find_plan_and_coupon_and_affiliate, only: [:create, :change_plan]
+    include Payola::AffiliateBehavior
+
+    before_filter :find_plan_and_coupon, only: [:create, :change_plan]
     before_filter :check_modify_permissions, only: [:destroy, :change_plan, :update_card]
 
     def show
@@ -64,10 +66,9 @@ module Payola
 
     private
 
-    def find_plan_and_coupon_and_affiliate
+    def find_plan_and_coupon
       find_plan
       find_coupon
-      find_affiliate
     end
 
     def find_plan
@@ -80,14 +81,6 @@ module Payola
 
     def find_coupon
       @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
-    end
-
-    def find_affiliate
-      affiliate_code = cookies[:aff] || params[:aff]
-      @affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first
-      if @affiliate
-        cookies[:aff] = affiliate_code
-      end
     end
 
     def check_modify_permissions

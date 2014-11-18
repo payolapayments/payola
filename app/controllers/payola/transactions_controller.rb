@@ -1,6 +1,8 @@
 module Payola
   class TransactionsController < ApplicationController
-    before_filter :find_product_and_coupon_and_affiliate, only: [:create]
+    include Payola::AffiliateBehavior
+
+    before_filter :find_product_and_coupon, only: [:create]
 
     def show
       sale = Sale.find_by!(guid: params[:guid])
@@ -34,10 +36,9 @@ module Payola
     end
 
     private
-    def find_product_and_coupon_and_affiliate
+    def find_product_and_coupon
       find_product
       find_coupon
-      find_affiliate
     end
 
     def find_product
@@ -56,14 +57,6 @@ module Payola
         @price = @product.price * (1 - @coupon.percent_off / 100.0)
       else
         @price = @product.price
-      end
-    end
-
-    def find_affiliate
-      affiliate_code = cookies[:aff] || params[:aff]
-      @affiliate = Affiliate.where('lower(code) = lower(?)', affiliate_code).first
-      if @affiliate
-        cookies[:aff] = affiliate_code
       end
     end
 
