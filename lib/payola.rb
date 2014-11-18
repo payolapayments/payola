@@ -17,6 +17,7 @@ module Payola
       :charge_verifier,
       :default_currency,
       :additional_charge_attributes,
+      :guid_generator,
       :pdf_receipt
 
     def configure(&block)
@@ -74,6 +75,7 @@ module Payola
       self.subscribables = {}
       self.additional_charge_attributes = lambda { |sale, customer| { } }
       self.pdf_receipt = false
+      self.guid_generator = lambda { SecureRandom.random_number(1_000_000_000).to_s(32) }
     end
 
     def register_sellable(klass)

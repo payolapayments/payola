@@ -12,7 +12,7 @@ module Payola
     def populate_guid
       if new_record?
         while !valid? || self.guid.nil?
-          self.guid = SecureRandom.random_number(1_000_000_000).to_s(32)
+          self.guid = Payola.guid_generator.call
         end
       end
     end
