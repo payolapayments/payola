@@ -12,3 +12,4 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
+gem 'simplecov', :require => false, :group => :test

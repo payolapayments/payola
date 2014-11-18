@@ -1,3 +1,12 @@
+require 'simplecov'
+if ENV['CIRCLE_ARTIFACTS']
+
+  dir = File.join("..", "..", "..", ENV['CIRCLE_ARTIFACTS'], "coverage")
+  SimpleCov.coverage_dir(dir)
+end
+SimpleCov.start 'rails'
+
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../dummy/config/environment", __FILE__)
