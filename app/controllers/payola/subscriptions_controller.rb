@@ -25,25 +25,17 @@ module Payola
     end
 
     def change_plan
-      subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::ChangeSubscriptionPlan.call(subscription, @plan)
+      @subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::ChangeSubscriptionPlan.call(@subscription, @plan)
 
-      if subscription.valid?
-        redirect_to confirm_subscription_path(subscription), notice: "Subscription plan updated"
-      else
-        redirect_to confirm_subscription_path(subscription), alert: subscription.errors.full_messages.to_sentence
-      end
+      confirm_with_message("Subscription plan updated")
     end
 
     def update_card
-      subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::UpdateCard.call(subscription, params[:stripeToken])
+      @subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::UpdateCard.call(@subscription, params[:stripeToken])
 
-      if subscription.valid?
-        redirect_to confirm_subscription_path(subscription), notice: "Card updated"
-      else
-        redirect_to confirm_subscription_path(subscription), alert: subscription.errors.full_messages.to_sentence
-      end
+      confirm_with_message("Card updated")
     end
 
     private
@@ -74,5 +66,14 @@ module Payola
         ) and return unless self.payola_can_modify_subscription?(subscription)
       end
     end
+
+    def confirm_with_message(message)
+      if @subscription.valid?
+        redirect_to confirm_subscription_path(@subscription), notice: message
+      else
+        redirect_to confirm_subscription_path(@subscription), alert: @subscription.errors.full_messages.to_sentence
+      end
+    end
+
   end
 end
