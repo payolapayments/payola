@@ -16,7 +16,17 @@ module Payola
         stripe_sub = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key).subscriptions.retrieve(invoice.subscription, secret_key)
         subscription.sync_with!(stripe_sub)
 
-        sale = Payola::Sale.new do |s|
+        sale = create_sale(subscription, invoice)
+
+        charge = Stripe::Charge.retrieve(invoice.charge, secret_key)
+
+        update_sale_with_charge(sale, charge)
+
+        return sale, charge
+      end
+
+      def create_sale(subscription, invoice)
+        Payola::Sale.new do |s|
           s.email = subscription.email
           s.state = 'processing'
           s.owner = subscription
@@ -25,9 +35,9 @@ module Payola
           s.amount = invoice.total
           s.currency = invoice.currency
         end
+      end
 
-        charge = Stripe::Charge.retrieve(invoice.charge, secret_key)
-
+      def update_sale_with_charge(sale, charge)
         sale.stripe_id  = charge.id
         sale.card_type  = charge.card.respond_to?(:brand) ? charge.card.brand : charge.card.type
         sale.card_last4 = charge.card.last4
@@ -38,9 +48,8 @@ module Payola
           balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction, secret_key)
           sale.fee_amount = balance.fee
         end
-
-        return sale, charge
       end
     end
+
   end
 end
