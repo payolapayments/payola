@@ -17,19 +17,6 @@ module Payola
       create_object(Sale, CreateSale, ProcessSale)
     end
 
-
-    def object_class
-      Sale
-    end
-
-    def object_creator_class
-      CreateSale
-    end
-
-    def object_processor_class
-      ProcessSale
-    end
-
     private
     def find_product_and_coupon
       find_product
