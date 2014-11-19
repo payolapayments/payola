@@ -411,6 +411,10 @@ You can upgrade and downgrade subscriptions by POSTing to `payola.change_subscri
 
 You can pass a coupon code to Payola by adding a `data-stripe="coupon"` input to your form. The coupon code will be passed directly to Stripe and attached to the subscription.
 
+## Upgrade to Pro
+
+I also sell **Payola Pro**, a collection of add-ons to Payola that enables things like drop-in Mailchimp and Mixpanel integration, as well as Stripe Connect support. It also comes with priority support and a lawyer-friendly commercial license. You can see all of the details on the [Payola Pro homepage](https://www.payola.io/pro).
+
 ## TODO
 
 * Multiple subscriptions per customer
