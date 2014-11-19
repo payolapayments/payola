@@ -93,4 +93,18 @@ module Payola
       end
     end
   end
+
+  describe Worker::BaseWorker do
+
+    class SomeTestService
+      def self.call; end
+    end
+    
+    describe "#perform" do
+      it "should call the given service" do
+        expect(SomeTestService).to receive(:call)
+        Payola::Worker::BaseWorker.new.perform('Payola::SomeTestService')
+      end
+    end
+  end
 end
