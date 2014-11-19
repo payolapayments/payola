@@ -34,14 +34,14 @@ var PayolaPaymentForm = {
                 type: "POST",
                 url: base_path + "/buy/" + product + "/" + permalink,
                 data: data_form.serialize(),
-                success: function(data) { PayolaPaymentForm.poll(form, 60, data.guid, base_path) },
-                error: function(data) { PayolaPaymentForm.showError(form, data.responseJSON.error) }
+                success: function(data) { PayolaPaymentForm.poll(form, 60, data.guid, base_path); },
+                error: function(data) { PayolaPaymentForm.showError(form, data.responseJSON.error); }
             });
         }
     },
 
     poll: function(form, num_retries_left, guid, base_path) {
-        if (num_retries_left == 0) {
+        if (num_retries_left === 0) {
             PayolaPaymentForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
         }
         $.get(base_path + '/status/' + guid, function(data) {
@@ -52,7 +52,7 @@ var PayolaPaymentForm = {
             } else if (data.status === "errored") {
                 PayolaPaymentForm.showError(form, data.error);
             } else {
-                setTimeout(function() { PayolaPaymentForm.poll(form, num_retries_left - 1, guid, base_path) }, 500);
+                setTimeout(function() { PayolaPaymentForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
         });
     },
