@@ -4,6 +4,16 @@ require 'stripe_event'
 require 'jquery-rails'
 
 module Payola
+
+  DEFAULT_EMAILS = {
+    receipt:       [ 'payola.sale.finished', 'Payola::ReceiptMailer', :receipt ],
+    refund:        [ 'charge.refunded',      'Payola::ReceiptMailer', :refund  ],
+    admin_receipt: [ 'payola.sale.finished', 'Payola::AdminMailer',   :receipt ],
+    admin_dispute: [ 'dispute.created',      'Payola::AdminMailer',   :dispute ],
+    admin_refund:  [ 'payola.sale.refunded', 'Payola::AdminMailer',   :refund  ],
+    admin_failure: [ 'payola.sale.failed',   'Payola::AdminMailer',   :failure ],
+  }
+
   class << self
     attr_accessor :publishable_key,
       :publishable_key_retriever,
@@ -87,20 +97,10 @@ module Payola
     end
 
     def send_email_for(*emails)
-      possible_emails = {
-        receipt:       [ 'payola.sale.finished', Payola::ReceiptMailer, :receipt ],
-        refund:        [ 'charge.refunded',      Payola::ReceiptMailer, :refund  ],
-        admin_receipt: [ 'payola.sale.finished', Payola::AdminMailer,   :receipt ],
-        admin_dispute: [ 'dispute.created',      Payola::AdminMailer,   :dispute ],
-        admin_refund:  [ 'payola.sale.refunded', Payola::AdminMailer,   :refund  ],
-        admin_failure: [ 'payola.sale.failed',   Payola::AdminMailer,   :failure ],
-      }
-
       emails.each do |email|
-        spec = possible_emails[email].dup
+        spec = DEFAULT_EMAILS[email].dup
         if spec
           Payola.subscribe(spec.shift) do |sale|
-
             if sale.is_a?(Stripe::Event)
               sale = Payola::Sale.find_by!(stripe_id: sale.data.object.id)
             end
