@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 module Payola
+  class FakeWorker
+    def self.can_run?
+      false
+    end
+  end
+
   describe "#configure" do
     it "should pass the class back to the given block" do
       Payola.configure do |payola|
@@ -42,7 +48,6 @@ module Payola
     before do
       Payola.reset!
 
-      class FakeWorker; end
       Payola::Worker.registry ||= {}
       Payola::Worker.registry[:fake] = FakeWorker
     end
@@ -88,7 +93,6 @@ module Payola
     before do
       Payola.reset!
 
-      class FakeWorker; end
       Payola::Worker.registry ||= {}
       Payola::Worker.registry[:fake] = FakeWorker
       Payola.background_worker = :fake
