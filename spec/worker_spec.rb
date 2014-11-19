@@ -8,6 +8,29 @@ module Payola
     end
   end
 
+  describe Worker do
+    describe "#autofind" do
+      it "should return ActiveJob if available" do
+        expect(Payola::Worker::ActiveJob).to receive(:can_run?).and_return(true)
+        expect(Payola::Worker.autofind).to eq Payola::Worker::ActiveJob
+      end
+      it "should return something else if available" do
+        expect(Payola::Worker::ActiveJob).to receive(:can_run?).and_return(false)
+        expect(Payola::Worker::Sidekiq).to receive(:can_run?).and_return(false)
+        expect(Payola::Worker::SuckerPunch).to receive(:can_run?).and_return(true)
+        expect(Payola::Worker.autofind).to eq Payola::Worker::SuckerPunch
+      end
+
+      it "should raise if nothing available" do
+        expect(Payola::Worker::ActiveJob).to receive(:can_run?).and_return(false).at_least(1)
+        expect(Payola::Worker::Sidekiq).to receive(:can_run?).and_return(false)
+        expect(Payola::Worker::SuckerPunch).to receive(:can_run?).and_return(false)
+
+        expect { Payola::Worker.autofind }.to raise_error("No eligable background worker systems found.")
+      end
+    end
+  end
+
   describe Worker::Sidekiq do
     before do
       module ::Sidekiq
