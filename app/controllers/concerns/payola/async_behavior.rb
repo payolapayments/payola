@@ -16,9 +16,9 @@ module Payola
       render json: {guid: object.guid, status: object.state, error: object.error}
     end
 
-    def create_object(object_class, object_creator_class, object_processor_class)
+    def create_object(object_class, object_creator_class, object_processor_class, product_key, product)
       create_params = params.permit!.merge(
-        plan: @plan,
+        product_key => product,
         coupon: @coupon,
         affiliate: @affiliate
       )

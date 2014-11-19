@@ -14,7 +14,7 @@ module Payola
     end
 
     def create
-      create_object(Sale, CreateSale, ProcessSale)
+      create_object(Sale, CreateSale, ProcessSale, :product, @product)
     end
 
     private

@@ -13,7 +13,16 @@ module Payola
         subscription.should_receive(:save).and_return(true)
         subscription.should_receive(:guid).at_least(1).times.and_return(1)
 
-        CreateSubscription.should_receive(:call).and_return(subscription)
+        CreateSubscription.should_receive(:call).with(
+          'plan_class' => 'subscription_plan',
+          'plan_id' => @plan.id.to_s,
+          'controller' => 'payola/subscriptions',
+          'action' => 'create',
+          'plan' => @plan,
+          'coupon' => nil,
+          'affiliate' => nil          
+        ).and_return(subscription)
+
         Payola.should_receive(:queue!)
         post :create, plan_class: @plan.plan_class, plan_id: @plan.id, use_route: :payola
 

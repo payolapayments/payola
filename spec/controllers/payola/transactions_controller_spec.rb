@@ -13,7 +13,16 @@ module Payola
         sale.should_receive(:save).and_return(true)
         sale.should_receive(:guid).at_least(1).times.and_return('blah')
 
-        CreateSale.should_receive(:call).and_return(sale)
+        CreateSale.should_receive(:call).with(
+          'product_class' => 'product',
+          'permalink' => @product.permalink,
+          'controller' => 'payola/transactions',
+          'action' => 'create',
+          'product' => @product,
+          'coupon' => nil,
+          'affiliate' => nil
+        ).and_return(sale)
+
         Payola.should_receive(:queue!)
         post :create, product_class: @product.product_class, permalink: @product.permalink, use_route: :payola
 
