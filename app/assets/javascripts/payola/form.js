@@ -42,7 +42,7 @@ var PayolaPaymentForm = {
 
     poll: function(form, num_retries_left, guid, base_path) {
         if (num_retries_left == 0) {
-            PayolaPaymentForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid)
+            PayolaPaymentForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
         }
         $.get(base_path + '/status/' + guid, function(data) {
             if (data.status === "finished") {
@@ -68,4 +68,4 @@ var PayolaPaymentForm = {
     }
 };
 
-$(function() { PayolaPaymentForm.initialize() } );
+$(function() { PayolaPaymentForm.initialize(); } );

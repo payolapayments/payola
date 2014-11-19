@@ -7,13 +7,13 @@ var PayolaCheckout = {
     },
 
     handleCheckoutButtonClick: function(button) {
-        form = button.parent('form');
-        options = form.data();
+        var form = button.parent('form');
+        var options = form.data();
 
         var handler = StripeCheckout.configure({
             key: options.publishable_key,
             image: options.product_image_path,
-            token: function(token) { PayolaCheckout.tokenHandler(token, options) },
+            token: function(token) { PayolaCheckout.tokenHandler(token, options); },
             name: options.name,
             description: options.description,
             amount: options.price,
@@ -45,8 +45,8 @@ var PayolaCheckout = {
             type: "POST",
             url: options.base_path + "/buy/" + options.product_class + "/" + options.product_permalink,
             data: form.serialize(),
-            success: function(data) { PayolaCheckout.poll(data.guid, 60, options) },
-            error: function(data) { PayolaCheckout.showError(data.responseJSON.error, options) }
+            success: function(data) { PayolaCheckout.poll(data.guid, 60, options); },
+            error: function(data) { PayolaCheckout.showError(data.responseJSON.error, options); }
         });
     },
 
@@ -60,7 +60,7 @@ var PayolaCheckout = {
     },
 
     poll: function(guid, num_retries_left, options) {
-        if (num_retries_left == 0) {
+        if (num_retries_left === 0) {
             PayolaCheckout.showError("This seems to be taking too long. Please contact support and give them transaction ID: " + guid, options);
             return;
         }
@@ -71,9 +71,9 @@ var PayolaCheckout = {
             } else if (data.status === "errored") {
                 PayolaCheckout.showError(data.error, options);
             } else {
-                setTimeout(function() { PayolaCheckout.poll(guid, num_retries_left - 1, options) }, 500);
+                setTimeout(function() { PayolaCheckout.poll(guid, num_retries_left - 1, options); }, 500);
             }
         });
     }
-}
-PayolaCheckout.initialize();
+};
+$(function() { PayolaCheckout.initialize(); });

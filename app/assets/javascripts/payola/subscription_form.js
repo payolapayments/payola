@@ -35,15 +35,15 @@ var PayolaSubscriptionForm = {
                 type: "POST",
                 url: base_path + "/subscribe/" + plan_type + "/" + plan_id,
                 data: data_form.serialize(),
-                success: function(data) { PayolaSubscriptionForm.poll(form, 60, data.guid, base_path) },
-                error: function(data) { PayolaSubscriptionForm.showError(form, data.responseJSON.error) }
+                success: function(data) { PayolaSubscriptionForm.poll(form, 60, data.guid, base_path); },
+                error: function(data) { PayolaSubscriptionForm.showError(form, data.responseJSON.error); }
             });
         }
     },
 
     poll: function(form, num_retries_left, guid, base_path) {
-        if (num_retries_left == 0) {
-            PayolaSubscriptionForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid)
+        if (num_retries_left === 0) {
+            PayolaSubscriptionForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
         }
         $.get(base_path + '/subscription_status/' + guid, function(data) {
             if (data.status === "active") {
@@ -53,7 +53,7 @@ var PayolaSubscriptionForm = {
             } else if (data.status === "errored") {
                 PayolaSubscriptionForm.showError(form, data.error);
             } else {
-                setTimeout(function() { PayolaSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path) }, 500);
+                setTimeout(function() { PayolaSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
         });
     },
@@ -71,4 +71,4 @@ var PayolaSubscriptionForm = {
     }
 };
 
-$(function() { PayolaSubscriptionForm.initialize() } );
+$(function() { PayolaSubscriptionForm.initialize(); } );
