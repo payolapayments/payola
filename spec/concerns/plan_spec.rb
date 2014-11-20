@@ -18,11 +18,6 @@ module Payola
       expect(subscription_plan.valid?).to be false
     end
 
-    it "should validate interval_count" do
-      subscription_plan = build(:subscription_plan, interval_count: nil)
-      expect(subscription_plan.valid?).to be false
-    end
-
     it "should validate stripe_id" do
       subscription_plan = build(:subscription_plan, stripe_id: nil)
       expect(subscription_plan.valid?).to be false

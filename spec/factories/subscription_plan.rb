@@ -6,4 +6,11 @@ FactoryGirl.define do
     interval "month"
     interval_count 1
   end
+
+  factory :subscription_plan_without_interval_count do
+    sequence(:name) { |n| "Foo #{n}" }
+    sequence(:stripe_id) { |n| "foo-#{n}" }
+    amount 100
+    interval "month"
+  end
 end

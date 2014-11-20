@@ -328,15 +328,15 @@ end
 
 A plan model requires a few attributes:
 
-* `amount`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
-* `interval`, (attribute) one of `'day'`,`'week'`,`'month'`, or `'year'`
-* `interval_count`, (attribute) the number of intervals between each
-  subscription
-* `stripe_id`, (attribute) a unique identifier used at Stripe to
+* `amount:integer`, (attribute) an amount in the format that Stripe expects. For USD this is cents.
+* `interval:string`, (attribute) one of `'day'`,`'week'`,`'month'`, or `'year'`
+* `stripe_id:string`, (attribute) a unique identifier used at Stripe to
   identify this plan
-* `name`, (attribute) a name describing this plan that will appear on
+* `name:string`, (attribute) a name describing this plan that will appear on
   customer invoices
-* `trial_period_days`, (attribute) *optional* the number of days for
+* `interval_count:integer`, (attribute) *optional* the number of intervals between each
+  subscription
+* `trial_period_days:integer`, (attribute) *optional* the number of days for
   the trial period on this plan
 
 ### Forms

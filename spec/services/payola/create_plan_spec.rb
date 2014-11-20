@@ -18,6 +18,15 @@ module Payola
         expect(plan.currency).to eq 'usd'
         expect(plan.trial_period_days).to eq @subscription_plan.trial_period_days
       end
+
+      it "should default interval_count" do
+        our_plan = create(:subscription_plan_without_interval_count)
+
+        expect(our_plan.respond_to?(:interval_count)).to eq false
+
+        plan = Stripe::Plan.retrieve(our_plan.stripe_id)
+        expect(plan.interval_count).to be_nil
+      end
     end
 
   end

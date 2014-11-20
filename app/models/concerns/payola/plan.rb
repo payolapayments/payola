@@ -7,7 +7,6 @@ module Payola
     included do
       validates_presence_of :amount
       validates_presence_of :interval
-      validates_presence_of :interval_count
       validates_presence_of :stripe_id
       validates_presence_of :name
 
