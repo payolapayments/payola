@@ -17,7 +17,6 @@ var PayolaSubscriptionForm = {
     stripeResponseHandler: function(form, status, response) {
         if (response.error) {
             PayolaSubscriptionForm.showError(form, response.error.message);
-            $(':submit').prop('disabled', false);
         } else {
             var email = form.find("[data-payola='email']").val();
             var coupon = form.find("[data-payola='coupon']").val();
@@ -60,6 +59,7 @@ var PayolaSubscriptionForm = {
 
     showError: function(form, message) {
         $('.payola-spinner').hide();
+        $(':submit').prop('disabled', false);
         var error_selector = form.data('payola-error-selector');
         if (error_selector) {
             $(error_selector).text(message);
@@ -71,4 +71,4 @@ var PayolaSubscriptionForm = {
     }
 };
 
-$(function() { PayolaSubscriptionForm.initialize(); } );
+$(function() { PayolaSubscriptionForm.initialize() } );

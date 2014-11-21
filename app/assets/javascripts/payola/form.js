@@ -17,7 +17,6 @@ var PayolaPaymentForm = {
     stripeResponseHandler: function(form, status, response) {
         if (response.error) {
             PayolaPaymentForm.showError(form, response.error.message);
-            form.find(':submit').prop('disabled', false);
         } else {
             var email = form.find("[data-payola='email']").val();
 
@@ -59,6 +58,7 @@ var PayolaPaymentForm = {
 
     showError: function(form, message) {
         $('.payola-spinner').hide();
+        form.find(':submit').prop('disabled', false);
         var error_selector = form.data('payola-error-selector');
         if (error_selector) {
             $(error_selector).text(message);
