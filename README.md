@@ -61,7 +61,7 @@ Please see the LICENSE file for licensing details.
 2. Make your changes, including tests that exercise the code
 3. Make a pull request
 
-Version announcements happen on the [Payola Payments Google group](https://groups.google.com/forum/#!forum/payola-payments).
+Version announcements happen on the [Payola Payments Google group](https://groups.google.com/forum/#!forum/payola-payments) and [@payolapayments](https://twitter.com/payolapayments).
 
 ## Author
 
