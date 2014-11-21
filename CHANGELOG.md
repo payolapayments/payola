@@ -1,5 +1,15 @@
 # Payola Changelog
 
+* v1.2.1 - 2014-11-20
+  - Make guid generator overrideable
+  - Bumped minimum version of AASM to 4.0
+  - Fixed a bug with the auto emails not working for webhook events
+  - Code cleanup
+  - Test coverage improvements
+
+* v1.2.0 - 2014-11-17
+  - Subscriptions
+
 * v1.1.4 - 2014-11-07
   - Pass the created customer to `additional_charge_attributes`
   - Add Payola Pro license
