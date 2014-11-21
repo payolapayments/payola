@@ -253,6 +253,16 @@ To customize the content of the emails, copy the appropriate views ([receipt](ap
 
 You can include a PDF with your receipt by setting the `include_pdf_receipt` option to `true`. This will send the `receipt_pdf.html` template to [Docverter](http://www.docverter.com) for conversion to PDF. See the [Docverter README](https://github.com/docverter/docverter) for installation instructions if you would like to run your own instance.
 
+### GUID Generator
+
+You can override the GUID generator that Payola uses. By default it generates a large random number and encodes it in Base32.
+
+```ruby
+Payola.configure do |config|
+  config.guid_generator = lambda { SecureRandom.hex(20) }
+end
+```
+
 ## Custom Forms
 
 Payola's custom form support is basic but functional. Setting up a custom form has two steps. First, include the `stripe_header` partial in your layout's `<head>` tag:
