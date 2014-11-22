@@ -11,6 +11,7 @@ module Payola
         s.affiliate_id = affiliate.try(:id)
         s.currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
         s.coupon = params[:coupon]
+        s.setup_fee = params[:setup_fee]
         #s.signed_custom_fields = params[:signed_custom_fields]
 
         s.amount = plan.amount
