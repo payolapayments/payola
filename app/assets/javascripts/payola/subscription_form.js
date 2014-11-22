@@ -29,7 +29,7 @@ var PayolaSubscriptionForm = {
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
             data_form.append($('<input type="hidden" name="coupon">').val(coupon));
-            data_form.append(form.find('input[name="authenticity_token"]'));
+            data_form.append(PayolaSubscriptionForm.authenticityTokenInput());
             $.ajax({
                 type: "POST",
                 url: base_path + "/subscribe/" + plan_type + "/" + plan_id,
@@ -47,7 +47,7 @@ var PayolaSubscriptionForm = {
         $.get(base_path + '/subscription_status/' + guid, function(data) {
             if (data.status === "active") {
                 form.append($('<input type="hidden" name="payola_subscription_guid"></input>').val(guid));
-                form.append($('<input type="hidden" name="authenticity_token"></input>').val($('meta[name="csrf-token"]').attr("content")));
+                form.append(PayolaSubscriptionForm.authenticityTokenInput());
                 form.get(0).submit();
             } else if (data.status === "errored") {
                 PayolaSubscriptionForm.showError(form, data.error);
@@ -68,6 +68,10 @@ var PayolaSubscriptionForm = {
             form.find('.payola-payment-error').text(message);
             form.find('.payola-payment-error').show();
         }
+    },
+
+    authenticityTokenInput: function() {
+        return $('<input type="hidden" name="authenticity_token"></input>').val($('meta[name="csrf-token"]').attr("content"));
     }
 };
 
