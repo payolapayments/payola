@@ -36,7 +36,7 @@ $ rake db:migrate
 
 [One-time payments](https://github.com/peterkeen/payola/wiki/One-time-payments)
 
-[Configuration options](https://github.com/peterkeen/payola/wiki/Configuration)
+[Configuration options](https://github.com/peterkeen/payola/wiki/Configuration-options)
 
 [Subscriptions](https://github.com/peterkeen/payola/wiki/Subscriptions)
 
