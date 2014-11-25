@@ -33,33 +33,6 @@ module Payola
 
         expect(sale.affiliate).to eq affiliate
       end
-
-      #describe "with coupon" do
-        #it "should include the coupon" do
-          #coupon = create(:payola_coupon)
-
-          #sale = CreateSubscription.call(
-            #email: 'pete@bugsplat.info',
-            #stripeToken: 'test_tok',
-            #product: @plan,
-            #coupon: coupon
-          #)
-
-          #expect(sale.coupon).to eq coupon
-        #end
-        #it "should set the price correctly" do
-          #coupon = create(:payola_coupon)
-
-          #sale = CreateSubscription.call(
-            #email: 'pete@bugsplat.info',
-            #stripeToken: 'test_tok',
-            #product: @plan,
-            #coupon: coupon
-          #)
-
-          #expect(sale.amount).to eq 99
-        #end
-      #end
     end
   end
 end
