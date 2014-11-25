@@ -12,6 +12,7 @@ module Payola
         s.currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
         s.coupon = params[:coupon]
         s.signed_custom_fields = params[:signed_custom_fields]
+        s.setup_fee = params[:setup_fee]
 
         s.owner = owner
         s.amount = plan.amount

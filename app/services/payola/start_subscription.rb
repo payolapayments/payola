@@ -13,6 +13,7 @@ module Payola
           plan:  subscription.plan.stripe_id,
         }
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?
+        create_params[:account_balance] = subscription.setup_fee if subscription.setup_fee.present?
 
         customer = Stripe::Customer.create(create_params, secret_key)
 
@@ -38,4 +39,3 @@ module Payola
 
   end
 end
-
