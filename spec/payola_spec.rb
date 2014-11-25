@@ -1,12 +1,6 @@
 require 'spec_helper'
 
 module Payola
-  class FakeWorker
-    def self.can_run?
-      false
-    end
-  end
-
   describe "#configure" do
     it "should pass the class back to the given block" do
       Payola.configure do |payola|

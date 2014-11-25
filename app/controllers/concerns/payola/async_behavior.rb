@@ -12,8 +12,7 @@ module Payola
 
     def object_status(object_class)
       object = object_class.find_by(guid: params[:guid])
-      render nothing: true, status: 404 and return unless object
-      render json: {guid: object.guid, status: object.state, error: object.error}
+      render_payola_status(object)
     end
 
     def create_object(object_class, object_creator_class, object_processor_class, product_key, product)
@@ -27,10 +26,9 @@ module Payola
 
       if object.save
         Payola.queue!(object_processor_class, object.guid)
-        render json: { guid: object.guid }
-      else
-        render json: { error: object.errors.full_messages.join(". ") }, status: 400
       end
+
+      render_payola_status(object)
     end
   end
 end

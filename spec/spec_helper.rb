@@ -84,3 +84,14 @@ RSpec.configure do |config|
     StripeMock.stop
   end
 end
+
+module Payola
+  class FakeWorker
+    def self.can_run?
+      false
+    end
+
+    def self.call(*args)
+    end
+  end
+end

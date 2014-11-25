@@ -25,15 +25,14 @@ var PayolaSubscriptionForm = {
             var plan_type = form.data('payola-plan-type');
             var plan_id = form.data('payola-plan-id');
 
-            var data_form = $('<form></form>');
-            data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
-            data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
-            data_form.append($('<input type="hidden" name="coupon">').val(coupon));
-            data_form.append(PayolaSubscriptionForm.authenticityTokenInput());
+            form.append($('<input type="hidden" name="stripeToken">').val(response.id));
+            form.append($('<input type="hidden" name="stripeEmail">').val(email));
+            form.append($('<input type="hidden" name="coupon">').val(coupon));
+            form.append(PayolaSubscriptionForm.authenticityTokenInput());
             $.ajax({
                 type: "POST",
-                url: base_path + "/subscribe/" + plan_type + "/" + plan_id,
-                data: data_form.serialize(),
+                url: form.action,
+                data: form.serialize(),
                 success: function(data) { PayolaSubscriptionForm.poll(form, 60, data.guid, base_path); },
                 error: function(data) { PayolaSubscriptionForm.showError(form, data.responseJSON.error); }
             });
@@ -46,9 +45,7 @@ var PayolaSubscriptionForm = {
         }
         $.get(base_path + '/subscription_status/' + guid, function(data) {
             if (data.status === "active") {
-                form.append($('<input type="hidden" name="payola_subscription_guid"></input>').val(guid));
-                form.append(PayolaSubscriptionForm.authenticityTokenInput());
-                form.get(0).submit();
+                window.location = base_path + '/confirm_subscription/' + guid;
             } else if (data.status === "errored") {
                 PayolaSubscriptionForm.showError(form, data.error);
             } else {

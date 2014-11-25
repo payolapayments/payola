@@ -1,6 +1,7 @@
 module Payola
   class TransactionsController < ApplicationController
     include Payola::AffiliateBehavior
+    include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
     before_filter :find_product_and_coupon, only: [:create]

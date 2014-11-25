@@ -1,6 +1,7 @@
 module Payola
   class SubscriptionsController < ApplicationController
     include Payola::AffiliateBehavior
+    include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
     before_filter :find_plan_and_coupon, only: [:create, :change_plan]

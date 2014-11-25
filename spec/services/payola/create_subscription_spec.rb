@@ -4,6 +4,7 @@ module Payola
   describe CreateSubscription do
     before do
       @plan = create(:subscription_plan)
+      Payola.background_worker = Payola::FakeWorker
     end
 
     describe "#call" do

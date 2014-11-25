@@ -12,6 +12,11 @@ module Payola
         subscription = double
         subscription.should_receive(:save).and_return(true)
         subscription.should_receive(:guid).at_least(1).times.and_return(1)
+        subscription.should_receive(:error).and_return(nil)
+        errors = double
+        errors.should_receive(:full_messages).and_return([])
+        subscription.should_receive(:errors).and_return(errors)
+        subscription.should_receive(:state).and_return('pending')
 
         CreateSubscription.should_receive(:call).with(
           'plan_class' => 'subscription_plan',
@@ -38,6 +43,10 @@ module Payola
           error = double
           error.should_receive(:full_messages).and_return(['done did broke'])
           subscription.should_receive(:errors).and_return(error)
+          subscription.should_receive(:state).and_return('errored')
+          subscription.should_receive(:error).and_return('')
+          subscription.should_receive(:guid).and_return('blah')
+
 
           CreateSubscription.should_receive(:call).and_return(subscription)
           Payola.should_not_receive(:queue!)
