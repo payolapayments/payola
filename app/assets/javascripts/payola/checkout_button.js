@@ -67,7 +67,7 @@ var PayolaCheckout = {
 
         $.get(options.base_path + "/status/" + guid, function(data) {
             if (data.status === "finished") {
-                window.location = options.base_path + "/confirm_subscription/" + guid;
+                window.location = options.base_path + "/confirm/" + guid;
             } else if (data.status === "errored") {
                 PayolaCheckout.showError(data.error, options);
             } else {
