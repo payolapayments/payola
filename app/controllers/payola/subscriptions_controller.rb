@@ -16,7 +16,7 @@ module Payola
     end
 
     def create
-      create_object(Subscription, CreateSubscription, ProcessSubscription, :plan, @plan)
+      create_object(Subscription, CreateSubscription, nil, :plan, @plan)
     end
 
     def destroy

@@ -24,7 +24,7 @@ module Payola
 
       object = object_creator_class.call(create_params)
 
-      if object.save
+      if object.save && object_processor_class.present?
         Payola.queue!(object_processor_class, object.guid)
       end
 
