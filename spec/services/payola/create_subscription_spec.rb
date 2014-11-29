@@ -8,7 +8,9 @@ module Payola
     end
 
     describe "#call" do
-      it "should create a sale" do
+      it "should create a subscription and queue the job" do
+        expect(Payola).to receive(:queue!)
+
         sale = CreateSubscription.call(
           stripeEmail: 'pete@bugsplat.info',
           stripeToken: 'test_tok',

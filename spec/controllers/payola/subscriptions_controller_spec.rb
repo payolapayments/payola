@@ -8,7 +8,7 @@ module Payola
     end
 
     describe '#create' do
-      it "should pass args to CreateSubscription and queue the job" do
+      it "should pass args to CreateSubscription" do
         subscription = double
         subscription.should_receive(:save).and_return(true)
         subscription.should_receive(:guid).at_least(1).times.and_return(1)
@@ -28,7 +28,6 @@ module Payola
           'affiliate' => nil          
         ).and_return(subscription)
 
-        Payola.should_receive(:queue!)
         post :create, plan_class: @plan.plan_class, plan_id: @plan.id, use_route: :payola
 
         expect(response.status).to eq 200
