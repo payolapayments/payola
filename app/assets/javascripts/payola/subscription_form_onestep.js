@@ -1,7 +1,7 @@
-var PayolaSubscriptionForm = {
+var PayolaOnestepSubscriptionForm = {
     initialize: function() {
-        $(document).on('submit', '.payola-subscription-form', function() {
-            return PayolaSubscriptionForm.handleSubmit($(this));
+        $(document).on('submit', '.payola-onestep-subscription-form', function() {
+            return PayolaOnestepSubscriptionForm.handleSubmit($(this));
         });
     },
 
@@ -9,14 +9,14 @@ var PayolaSubscriptionForm = {
         $(':submit').prop('disabled', true);
         $('.payola-spinner').show();
         Stripe.card.createToken(form, function(status, response) {
-            PayolaSubscriptionForm.stripeResponseHandler(form, status, response);
+            PayolaOnestepSubscriptionForm.stripeResponseHandler(form, status, response);
         });
         return false;
     },
 
     stripeResponseHandler: function(form, status, response) {
         if (response.error) {
-            PayolaSubscriptionForm.showError(form, response.error.message);
+            PayolaOnestepSubscriptionForm.showError(form, response.error.message);
         } else {
             var email = form.find("[data-payola='email']").val();
             var coupon = form.find("[data-payola='coupon']").val();
@@ -28,28 +28,28 @@ var PayolaSubscriptionForm = {
             form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             form.append($('<input type="hidden" name="stripeEmail">').val(email));
             form.append($('<input type="hidden" name="coupon">').val(coupon));
-            form.append(PayolaSubscriptionForm.authenticityTokenInput());
+            form.append(PayolaOnestepSubscriptionForm.authenticityTokenInput());
             $.ajax({
                 type: "POST",
                 url: form.action,
                 data: form.serialize(),
-                success: function(data) { PayolaSubscriptionForm.poll(form, 60, data.guid, base_path); },
-                error: function(data) { PayolaSubscriptionForm.showError(form, data.responseJSON.error); }
+                success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
+                error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
             });
         }
     },
 
     poll: function(form, num_retries_left, guid, base_path) {
         if (num_retries_left === 0) {
-            PayolaSubscriptionForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
+            PayolaOnestepSubscriptionForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
         }
         $.get(base_path + '/subscription_status/' + guid, function(data) {
             if (data.status === "active") {
                 window.location = base_path + '/confirm_subscription/' + guid;
             } else if (data.status === "errored") {
-                PayolaSubscriptionForm.showError(form, data.error);
+                PayolaOnestepSubscriptionForm.showError(form, data.error);
             } else {
-                setTimeout(function() { PayolaSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
+                setTimeout(function() { PayolaOnestepSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
         });
     },
@@ -72,4 +72,4 @@ var PayolaSubscriptionForm = {
     }
 };
 
-$(function() { PayolaSubscriptionForm.initialize() } );
+$(function() { PayolaOnestepSubscriptionForm.initialize() } );
