@@ -1,5 +1,9 @@
 # Payola Changelog
 
+* v1.2.2 - 2014-11-29
+  - Optionally invert subscription controller flow
+  - Fix the CSRF token behavior
+
 * v1.2.1 - 2014-11-20
   - Make guid generator overrideable
   - Bumped minimum version of AASM to 4.0
