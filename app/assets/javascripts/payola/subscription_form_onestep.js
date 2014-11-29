@@ -25,6 +25,8 @@ var PayolaOnestepSubscriptionForm = {
             var plan_type = form.data('payola-plan-type');
             var plan_id = form.data('payola-plan-id');
 
+            form.append($('<input type="hidden" name="plan_type">').val(plan_type));
+            form.append($('<input type="hidden" name="plan_id">').val(plan_id));
             form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             form.append($('<input type="hidden" name="stripeEmail">').val(email));
             form.append($('<input type="hidden" name="coupon">').val(coupon));
