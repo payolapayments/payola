@@ -55,6 +55,19 @@ module Payola
         expect(ii.amount).to eq 100
         expect(ii.description).to eq "Setup Fee"
       end
+
+      it "should allow the plan to override the setup fee description" do
+        plan = create(:subscription_plan)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user, setup_fee: 100)
+
+        expect(plan).to receive(:setup_fee_description).with(subscription).and_return('Random Mystery Fee')
+        StartSubscription.call(subscription)
+
+        ii = Stripe::InvoiceItem.all(customer: subscription.stripe_customer_id).first
+        expect(ii).to_not be_nil
+        expect(ii.amount).to eq 100
+        expect(ii.description).to eq 'Random Mystery Fee'        
+      end
     end
   end
 end
