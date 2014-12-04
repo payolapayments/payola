@@ -4,6 +4,8 @@ module Payola
   describe StartSubscription do
     let(:stripe_helper) { StripeMock.create_test_helper }
     let(:token){ StripeMock.generate_card_token({}) }
+    let(:user){ User.create }
+
     describe "#call" do
       it "should create a customer" do
         plan = create(:subscription_plan)
@@ -31,6 +33,28 @@ module Payola
         end
       end
 
+      it "should re-use an existing customer" do
+        plan = create(:subscription_plan)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user)
+        StartSubscription.call(subscription)
+        CancelSubscription.call(subscription)
+
+        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user)
+        StartSubscription.call(subscription2)
+        expect(subscription2.reload.stripe_customer_id).to_not be_nil
+        expect(subscription2.reload.stripe_customer_id).to eq subscription.reload.stripe_customer_id
+      end
+
+      it "should create an invoice item with a setup fee" do
+        plan = create(:subscription_plan)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user, setup_fee: 100)
+        StartSubscription.call(subscription)
+
+        ii = Stripe::InvoiceItem.all(customer: subscription.stripe_customer_id).first
+        expect(ii).to_not be_nil
+        expect(ii.amount).to eq 100
+        expect(ii.description).to eq "Setup Fee"
+      end
     end
   end
 end
