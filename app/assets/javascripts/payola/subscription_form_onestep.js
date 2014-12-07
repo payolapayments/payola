@@ -25,6 +25,8 @@ var PayolaOnestepSubscriptionForm = {
             var plan_type = form.data('payola-plan-type');
             var plan_id = form.data('payola-plan-id');
 
+            var action = $(form).attr('action');
+
             form.append($('<input type="hidden" name="plan_type">').val(plan_type));
             form.append($('<input type="hidden" name="plan_id">').val(plan_id));
             form.append($('<input type="hidden" name="stripeToken">').val(response.id));
@@ -33,7 +35,7 @@ var PayolaOnestepSubscriptionForm = {
             form.append(PayolaOnestepSubscriptionForm.authenticityTokenInput());
             $.ajax({
                 type: "POST",
-                url: form.action,
+                url: action,
                 data: form.serialize(),
                 success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
                 error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
