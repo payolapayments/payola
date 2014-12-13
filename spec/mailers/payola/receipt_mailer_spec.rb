@@ -1,18 +1,23 @@
 require 'spec_helper'
+require 'docverter'
 
 module Payola
   describe ReceiptMailer do
     let(:sale) { create(:sale) }
 
+    before do
+      Payola.pdf_receipt = false
+    end
+
     describe '#receipt' do
       it 'should send a receipt' do
-        Payola.pdf_receipt = false
         mail = Payola::ReceiptMailer.receipt(sale.guid)
         expect(mail.subject).to eq 'Purchase Receipt'
       end
 
       it 'should send a receipt with a pdf' do
         Payola.pdf_receipt = true
+        expect(Docverter::Conversion).to receive(:run).and_return('pdf')
         mail = Payola::ReceiptMailer.receipt(sale.guid)
         expect(mail.attachments["receipt-#{sale.guid}.pdf"]).to_not be nil
       end
