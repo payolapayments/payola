@@ -35,7 +35,7 @@ module Payola
     def find_coupon
       coupon_code = cookies[:cc] || params[:cc] || params[:coupon_code]
       @coupon = Coupon.where('lower(code) = lower(?)', coupon_code).first
-      if @coupon
+      if @coupon && @coupon.active?
         cookies[:cc] = coupon_code
         @price = @product.price * (1 - @coupon.percent_off / 100.0)
       else
