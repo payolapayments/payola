@@ -28,7 +28,7 @@ module Payola
           end
         end
 
-        raise "No eligable background worker systems found."
+        raise "No eligible background worker systems found."
       end
     end
 

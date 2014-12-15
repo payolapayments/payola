@@ -26,7 +26,7 @@ module Payola
         expect(Payola::Worker::Sidekiq).to receive(:can_run?).and_return(false)
         expect(Payola::Worker::SuckerPunch).to receive(:can_run?).and_return(false)
 
-        expect { Payola::Worker.autofind }.to raise_error("No eligable background worker systems found.")
+        expect { Payola::Worker.autofind }.to raise_error("No eligible background worker systems found.")
       end
     end
   end
