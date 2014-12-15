@@ -75,10 +75,10 @@ module Payola
       self.background_worker = nil
       self.event_filter = lambda { |event| event }
       self.charge_verifier = lambda { |event| true }
-      self.publishable_key = ENV['STRIPE_PUBLISHABLE_KEY']
-      self.secret_key = ENV['STRIPE_SECRET_KEY']
-      self.secret_key_retriever = lambda { |sale| Payola.secret_key }
-      self.publishable_key_retriever = lambda { |sale| Payola.publishable_key }
+      self.publishable_key = lambda { ENV['STRIPE_PUBLISHABLE_KEY'] }
+      self.secret_key = lambda { ENV['STRIPE_SECRET_KEY'] }
+      self.secret_key_retriever = lambda { |sale| Payola.secret_key.respond_to?(:call) ? Payola.secret_key.call() : Payola.secret_key  }
+      self.publishable_key_retriever = lambda { |sale| Payola.publishable_key.respond_to?(:call) ? Payola.publishable_key.call() : Payola.publishable_key }
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
