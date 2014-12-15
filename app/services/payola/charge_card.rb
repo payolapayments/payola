@@ -22,10 +22,14 @@ module Payola
     end
 
     def self.create_customer(sale, secret_key)
-      Stripe::Customer.create({
-        card: sale.stripe_token,
-        email: sale.email
-      }, secret_key)
+      if sale.stripe_customer_id.present?
+        Stripe::Customer.retrieve(sale.stripe_customer_id, secret_key)
+      else
+        Stripe::Customer.create({
+          card: sale.stripe_token,
+          email: sale.email
+        }, secret_key)
+      end
     end
 
     def self.create_charge(sale, customer, secret_key)

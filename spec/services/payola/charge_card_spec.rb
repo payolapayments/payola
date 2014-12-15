@@ -10,6 +10,15 @@ module Payola
         expect(sale.reload.stripe_customer_id).to_not be_nil
       end
 
+      it "should not create a customer if one already exists" do
+        customer = Stripe::Customer.create
+        sale = create(:sale, state: 'processing', stripe_customer_id: customer.id)
+        expect(Stripe::Customer).to receive(:retrieve).and_return(customer)
+        ChargeCard.call(sale)
+        expect(sale.reload.stripe_customer_id).to eq customer.id
+        expect(sale.state).to eq 'finished'
+      end
+
       it "should create a charge" do
         sale = create(:sale, state: 'processing', stripe_token: stripe_helper.generate_card_token)
         ChargeCard.call(sale)
