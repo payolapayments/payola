@@ -20,7 +20,7 @@ module Payola
 
     include AASM
 
-    attr_accessor :old_plan
+    attr_accessor :old_plan, :old_quantity
 
     aasm column: 'state', skip_validation_on_save: true do
       state :pending, initial: true
