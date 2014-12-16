@@ -20,6 +20,7 @@ var PayolaOnestepSubscriptionForm = {
         } else {
             var email = form.find("[data-payola='email']").val();
             var coupon = form.find("[data-payola='coupon']").val();
+            var quantity = form.find("[data-payola='quantity']").val();
 
             var base_path = form.data('payola-base-path');
             var plan_type = form.data('payola-plan-type');
@@ -32,6 +33,7 @@ var PayolaOnestepSubscriptionForm = {
             form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             form.append($('<input type="hidden" name="stripeEmail">').val(email));
             form.append($('<input type="hidden" name="coupon">').val(coupon));
+            form.append($('<input type="hidden" name="quantity">').val(quantity));
             form.append(PayolaOnestepSubscriptionForm.authenticityTokenInput());
             $.ajax({
                 type: "POST",
