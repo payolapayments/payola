@@ -20,7 +20,7 @@ module Payola
 
     include AASM
 
-    attr_accessor :old_plan
+    attr_accessor :old_plan, :old_quantity
 
     aasm column: 'state', skip_validation_on_save: true do
       state :pending, initial: true
@@ -114,6 +114,12 @@ module Payola
       self.old_plan = old_plan
       Payola.instrument(instrument_key('plan_changed'), self)
       Payola.instrument(instrument_key('plan_changed', false), self)
+    end
+
+    def instrument_quantity_changed(old_quantity)
+      self.old_quantity = old_quantity
+      Payola.instrument(instrument_key('quantity_changed'), self)
+      Payola.instrument(instrument_key('quantity_changed', false), self)
     end
 
     def redirector

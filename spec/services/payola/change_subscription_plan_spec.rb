@@ -23,7 +23,6 @@ module Payola
       end
 
       it "should change the plan on the payola subscription" do
-        Payola::ChangeSubscriptionPlan.call(@subscription, @plan2)
         expect(@subscription.reload.plan).to eq @plan2
       end
     end
