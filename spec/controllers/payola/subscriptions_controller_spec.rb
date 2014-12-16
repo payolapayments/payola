@@ -25,6 +25,7 @@ module Payola
           'action' => 'create',
           'plan' => @plan,
           'coupon' => nil,
+          'quantity' => 1,
           'affiliate' => nil          
         ).and_return(subscription)
 
@@ -94,7 +95,7 @@ module Payola
       end
       it "call Payola::CancelSubscription and redirect" do
         Payola::CancelSubscription.should_receive(:call)
-        delete :destroy, :guid => @subscription.guid, use_route: :payola
+        delete :destroy, guid: @subscription.guid, use_route: :payola
         # TODO : Figure out why this needs to be a hardcoded path.
         # Why doesn't subscription_path(@subscription) work?
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
@@ -104,7 +105,7 @@ module Payola
         expect(Payola::CancelSubscription).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
-        delete :destroy, :guid => @subscription.guid, use_route: :payola
+        delete :destroy, guid: @subscription.guid, use_route: :payola
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
@@ -125,11 +126,36 @@ module Payola
         expect(request.flash[:notice]).to eq 'Subscription plan updated'
       end
 
-      it "should redirect with an error if it can't cancel the subscription" do
-        expect(Payola::CancelSubscription).to_not receive(:call)
+      it "should redirect with an error if it can't update the subscription" do
+        expect(Payola::ChangeSubscriptionPlan).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
-        delete :destroy, :guid => @subscription.guid, use_route: :payola
+        post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id, use_route: :payola
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
+      end
+    end
+
+    describe '#change_quantity' do
+      before :each do
+        @subscription = create(:subscription, state: :active)
+        @plan = create(:subscription_plan)
+      end
+
+      it "should call Payola::ChangeSubscriptionQuantity and redirect" do
+        expect(Payola::ChangeSubscriptionQuantity).to receive(:call).with(@subscription, 5)
+
+        post :change_quantity, guid: @subscription.guid, quantity: 5, use_route: :payola
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:notice]).to eq 'Subscription quantity updated'
+      end
+
+      it "should redirect with an error if it can't update the subscription" do
+        expect(Payola::ChangeSubscriptionQuantity).to_not receive(:call)
+        expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
+
+        post :change_quantity, guid: @subscription.guid, quantity: 5, use_route: :payola
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
