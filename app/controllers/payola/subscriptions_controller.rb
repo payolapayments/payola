@@ -4,8 +4,8 @@ module Payola
     include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
-    before_filter :find_plan_and_coupon, only: [:create, :change_plan]
-    before_filter :check_modify_permissions, only: [:destroy, :change_plan, :update_card]
+    before_filter :find_plan_coupon_and_quantity, only: [:create, :change_plan]
+    before_filter :check_modify_permissions, only: [:destroy, :change_plan, :change_quantity, :update_card]
 
     def show
       show_object(Subscription)
@@ -32,6 +32,14 @@ module Payola
       confirm_with_message("Subscription plan updated")
     end
 
+    def change_quantity
+      find_quantity
+      @subscription = Subscription.find_by!(guid: params[:guid])
+      Payola::ChangeSubscriptionQuantity.call(@subscription, @quantity)
+
+      confirm_with_message("Subscription quantity updated")
+    end
+
     def update_card
       @subscription = Subscription.find_by!(guid: params[:guid])
       Payola::UpdateCard.call(@subscription, params[:stripeToken])
@@ -41,9 +49,10 @@ module Payola
 
     private
 
-    def find_plan_and_coupon
+    def find_plan_coupon_and_quantity
       find_plan
       find_coupon
+      find_quantity
     end
 
     def find_plan
@@ -56,6 +65,10 @@ module Payola
 
     def find_coupon
       @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
+    end
+
+    def find_quantity
+      @quantity = params[:quantity].blank? ? 1 : params[:quantity].to_i
     end
 
     def check_modify_permissions
