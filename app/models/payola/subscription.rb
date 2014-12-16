@@ -116,6 +116,12 @@ module Payola
       Payola.instrument(instrument_key('plan_changed', false), self)
     end
 
+    def instrument_quantity_changed(old_quantity)
+      self.old_quantity = old_quantity
+      Payola.instrument(instrument_key('quantity_changed'), self)
+      Payola.instrument(instrument_key('quantity_changed', false), self)
+    end
+
     def redirector
       plan
     end
