@@ -16,11 +16,20 @@ module Payola
     end
 
     def create_object(object_class, object_creator_class, object_processor_class, product_key, product)
-      create_params = params.permit!.merge(
-        product_key => product,
-        coupon: @coupon,
-        affiliate: @affiliate
-      )
+      create_params = if object_class == Subscription
+        params.permit!.merge(
+          product_key => product,
+          coupon: @coupon,
+          quantity: @quantity,
+          affiliate: @affiliate
+        )
+      else
+        params.permit!.merge(
+          product_key => product,
+          coupon: @coupon,
+          affiliate: @affiliate
+        )
+      end
 
       object = object_creator_class.call(create_params)
 
