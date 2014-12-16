@@ -13,6 +13,7 @@ module Payola
         s.coupon = params[:coupon]
         s.signed_custom_fields = params[:signed_custom_fields]
         s.setup_fee = params[:setup_fee]
+        s.quantity = params[:quantity]
 
         s.owner = owner
         s.amount = plan.amount
