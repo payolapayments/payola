@@ -30,7 +30,7 @@ var PayolaSubscriptionForm = {
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
             data_form.append($('<input type="hidden" name="coupon">').val(coupon));
-            form.append($('<input type="hidden" name="quantity">').val(quantity));
+            data_form.append($('<input type="hidden" name="quantity">').val(quantity));
             data_form.append(PayolaSubscriptionForm.authenticityTokenInput());
             $.ajax({
                 type: "POST",
