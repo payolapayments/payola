@@ -34,5 +34,14 @@ module Payola
       subscription_plan.save!
     end
 
+    it "should not try to create the plan at stripe before the model is updated" do
+      subscription_plan = build(:subscription_plan)
+      subscription_plan.save!
+      subscription_plan.name = "new name"
+
+      Payola::CreatePlan.should_not_receive(:call)
+      subscription_plan.save!
+    end
+
   end
 end
