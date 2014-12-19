@@ -65,7 +65,7 @@ var PayolaCheckout = {
             return;
         }
 
-        $.get(options.base_path + "/status/" + guid, function(data) {
+        var handler = function(data) {
             if (data.status === "finished") {
                 window.location = options.base_path + "/confirm/" + guid;
             } else if (data.status === "errored") {
@@ -73,6 +73,13 @@ var PayolaCheckout = {
             } else {
                 setTimeout(function() { PayolaCheckout.poll(guid, num_retries_left - 1, options); }, 500);
             }
+        };
+
+        $.ajax({
+            type: "GET",
+            url: options.base_path + "/status/" + guid,
+            success: handler,
+            error: handler
         });
     }
 };

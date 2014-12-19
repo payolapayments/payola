@@ -49,7 +49,7 @@ var PayolaOnestepSubscriptionForm = {
         if (num_retries_left === 0) {
             PayolaOnestepSubscriptionForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
         }
-        $.get(base_path + '/subscription_status/' + guid, function(data) {
+        var handler = function(data) {
             if (data.status === "active") {
                 window.location = base_path + '/confirm_subscription/' + guid;
             } else if (data.status === "errored") {
@@ -57,6 +57,13 @@ var PayolaOnestepSubscriptionForm = {
             } else {
                 setTimeout(function() { PayolaOnestepSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: base_path + '/subscription_status/' + guid,
+            success: handler,
+            error: handler
         });
     },
 
