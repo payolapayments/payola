@@ -2,6 +2,8 @@ require 'spec_helper'
 
 module Payola
   describe TransactionsController do
+    routes { Payola::Engine.routes }
+
     before do
       @product = create(:product)
       Payola.register_sellable(@product.class)
@@ -29,7 +31,7 @@ module Payola
         ).and_return(sale)
 
         Payola.should_receive(:queue!)
-        post :create, product_class: @product.product_class, permalink: @product.permalink, use_route: :payola
+        post :create, product_class: @product.product_class, permalink: @product.permalink
 
         expect(response.status).to eq 200
         parsed_body = JSON.load(response.body)
@@ -50,7 +52,7 @@ module Payola
           CreateSale.should_receive(:call).and_return(sale)          
           Payola.should_not_receive(:queue!)
 
-          post :create, product_class: @product.product_class, permalink: @product.permalink, use_route: :payola
+          post :create, product_class: @product.product_class, permalink: @product.permalink
 
           expect(response.status).to eq 400
           parsed_body = JSON.load(response.body)
@@ -61,12 +63,12 @@ module Payola
 
     describe '#status' do
       it "should return 404 if it can't find the sale" do
-        get :status, guid: 'doesnotexist', use_route: :payola
+        get :status, guid: 'doesnotexist'
         expect(response.status).to eq 404
       end
       it "should return json with properties" do
         sale = create(:sale)
-        get :status, guid: sale.guid, use_route: :payola
+        get :status, guid: sale.guid
 
         expect(response.status).to eq 200
 
@@ -81,7 +83,7 @@ module Payola
     describe '#show' do
       it "should redirect to the product's redirect path" do
         sale = create(:sale)
-        get :show, guid: sale.guid, use_route: :payola
+        get :show, guid: sale.guid
 
         expect(response).to redirect_to '/'
       end
