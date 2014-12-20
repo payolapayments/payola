@@ -13,12 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20141213205847) do
 
-  create_table "owners", force: true do |t|
+  create_table "owners", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "payola_affiliates", force: true do |t|
+  create_table "payola_affiliates", force: :cascade do |t|
     t.string   "code"
     t.string   "email"
     t.integer  "percent"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20141213205847) do
     t.datetime "updated_at"
   end
 
-  create_table "payola_coupons", force: true do |t|
+  create_table "payola_coupons", force: :cascade do |t|
     t.string   "code"
     t.integer  "percent_off"
     t.datetime "created_at"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20141213205847) do
     t.boolean  "active",      default: true
   end
 
-  create_table "payola_sales", force: true do |t|
+  create_table "payola_sales", force: :cascade do |t|
     t.string   "email"
     t.string   "guid"
     t.integer  "product_id"
@@ -70,13 +70,13 @@ ActiveRecord::Schema.define(version: 20141213205847) do
   add_index "payola_sales", ["product_id", "product_type"], name: "index_payola_sales_on_product"
   add_index "payola_sales", ["stripe_customer_id"], name: "index_payola_sales_on_stripe_customer_id"
 
-  create_table "payola_stripe_webhooks", force: true do |t|
+  create_table "payola_stripe_webhooks", force: :cascade do |t|
     t.string   "stripe_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "payola_subscriptions", force: true do |t|
+  create_table "payola_subscriptions", force: :cascade do |t|
     t.string   "plan_type"
     t.integer  "plan_id"
     t.datetime "start"
@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 20141213205847) do
 
   add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid"
 
-  create_table "products", force: true do |t|
+  create_table "products", force: :cascade do |t|
     t.string   "name"
     t.string   "permalink"
     t.integer  "price"
@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(version: 20141213205847) do
     t.datetime "updated_at"
   end
 
-  create_table "subscription_plan_without_interval_counts", force: true do |t|
+  create_table "subscription_plan_without_interval_counts", force: :cascade do |t|
     t.string   "name"
     t.string   "stripe_id"
     t.integer  "amount"
@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 20141213205847) do
     t.datetime "updated_at"
   end
 
-  create_table "subscription_plans", force: true do |t|
+  create_table "subscription_plans", force: :cascade do |t|
     t.integer  "amount"
     t.string   "interval"
     t.integer  "interval_count"
@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(version: 20141213205847) do
     t.datetime "updated_at"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
