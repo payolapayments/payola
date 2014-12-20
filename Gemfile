@@ -14,3 +14,6 @@ gemspec
 # gem 'debugger'
 gem 'simplecov', :require => false, :group => :test
 gem "codeclimate-test-reporter", group: :test, require: nil
+
+gem 'rails', '= 4.2.0'
+gem 'aasm', '= 4.0.5'

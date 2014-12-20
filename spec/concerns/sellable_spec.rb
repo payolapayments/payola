@@ -12,7 +12,7 @@ module Payola
         expect(product.valid?).to be false
       end
       it "should validate permalink" do
-        product = build(:product, permalink: false)
+        product = build(:product, permalink: nil)
         expect(product.valid?).to be false
       end
     end
