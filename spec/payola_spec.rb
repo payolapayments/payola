@@ -13,13 +13,13 @@ module Payola
     it "should set publishable key from env" do
       ENV['STRIPE_PUBLISHABLE_KEY'] = 'some_key'
       Payola.reset!
-      expect(Payola.publishable_key.call).to eq 'some_key'
+      expect(Payola.publishable_key).to eq 'some_key'
     end
 
     it "should set secret key from env" do
       ENV['STRIPE_SECRET_KEY'] = 'some_secret'
       Payola.reset!
-      expect(Payola.secret_key.call).to eq 'some_secret'
+      expect(Payola.secret_key).to eq 'some_secret'
     end
   end
 

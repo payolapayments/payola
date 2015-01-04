@@ -75,10 +75,10 @@ module Payola
       self.background_worker = nil
       self.event_filter = lambda { |event| event }
       self.charge_verifier = lambda { |event| true }
-      self.publishable_key = lambda { ENV['STRIPE_PUBLISHABLE_KEY'] }
-      self.secret_key = lambda { ENV['STRIPE_SECRET_KEY'] }
-      self.secret_key_retriever = lambda { |sale| Payola.secret_key.respond_to?(:call) ? Payola.secret_key.call() : Payola.secret_key  }
-      self.publishable_key_retriever = lambda { |sale| Payola.publishable_key.respond_to?(:call) ? Payola.publishable_key.call() : Payola.publishable_key }
+      self.publishable_key = EnvWrapper.new('STRIPE_PUBLISHABLE_KEY')
+      self.secret_key = EnvWrapper.new('STRIPE_SECRET_KEY')
+      self.secret_key_retriever = lambda { |sale| Payola.secret_key  }
+      self.publishable_key_retriever = lambda { |sale| Payola.publishable_key }
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
       self.sellables = {}
@@ -118,6 +118,20 @@ module Payola
       StripeWebhook.create!(stripe_id: params[:id])
       event = Stripe::Event.retrieve(params[:id], Payola.secret_key)
       Payola.event_filter.call(event)
+    end
+  end
+
+  class EnvWrapper
+    def initialize(key)
+      @key = key
+    end
+
+    def to_s
+      ENV[@key]
+    end
+
+    def ==(other)
+      to_s == other.to_s
     end
   end
 
