@@ -1,5 +1,13 @@
 # Payola Changelog
 
+* v1.2.3 - 2015-01-03
+  - Add support for Rails 4.2
+  - Re-use customers and create invoice items for setup fees
+  - Add an active flag on `Payola::Coupon`
+  - Fix load-order problems
+  - Add support for subscription quantities
+  - Properly handle form errors
+
 * v1.2.2 - 2014-11-29
   - Optionally invert subscription controller flow
   - Fix the CSRF token behavior
