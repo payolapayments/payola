@@ -36,11 +36,11 @@ module Payola
     end
 
     def secret_key_for_sale(sale)
-      return secret_key_retriever.call(sale)
+      return secret_key_retriever.call(sale).to_s
     end
 
     def publishable_key_for_sale(sale)
-      return publishable_key_retriever.call(sale)
+      return publishable_key_retriever.call(sale).to_s
     end
 
     def subscribe(name, callable = Proc.new)
