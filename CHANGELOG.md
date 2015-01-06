@@ -1,5 +1,8 @@
 # Payola Changelog
 
+* v1.2.4 - 2015-01-06
+  - Fix regressions in v1.2.3
+
 * v1.2.3 - 2015-01-03
   - Add support for Rails 4.2
   - Re-use customers and create invoice items for setup fees
@@ -59,3 +62,4 @@
 
 * v1.0.6 - 2014-10-19
   - First public release
+<
