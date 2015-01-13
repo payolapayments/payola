@@ -1,0 +1,79 @@
+<%
+  button_class = local_assigns.fetch :button_class, "stripe-button-el"
+  button_inner_style = local_assigns.fetch :button_inner_style, 'min-height: 30px'
+  button_text = local_assigns.fetch :button_text, "Subscribe Now"
+  plan_class = plan.plan_class
+  plan_id = plan.id
+  quantity = local_assigns.fetch :quantity, 1
+  price = local_assigns.fetch :price, plan.amount * quantity
+  name = local_assigns.fetch :name, plan.name
+  description = local_assigns.fetch :description, "#{name} (#{formatted_price(price)} per month)"
+  plan_image_path = local_assigns.fetch :plan_image_path , ''
+  panel_label = local_assigns.fetch :panel_label, ''
+  allow_remember_me = local_assigns.fetch :allow_remember_me, false
+  email = local_assigns.fetch :email, ''
+  verify_zip_code = local_assigns.fetch :verify_zip_code, false
+  custom_fields = local_assigns.fetch :custom_fields, nil
+  billing_address = local_assigns.fetch :billing_address, false
+  shipping_address = local_assigns.fetch :shipping_address, false
+
+  sale = Payola::Subscription.new(plan: plan)
+
+  button_id = "payola-button-#{plan_class}-#{plan_id}"
+  
+  form_id = "#{button_id}-form"
+
+  currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
+
+  form_path = payola.subscribe_path(plan_class: plan_class, plan_id: plan.id)
+
+  error_div_id = local_assigns.fetch :error_div_id, ''
+  if error_div_id.present?
+    show_default_error_div = false
+  else
+    error_div_id = "#{button_id}-errors"
+    show_default_error_div = true
+  end
+
+  raw_data = {
+    base_path: main_app.payola_path,
+    form_id: form_id,
+    button_id: button_id,
+    error_div_id: error_div_id,
+    plan_class: plan_class,
+    plan_id: plan_id,
+    price: price,
+    name: name,
+    description: description,
+    currency: currency,
+    plan_image_path: plan_image_path,
+    publishable_key: Payola.publishable_key_for_sale(sale),
+    panel_label: panel_label,
+    allow_remember_me: allow_remember_me,
+    email: email,
+    verify_zip_code: verify_zip_code,
+    billing_address: billing_address,
+    shipping_address: shipping_address
+  }
+
+  raw_data[:signed_custom_fields] = sale.verifier.generate(custom_fields) if custom_fields
+
+  html_hash = {}
+  raw_data.each do |k,v|
+    html_hash["data-#{k}"] = v
+  end
+  html_hash["id"] = form_id
+%>
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
+
+<%= form_tag form_path, html_hash do %>
+  <button class="<%= button_class %> payola-subscription-checkout-button" id="<%= button_id %>">
+    <span class="payola-subscription-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
+    <span class="payola-subscription-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
+  </button>
+  <% if show_default_error_div %>
+    <div class="payola-error-target" style="display:none", id="<%= error_div_id %>"></div>
+  <% end %>
+<% end %>
