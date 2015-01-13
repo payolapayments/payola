@@ -66,7 +66,7 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
 
-<%= form_tag payola.subscribe_path(plan_class: plan_class, plan_id: plan.id), html_hash do %>
+<%= form_tag payola.subscribe_path(plan_class: plan_class, plan_id: plan_id), html_hash do %>
   <button class="<%= button_class %> payola-subscription-checkout-button" id="<%= button_id %>">
     <span class="payola-subscription-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
     <span class="payola-subscription-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
