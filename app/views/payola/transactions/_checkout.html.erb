@@ -37,8 +37,8 @@
     form_id: form_id,
     button_id: button_id,
     error_div_id: error_div_id,
-    product_class: sellable.product_class,
-    product_permalink: sellable.permalink,
+    product_class: product_class,
+    product_permalink: product_permalink,
     price: price,
     name: name,
     description: description,
@@ -65,7 +65,7 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
 
-<%= form_tag payola.buy_path(product_class: sellable.product_class, permalink: sellable.permalink), html_hash do %>
+<%= form_tag payola.buy_path(product_class: product_class, permalink: product_permalink), html_hash do %>
   <button class="<%= button_class %> payola-checkout-button" id="<%= button_id %>">
     <span class="payola-checkout-button-text" style="display: block; <%= button_inner_style %>"><%= button_text %></span>
     <span class="payola-checkout-button-spinner" style="display: none; <%= button_inner_style %>">Please wait...</span>
