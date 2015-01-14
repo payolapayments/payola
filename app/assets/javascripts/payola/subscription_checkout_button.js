@@ -34,6 +34,7 @@ var PayolaSubscriptionCheckout = {
         console.log(options.form_id);
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
+        form.append($('<input type="hidden" name="quantity">').val(options.quantity));
         if (options.signed_custom_fields) {
           form.append($('<input type="hidden" name="signed_custom_fields">').val(options.signed_custom_fields));
         }
@@ -43,7 +44,7 @@ var PayolaSubscriptionCheckout = {
         $(".payola-subscription-checkout-button-spinner").show();
         $.ajax({
             type: "POST",
-            url: options.base_path + "/subscribe/" + options.plan_class + "/" + options.plan_id + "?quantity=" + options.quantity,
+            url: options.base_path + "/subscribe/" + options.plan_class + "/" + options.plan_id,
             data: form.serialize(),
             success: function(data) { PayolaSubscriptionCheckout.poll(data.guid, 60, options); },
             error: function(data) { PayolaSubscriptionCheckout.showError(data.responseJSON.error, options); }
