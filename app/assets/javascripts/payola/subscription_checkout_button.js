@@ -43,7 +43,7 @@ var PayolaSubscriptionCheckout = {
         $(".payola-subscription-checkout-button-spinner").show();
         $.ajax({
             type: "POST",
-            url: options.base_path + "/subscribe/" + options.plan_class + "/" + options.plan_id,
+            url: options.base_path + "/subscribe/" + options.plan_class + "/" + options.plan_id + "?quantity=" + options.quantity,
             data: form.serialize(),
             success: function(data) { PayolaSubscriptionCheckout.poll(data.guid, 60, options); },
             error: function(data) { PayolaSubscriptionCheckout.showError(data.responseJSON.error, options); }
