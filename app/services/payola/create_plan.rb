@@ -3,6 +3,12 @@ module Payola
     def self.call(plan)
       secret_key = Payola.secret_key_for_sale(plan)
 
+      begin
+        return Stripe::Plan.retrieve(plan.stripe_id, secret_key)
+      rescue Stripe::InvalidRequestError
+        # fall through
+      end
+
       Stripe::Plan.create({
         id:                plan.stripe_id,
         amount:            plan.amount,

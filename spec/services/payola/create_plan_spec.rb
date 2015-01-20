@@ -27,6 +27,12 @@ module Payola
         plan = Stripe::Plan.retrieve(our_plan.stripe_id)
         expect(plan.interval_count).to be_nil
       end
+
+      it "should skip creating a plan if there is already a plan with that stripe id" do
+        expect(Stripe::Plan).to_not receive(:create)
+
+        Payola::CreatePlan.call(@subscription_plan)
+      end
     end
 
   end
