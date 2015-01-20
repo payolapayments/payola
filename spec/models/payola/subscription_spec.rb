@@ -15,13 +15,13 @@ module Payola
       end
 
       it "should validate lack of email" do
-        sale = build(:sale, email: nil)
-        expect(sale.valid?).to be false
+        subscription = build(:subscription, email: nil)
+        expect(subscription.valid?).to be false
       end
 
       it "should validate stripe_token" do
-        sale = build(:sale, stripe_token: nil)
-        expect(sale.valid?).to be false
+        subscription = build(:subscription, stripe_token: nil)
+        expect(subscription.valid?).to be false
       end
 
     end

@@ -16,7 +16,7 @@ module Payola
     belongs_to :owner, polymorphic: true
     belongs_to :affiliate
 
-    has_many :sales, class_name: 'Payola::Sale'
+    has_many :sales, class_name: 'Payola::Sale', as: :owner
 
     include AASM
 
