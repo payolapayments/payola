@@ -34,6 +34,7 @@ var PayolaSubscriptionCheckout = {
         console.log(options.form_id);
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
+        form.append($('<input type="hidden" name="quantity">').val(options.quantity));
         if (options.signed_custom_fields) {
           form.append($('<input type="hidden" name="signed_custom_fields">').val(options.signed_custom_fields));
         }
