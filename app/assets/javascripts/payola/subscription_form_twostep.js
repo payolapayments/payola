@@ -51,18 +51,22 @@ var PayolaSubscriptionForm = {
                 form.append($('<input type="hidden" name="payola_subscription_guid"></input>').val(guid));
                 form.append(PayolaSubscriptionForm.authenticityTokenInput());
                 form.get(0).submit();
-            } else if (data.status === "errored") {
-                PayolaSubscriptionForm.showError(form, data.error);
             } else {
                 setTimeout(function() { PayolaSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
         };
+        var errorHandler = function(jqXHR){
+          if(jqXHR.responseJSON.status === "errored"){
+            PayolaSubscriptionForm.showError(form, jqXHR.responseJSON.error);
+          }
+        };
 
         $.ajax({
             type: 'GET',
+            dataType: 'json',
             url: base_path + '/subscription_status/' + guid,
             success: handler,
-            error: handler
+            error: errorHandler
         });
     },
 

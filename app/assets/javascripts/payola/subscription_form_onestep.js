@@ -52,18 +52,22 @@ var PayolaOnestepSubscriptionForm = {
         var handler = function(data) {
             if (data.status === "active") {
                 window.location = base_path + '/confirm_subscription/' + guid;
-            } else if (data.status === "errored") {
-                PayolaOnestepSubscriptionForm.showError(form, data.error);
             } else {
                 setTimeout(function() { PayolaOnestepSubscriptionForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
         };
+        var errorHandler = function(jqXHR){
+          if(jqXHR.responseJSON.status === "errored"){
+            PayolaSubscriptionForm.showError(form, jqXHR.responseJSON.error);
+          }
+        };
 
         $.ajax({
             type: 'GET',
+            dataType: 'json',
             url: base_path + '/subscription_status/' + guid,
             success: handler,
-            error: handler
+            error: errorHandler
         });
     },
 
