@@ -54,8 +54,9 @@ module Payola
     end
 
     def find_or_create_customer
-      subs = Subscription.where(owner: subscription.owner) if subscription.owner
-      if subs && subs.length > 1
+      subs = Subscription.where(owner: subscription.owner).where("state in ('active', 'canceled')") if subscription.owner
+
+      if subs && subs.length >= 1
         first_sub = subs.first
         customer_id = first_sub.stripe_customer_id
         return Stripe::Customer.retrieve(customer_id, secret_key)
