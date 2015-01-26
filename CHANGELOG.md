@@ -71,4 +71,4 @@
 
 * v1.0.6 - 2014-10-19
   - First public release
-<
+
