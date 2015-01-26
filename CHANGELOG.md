@@ -1,5 +1,14 @@
 # Payola Changelog
 
+* v1.2.6 - 2015-01-26
+  - Fix Javascript error handling for subscriptions
+
+* v1.2.5 - 2015-01-25
+  - Capure all attributes from Stripe when starting a subscription
+  - Allow for use of Checkout for Subscriptions
+  - Only re-use active or canceled subscriptions
+  - Make plan creation idempotent
+
 * v1.2.4 - 2015-01-06
   - Fix regressions in v1.2.3
 
