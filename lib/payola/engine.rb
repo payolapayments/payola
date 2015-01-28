@@ -35,5 +35,12 @@ module Payola
         config.subscribe 'customer.subscription.updated', Payola::SyncSubscription
       end
     end
+
+    initializer 'payola.print_banner' do
+      if Rails.env.development?
+        Rails.logger.info "Payola v#{Payola::VERSION}. See LICENSE and the LGPL-3.0 for licensing details."
+        Rails.logger.info "Upgrade to Payola Pro for more features and support. https://www.payola.io/pro" unless defined?(::Payola::Pro)
+      end
+    end
   end
 end
