@@ -1,3 +1,4 @@
+require 'payola/version'
 require "payola/engine"
 require "payola/worker"
 require 'stripe_event'
