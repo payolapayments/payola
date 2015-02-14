@@ -31,6 +31,16 @@ $ rails g payola:install
 $ rake db:migrate
 ```
 
+Optionally, tell Stripe about your application. Add this as a webhook in your [Stripe dashboard](https://dashboard.stripe.com/account/webhooks):
+
+```
+https://your.website.example.com/payola/events
+```
+
+### Disable Turbolinks
+
+Payola does not currently play nice with turbolinks. Disable it by removing the turoblinks include in your `application.js`.
+
 ## Additional Setup Resources
 
 
