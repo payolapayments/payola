@@ -21,6 +21,7 @@ var PayolaOnestepSubscriptionForm = {
     submitForm: function(form){
       $.ajax({
             type: 'POST',
+            dataType: 'json',
             url: $(form).attr('action'),
             data: form.serialize(),
             success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
