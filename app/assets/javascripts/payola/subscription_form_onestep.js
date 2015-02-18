@@ -8,10 +8,24 @@ var PayolaOnestepSubscriptionForm = {
     handleSubmit: function(form) {
         $(':submit').prop('disabled', true);
         $('.payola-spinner').show();
-        Stripe.card.createToken(form, function(status, response) {
-            PayolaOnestepSubscriptionForm.stripeResponseHandler(form, status, response);
-        });
+        if($('.payola-onestep-subscription-form input[name=stripeToken]').length) {
+            PayolaOnestepSubscriptionForm.submitForm(form);
+        } else {
+            Stripe.card.createToken(form, function(status, response) {
+                PayolaOnestepSubscriptionForm.stripeResponseHandler(form, status, response);
+            });
+        }
         return false;
+    },
+
+    submitForm: function(form){
+      $.ajax({
+            type: 'POST',
+            url: $(form).attr('action'),
+            data: form.serialize(),
+            success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
+            error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
+        });
     },
 
     stripeResponseHandler: function(form, status, response) {
@@ -26,8 +40,6 @@ var PayolaOnestepSubscriptionForm = {
             var plan_type = form.data('payola-plan-type');
             var plan_id = form.data('payola-plan-id');
 
-            var action = $(form).attr('action');
-
             form.append($('<input type="hidden" name="plan_type">').val(plan_type));
             form.append($('<input type="hidden" name="plan_id">').val(plan_id));
             form.append($('<input type="hidden" name="stripeToken">').val(response.id));
@@ -35,13 +47,8 @@ var PayolaOnestepSubscriptionForm = {
             form.append($('<input type="hidden" name="coupon">').val(coupon));
             form.append($('<input type="hidden" name="quantity">').val(quantity));
             form.append(PayolaOnestepSubscriptionForm.authenticityTokenInput());
-            $.ajax({
-                type: "POST",
-                url: action,
-                data: form.serialize(),
-                success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
-                error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
-            });
+
+            PayolaOnestepSubscriptionForm.submitForm(form);
         }
     },
 
