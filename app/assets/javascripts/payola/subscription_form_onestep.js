@@ -19,7 +19,8 @@ var PayolaOnestepSubscriptionForm = {
     },
 
     submitForm: function(form){
-      $.ajax({
+        var base_path = form.data('payola-base-path');
+        $.ajax({
             type: 'POST',
             dataType: 'json',
             url: $(form).attr('action'),
@@ -40,7 +41,6 @@ var PayolaOnestepSubscriptionForm = {
             var coupon = form.find("[data-payola='coupon']").prop('disabled', true).val();
             var quantity = form.find("[data-payola='quantity']").prop('disabled', true).val();
 
-            var base_path = form.data('payola-base-path');
             var plan_type = form.data('payola-plan-type');
             var plan_id = form.data('payola-plan-id');
 
