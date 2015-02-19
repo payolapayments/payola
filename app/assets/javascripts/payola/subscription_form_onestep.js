@@ -33,9 +33,12 @@ var PayolaOnestepSubscriptionForm = {
         if (response.error) {
             PayolaOnestepSubscriptionForm.showError(form, response.error.message);
         } else {
-            var email = form.find("[data-payola='email']").val();
-            var coupon = form.find("[data-payola='coupon']").val();
-            var quantity = form.find("[data-payola='quantity']").val();
+            form.find("[data-stripe='number'], [data-stripe='cvc'], [data-stripe='exp_month']").prop('disabled', true);
+            form.find("[data-stripe='exp_year'], [data-payola='first_name'], [data-payola='last_name']").prop('disabled', true);
+
+            var email = form.find("[data-payola='email']").prop('disabled', true).val();
+            var coupon = form.find("[data-payola='coupon']").prop('disabled', true).val();
+            var quantity = form.find("[data-payola='quantity']").prop('disabled', true).val();
 
             var base_path = form.data('payola-base-path');
             var plan_type = form.data('payola-plan-type');
