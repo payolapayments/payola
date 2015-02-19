@@ -41,7 +41,7 @@ module Payola
       end
 
       def plan_class
-        self.to_s.underscore
+        self.to_s.parameterize
       end
     end
 

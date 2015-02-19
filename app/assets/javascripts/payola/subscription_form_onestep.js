@@ -8,25 +8,41 @@ var PayolaOnestepSubscriptionForm = {
     handleSubmit: function(form) {
         $(':submit').prop('disabled', true);
         $('.payola-spinner').show();
-        Stripe.card.createToken(form, function(status, response) {
-            PayolaOnestepSubscriptionForm.stripeResponseHandler(form, status, response);
-        });
+        if($('.payola-onestep-subscription-form input[name=stripeToken]').length) {
+            PayolaOnestepSubscriptionForm.submitForm(form);
+        } else {
+            Stripe.card.createToken(form, function(status, response) {
+                PayolaOnestepSubscriptionForm.stripeResponseHandler(form, status, response);
+            });
+        }
         return false;
+    },
+
+    submitForm: function(form){
+        var base_path = form.data('payola-base-path');
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: $(form).attr('action'),
+            data: form.serialize(),
+            success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
+            error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
+        });
     },
 
     stripeResponseHandler: function(form, status, response) {
         if (response.error) {
             PayolaOnestepSubscriptionForm.showError(form, response.error.message);
         } else {
-            var email = form.find("[data-payola='email']").val();
-            var coupon = form.find("[data-payola='coupon']").val();
-            var quantity = form.find("[data-payola='quantity']").val();
+            form.find("[data-stripe='number'], [data-stripe='cvc'], [data-stripe='exp_month']").prop('disabled', true);
+            form.find("[data-stripe='exp_year'], [data-payola='first_name'], [data-payola='last_name']").prop('disabled', true);
 
-            var base_path = form.data('payola-base-path');
+            var email = form.find("[data-payola='email']").prop('disabled', true).val();
+            var coupon = form.find("[data-payola='coupon']").prop('disabled', true).val();
+            var quantity = form.find("[data-payola='quantity']").prop('disabled', true).val();
+
             var plan_type = form.data('payola-plan-type');
             var plan_id = form.data('payola-plan-id');
-
-            var action = $(form).attr('action');
 
             form.append($('<input type="hidden" name="plan_type">').val(plan_type));
             form.append($('<input type="hidden" name="plan_id">').val(plan_id));
@@ -35,13 +51,8 @@ var PayolaOnestepSubscriptionForm = {
             form.append($('<input type="hidden" name="coupon">').val(coupon));
             form.append($('<input type="hidden" name="quantity">').val(quantity));
             form.append(PayolaOnestepSubscriptionForm.authenticityTokenInput());
-            $.ajax({
-                type: "POST",
-                url: action,
-                data: form.serialize(),
-                success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
-                error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
-            });
+
+            PayolaOnestepSubscriptionForm.submitForm(form);
         }
     },
 
