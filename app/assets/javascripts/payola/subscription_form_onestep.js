@@ -57,9 +57,7 @@ var PayolaOnestepSubscriptionForm = {
             }
         };
         var errorHandler = function(jqXHR){
-          if(jqXHR.responseJSON.status === "errored"){
-            PayolaSubscriptionForm.showError(form, jqXHR.responseJSON.error);
-          }
+            PayolaOnestepSubscriptionForm.showError(form, jqXHR.responseJSON.error);
         };
 
         $.ajax({
