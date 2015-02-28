@@ -1,5 +1,10 @@
 # Payola Changelog
 
+* v1.2.7 - 2015-02-28
+  - Fix Javascript error handling for one-step subscriptions
+  - Add some docs about events and turbolinks incompatibility
+  - Support namespaced models for plans
+
 * v1.2.6 - 2015-01-26
   - Fix Javascript error handling for subscriptions
 
