@@ -5,11 +5,11 @@ module Payola
       begin
         customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
 
-        customer.card = token
+        customer.source = token
         customer.save
 
         customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
-        card = customer.cards.retrieve(customer.default_card, secret_key)
+        card = customer.sources.retrieve(customer.default_source, secret_key)
 
         subscription.update_attributes(
           card_type: card.brand,

@@ -30,7 +30,7 @@ module Payola
       it "should sync timestamps" do
         plan = create(:subscription_plan)
         subscription = build(:subscription, plan: plan)
-        stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, card: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
+        stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
         old_start = subscription.current_period_start
         old_end = subscription.current_period_end
         trial_start = subscription.trial_start
@@ -53,7 +53,7 @@ module Payola
       it "should sync non-timestamp fields" do
         plan = create(:subscription_plan)
         subscription = build(:subscription, plan: plan)
-        stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, card: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
+        stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
 
         expect(stripe_sub).to receive(:quantity).and_return(10).at_least(1)
         expect(stripe_sub).to receive(:cancel_at_period_end).and_return(true).at_least(1)

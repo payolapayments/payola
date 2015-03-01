@@ -27,7 +27,7 @@ module Payola
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?
         stripe_sub = customer.subscriptions.create(create_params)
 
-        card = customer.cards.data.first
+        card = customer.sources.data.first
         subscription.update_attributes(
           stripe_id:             stripe_sub.id,
           stripe_customer_id:    customer.id,
@@ -62,8 +62,8 @@ module Payola
         return Stripe::Customer.retrieve(customer_id, secret_key)
       else
         customer_create_params = {
-          card:  subscription.stripe_token,
-          email: subscription.email
+          source: subscription.stripe_token,
+          email:  subscription.email
         }
   
         customer = Stripe::Customer.create(customer_create_params, secret_key)

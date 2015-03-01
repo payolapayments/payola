@@ -9,7 +9,7 @@ module Payola
 
       customer = Stripe::Customer.create(
         email: 'foo',
-        card: stripe_helper.generate_card_token,
+        source: stripe_helper.generate_card_token,
         plan: plan.stripe_id
       )
 
@@ -28,7 +28,7 @@ module Payola
       plan = create(:subscription_plan)
       customer = Stripe::Customer.create(
         email: 'foo',
-        card: stripe_helper.generate_card_token,
+        source: stripe_helper.generate_card_token,
         plan: plan.stripe_id
       )
 

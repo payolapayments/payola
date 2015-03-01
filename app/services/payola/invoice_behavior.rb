@@ -39,8 +39,8 @@ module Payola
 
       def update_sale_with_charge(sale, charge)
         sale.stripe_id  = charge.id
-        sale.card_type  = charge.card.respond_to?(:brand) ? charge.card.brand : charge.card.type
-        sale.card_last4 = charge.card.last4
+        sale.card_type  = charge.source.brand
+        sale.card_last4 = charge.source.last4
 
         if charge.respond_to?(:fee)
           sale.fee_amount = charge.fee
