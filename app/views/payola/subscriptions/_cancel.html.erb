@@ -6,5 +6,5 @@
 %>
 
 <%= form_tag payola.cancel_subscription_path(subscription.guid), :method => :delete do %>
-  <%= submit_tag button_text, html: { disabled: disabled, class: button_class }, data: { confirm: confirm_text } %>
+  <%= submit_tag button_text, disabled: disabled, class: button_class, data: { confirm: confirm_text } %>
 <% end %>
