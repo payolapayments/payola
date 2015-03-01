@@ -59,8 +59,10 @@ module Payola
       if subs && subs.length >= 1
         first_sub = subs.first
         customer_id = first_sub.stripe_customer_id
-        customer = Stripe::Customer.retrieve(customer_id, secret_key)
-        return customer unless customer.try(:deleted)
+        unless customer_id.blank?
+          customer = Stripe::Customer.retrieve(customer_id, secret_key)
+          return customer unless customer.try(:deleted)
+        end
       end
 
       customer_create_params = {
