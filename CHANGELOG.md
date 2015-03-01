@@ -1,5 +1,8 @@
 # Payola Changelog
 
+* v1.3.0 - 2015-02-28
+  - Support Stripe API version 2015-02-18
+
 * v1.2.7 - 2015-02-28
   - Fix Javascript error handling for one-step subscriptions
   - Add some docs about events and turbolinks incompatibility
