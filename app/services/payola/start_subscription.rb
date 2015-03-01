@@ -70,13 +70,6 @@ module Payola
 
       customer = Stripe::Customer.create(customer_create_params, secret_key)
 
-      customer_create_params = {
-        card:  subscription.stripe_token,
-        email: subscription.email
-      }
-
-      customer = Stripe::Customer.create(customer_create_params, secret_key)
-
       if subscription.setup_fee.present?
         plan = subscription.plan
         description = plan.try(:setup_fee_description, subscription) || 'Setup Fee'
