@@ -66,8 +66,8 @@ module Payola
       end
 
       customer_create_params = {
-        card:  subscription.stripe_token,
-        email: subscription.email
+        source: subscription.stripe_token,
+        email:  subscription.email
       }
 
       customer = Stripe::Customer.create(customer_create_params, secret_key)
