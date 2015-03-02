@@ -1,7 +1,7 @@
 class CreatePayolaSales < ActiveRecord::Migration
   def change
     create_table :payola_sales do |t|
-      t.string   "email"
+      t.string   "email",         limit: 191
       t.string   "guid",          limit: 191
       t.integer  "product_id"
       t.string   "product_type",  limit: 100
