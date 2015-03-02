@@ -4,7 +4,7 @@ class CreatePayolaSales < ActiveRecord::Migration
       t.string   "email"
       t.string   "guid",          limit: 191
       t.integer  "product_id"
-      t.string   "product_type",  limit: 191
+      t.string   "product_type",  limit: 100
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "state"
