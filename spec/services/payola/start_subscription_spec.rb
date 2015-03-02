@@ -45,6 +45,19 @@ module Payola
         expect(subscription2.reload.stripe_customer_id).to eq subscription.reload.stripe_customer_id
       end
 
+      it "should not re-use an existing customer that has been deleted" do
+        plan = create(:subscription_plan)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user)
+        StartSubscription.call(subscription)
+        deleted_customer_id = subscription.reload.stripe_customer_id
+        Stripe::Customer.retrieve(deleted_customer_id).delete
+
+        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user)
+        StartSubscription.call(subscription2)
+        expect(subscription2.reload.stripe_customer_id).to_not be_nil
+        expect(subscription2.reload.stripe_customer_id).to_not eq deleted_customer_id
+      end
+
       it "should create an invoice item with a setup fee" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user, setup_fee: 100)
@@ -66,7 +79,7 @@ module Payola
         ii = Stripe::InvoiceItem.all(customer: subscription.stripe_customer_id).first
         expect(ii).to_not be_nil
         expect(ii.amount).to eq 100
-        expect(ii.description).to eq 'Random Mystery Fee'        
+        expect(ii.description).to eq 'Random Mystery Fee'
       end
     end
   end
