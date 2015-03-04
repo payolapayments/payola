@@ -1,10 +1,14 @@
 <%
   button_class = local_assigns.fetch :button_class, 'stripe-button-el'
+  button_id = local_assigns.fetch :button_id, "cancel-subscription-#{subscription.guid}"
   button_text = local_assigns.fetch :button_text, "Cancel Subscription"
   confirm_text = local_assigns.fetch :confirm_text, "Are you sure?"
-  disabled = subscription.active?
+  disabled = !subscription.active?
+  url = local_assigns.fetch :url, payola.cancel_subscription_path(subscription.guid)
 %>
 
-<%= form_tag payola.cancel_subscription_path(subscription.guid), :method => :delete do %>
-  <%= submit_tag button_text, html: { disabled: disabled, class: button_class }, data: { confirm: confirm_text } %>
-<% end %>
+<%= form_tag url, :method => :delete do %>
+  <%= button_tag type: 'submit', class: button_class, disabled: disabled, data: { confirm: confirm_text } do %>
+    <%= content_tag(:span, button_text, class: 'payola-subscription-cancel-buton-text') %>
+  <% end -%>
+<% end -%>
