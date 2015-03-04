@@ -1,7 +1,7 @@
 module Payola
   class StartSubscription
     attr_reader :subscription, :secret_key
-    
+
     def self.call(subscription)
       subscription.save!
       secret_key = Payola.secret_key_for_sale(subscription)
@@ -59,15 +59,18 @@ module Payola
       if subs && subs.length >= 1
         first_sub = subs.first
         customer_id = first_sub.stripe_customer_id
-        return Stripe::Customer.retrieve(customer_id, secret_key)
-      else
-        customer_create_params = {
-          source: subscription.stripe_token,
-          email:  subscription.email
-        }
-  
-        customer = Stripe::Customer.create(customer_create_params, secret_key)
+        unless customer_id.blank?
+          customer = Stripe::Customer.retrieve(customer_id, secret_key)
+          return customer unless customer.try(:deleted)
+        end
       end
+
+      customer_create_params = {
+        source: subscription.stripe_token,
+        email:  subscription.email
+      }
+
+      customer = Stripe::Customer.create(customer_create_params, secret_key)
 
       if subscription.setup_fee.present?
         plan = subscription.plan
