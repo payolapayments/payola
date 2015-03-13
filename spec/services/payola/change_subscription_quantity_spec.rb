@@ -11,7 +11,8 @@ module Payola
         token = StripeMock.generate_card_token({})
         @subscription = create(:subscription, quantity: 1, stripe_token: token, plan: @plan)
         StartSubscription.call(@subscription)
-        Payola::ChangeSubscriptionQuantity.call(@subscription, 2)
+        @subscription = Payola::ChangeSubscriptionQuantity.call(@subscription, 2)
+        expect(@subscription.errors).to be_blank
       end
 
       it "should change the quantity on the stripe subscription" do
