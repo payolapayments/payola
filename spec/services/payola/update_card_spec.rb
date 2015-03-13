@@ -9,8 +9,10 @@ module Payola
         @plan = create(:subscription_plan)
 
         token = StripeMock.generate_card_token({})
-        @subscription = create(:subscription, plan: @plan, stripe_token: token)
+        @subscription = create(:subscription, plan: @plan, stripe_token: token, state: 'processing')
         StartSubscription.call(@subscription)
+        expect(@subscription.error).to be_nil
+        expect(@subscription.active?).to be_truthy
         token2 = StripeMock.generate_card_token({last4: '2233', exp_year: '2021', exp_month: '11', brand: 'JCB'})
         Payola::UpdateCard.call(@subscription, token2)
       end

@@ -10,8 +10,10 @@ module Payola
         expect(@plan.errors).to be_blank
 
         token = StripeMock.generate_card_token({})
-        @subscription = create(:subscription, quantity: 1, stripe_token: token, plan: @plan)
+        @subscription = create(:subscription, quantity: 1, stripe_token: token, plan: @plan, state: 'processing')
         StartSubscription.call(@subscription)
+        expect(@subscription.error).to be_nil
+        expect(@subscription.active?).to be_truthy
         @subscription = Payola::ChangeSubscriptionQuantity.call(@subscription, 2)
         expect(@subscription.errors).to be_blank
       end
