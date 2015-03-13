@@ -7,6 +7,7 @@ module Payola
     describe "#call" do
       before do
         @plan = create(:subscription_plan)
+        expect(@plan.errors).to be_blank
 
         token = StripeMock.generate_card_token({})
         @subscription = create(:subscription, quantity: 1, stripe_token: token, plan: @plan)
