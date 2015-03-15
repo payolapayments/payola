@@ -20,8 +20,7 @@ module Payola
     end
 
     def create_stripe_plan
-      plan = Payola::CreatePlan.call(self)
-      p plan
+      Payola::CreatePlan.call(self)
     end
 
     def plan_class

@@ -5,7 +5,7 @@ module Payola
     let(:stripe_helper) { StripeMock.create_test_helper }
 
     describe "#call" do
-      before do
+      before(:each) do
         @plan = create(:subscription_plan)
         expect(@plan.errors).to be_blank
 
