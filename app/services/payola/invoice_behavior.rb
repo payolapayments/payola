@@ -20,7 +20,7 @@ module Payola
 
         charge = Stripe::Charge.retrieve(invoice.charge, secret_key)
 
-        update_sale_with_charge(sale, charge)
+        update_sale_with_charge(sale, charge, secret_key)
 
         return sale, charge
       end
@@ -37,7 +37,7 @@ module Payola
         end
       end
 
-      def update_sale_with_charge(sale, charge)
+      def update_sale_with_charge(sale, charge, secret_key)
         sale.stripe_id  = charge.id
         sale.card_type  = charge.source.brand
         sale.card_last4 = charge.source.last4
