@@ -24,12 +24,14 @@ Add Payola to your Gemfile:
 gem 'payola-payments'
 ```
 
-Run the installer and install the migrations:
+Run the installer:
 
 ```bash
 $ rails g payola:install
 $ rake db:migrate
 ```
+
+(**Note**: do not run `rake payola:install:migrations`. Payola's migrations live inside the gem and do not get copied into your application.)
 
 Optionally, tell Stripe about your application. Add this as a webhook in your [Stripe dashboard](https://dashboard.stripe.com/account/webhooks):
 
