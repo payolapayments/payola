@@ -4,5 +4,6 @@ FactoryGirl.define do
     product
     stripe_token 'tok_test'
     currency 'usd'
+    amount 100
   end
 end
