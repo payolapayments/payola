@@ -82,7 +82,7 @@ module Payola
     end
 
     def confirm_with_message(message)
-      if @subscription.valid?
+      if @subscription.errors.empty?
         redirect_to confirm_subscription_path(@subscription), notice: message
       else
         redirect_to confirm_subscription_path(@subscription), alert: @subscription.errors.full_messages.to_sentence
