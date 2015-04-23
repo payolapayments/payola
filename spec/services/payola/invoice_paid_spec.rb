@@ -34,7 +34,7 @@ module Payola
 
       sub = create(:subscription, plan: plan, stripe_customer_id: customer.id, stripe_id: customer.subscriptions.first.id)
 
-      charge = Stripe::Charge.create
+      charge = Stripe::Charge.create(amount: 100, currency: 'usd')
       event = StripeMock.mock_webhook_event('invoice.payment_succeeded', subscription: sub.stripe_id, charge: charge.id)
 
       count = Payola::Sale.count
