@@ -28,7 +28,7 @@ module Payola
           'plan' => @plan,
           'coupon' => nil,
           'quantity' => 1,
-          'affiliate' => nil          
+          'affiliate' => nil
         ).and_return(subscription)
 
         post :create, plan_class: @plan.plan_class, plan_id: @plan.id
@@ -128,6 +128,15 @@ module Payola
         expect(request.flash[:notice]).to eq 'Subscription plan updated'
       end
 
+      it "should show error if Payola::ChangeSubscriptionPlan fails" do
+        StripeMock.prepare_error(Stripe::StripeError.new('There was a problem changing the subscription'))
+
+        post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:alert]).to eq 'There was a problem changing the subscription'
+      end
+
       it "should redirect with an error if it can't update the subscription" do
         expect(Payola::ChangeSubscriptionPlan).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
@@ -153,6 +162,15 @@ module Payola
         expect(request.flash[:notice]).to eq 'Subscription quantity updated'
       end
 
+      it "should show error if Payola::ChangeSubscriptionQuantity fails" do
+        StripeMock.prepare_error(Stripe::StripeError.new('There was a problem changing the subscription quantity'))
+
+        post :change_quantity, guid: @subscription.guid, quantity: 5
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:alert]).to eq 'There was a problem changing the subscription quantity'
+      end
+
       it "should redirect with an error if it can't update the subscription" do
         expect(Payola::ChangeSubscriptionQuantity).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
@@ -176,6 +194,15 @@ module Payola
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:notice]).to eq 'Card updated'
+      end
+
+      it "should show error if Payola::UpdateCare fails" do
+        StripeMock.prepare_error(Stripe::StripeError.new('There was a problem updating the card'))
+
+        post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234'
+
+        expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
+        expect(request.flash[:alert]).to eq 'There was a problem updating the card'
       end
 
       it "should redirect with an error" do

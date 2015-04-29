@@ -1,5 +1,9 @@
 # Payola Changelog
 
+* v1.3.1 - 2015-03-18
+  - Fix a problem when creating subscription invoice payments
+  - Peg Stripe gem at 1.20.1 pending a fix to rebelidealist/stripe-ruby-mock#203
+
 * v1.3.0 - 2015-02-28
   - Support Stripe API version 2015-02-18
 
