@@ -44,7 +44,7 @@ module Payola
 
         if charge.respond_to?(:fee)
           sale.fee_amount = charge.fee
-        else
+        elsif !charge.balance_transaction.nil?
           balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction, secret_key)
           sale.fee_amount = balance.fee
         end
