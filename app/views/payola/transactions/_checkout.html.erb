@@ -16,7 +16,6 @@
   billing_address = local_assigns.fetch :billing_address, false
   shipping_address = local_assigns.fetch :shipping_address, false
   bitcoin = local_assigns.fetch :bitcoin, false
-  capture = local_assigns.fetch :capture, true
 
   sale = Payola::Sale.new(product: sellable)
 
