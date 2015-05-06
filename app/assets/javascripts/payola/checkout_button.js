@@ -24,7 +24,6 @@ var PayolaCheckout = {
             shippingAddress: options.shipping_address,
             currency: options.currency,
             bitcoin: options.bitcoin,
-            capture: options.capture,
             email: options.email || undefined
         });
 
