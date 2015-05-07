@@ -15,6 +15,7 @@
   custom_fields = local_assigns.fetch :custom_fields, nil
   billing_address = local_assigns.fetch :billing_address, false
   shipping_address = local_assigns.fetch :shipping_address, false
+  bitcoin = local_assigns.fetch :bitcoin, false
 
   sale = Payola::Sale.new(product: sellable)
 
@@ -50,7 +51,8 @@
     email: email,
     verify_zip_code: verify_zip_code,
     billing_address: billing_address,
-    shipping_address: shipping_address
+    shipping_address: shipping_address,
+    bitcoin: bitcoin
   }
 
   raw_data[:signed_custom_fields] = sale.verifier.generate(custom_fields) if custom_fields
