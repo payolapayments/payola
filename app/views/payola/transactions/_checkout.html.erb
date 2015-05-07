@@ -52,8 +52,7 @@
     verify_zip_code: verify_zip_code,
     billing_address: billing_address,
     shipping_address: shipping_address,
-    bitcoin: bitcoin,
-    capture: capture,
+    bitcoin: bitcoin
   }
 
   raw_data[:signed_custom_fields] = sale.verifier.generate(custom_fields) if custom_fields
