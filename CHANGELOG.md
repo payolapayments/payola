@@ -1,5 +1,12 @@
 # Payola Changelog
 
+* v1.3.2 - 2015-05-18
+  - Lock stripe-ruby-mock to v2.1.0 to work around test issues
+  - Properly bubble subscription errors up to the user
+  - Handle card declines
+  - Add bitcoin option to checkout button
+  - Move the Payola Pro message out of initializers
+
 * v1.3.1 - 2015-03-18
   - Fix a problem when creating subscription invoice payments
   - Peg Stripe gem at 1.20.1 pending a fix to rebelidealist/stripe-ruby-mock#203
