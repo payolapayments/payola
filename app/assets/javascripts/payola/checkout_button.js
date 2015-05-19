@@ -80,7 +80,7 @@ var PayolaCheckout = {
             type: "GET",
             url: options.base_path + "/status/" + guid,
             success: handler,
-            error: handler
+            error: function(xhr){ handler(xhr.responseJSON) }
         });
     }
 };
