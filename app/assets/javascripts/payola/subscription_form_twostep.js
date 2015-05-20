@@ -6,7 +6,7 @@ var PayolaSubscriptionForm = {
     },
 
     handleSubmit: function(form) {
-        $(':submit').prop('disabled', true);
+        $(form).find(':submit').prop('disabled', true);
         $('.payola-spinner').show();
         Stripe.card.createToken(form, function(status, response) {
             PayolaSubscriptionForm.stripeResponseHandler(form, status, response);
@@ -72,7 +72,7 @@ var PayolaSubscriptionForm = {
 
     showError: function(form, message) {
         $('.payola-spinner').hide();
-        $(':submit').prop('disabled', false);
+        $(form).find(':submit').prop('disabled', false);
         var error_selector = form.data('payola-error-selector');
         if (error_selector) {
             $(error_selector).text(message);
