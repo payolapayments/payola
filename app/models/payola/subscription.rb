@@ -9,7 +9,7 @@ module Payola
     validates_presence_of :email
     validates_presence_of :plan_id
     validates_presence_of :plan_type
-    validates_presence_of :stripe_token
+    #validates_presence_of :stripe_token
     validates_presence_of :currency
 
     belongs_to :plan,  polymorphic: true

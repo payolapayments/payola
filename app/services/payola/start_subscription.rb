@@ -27,13 +27,9 @@ module Payola
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?
         stripe_sub = customer.subscriptions.create(create_params)
 
-        card = customer.sources.data.first
         subscription.update_attributes(
           stripe_id:             stripe_sub.id,
           stripe_customer_id:    customer.id,
-          card_last4:            card.last4,
-          card_expiration:       Date.new(card.exp_year, card.exp_month, 1),
-          card_type:             card.respond_to?(:brand) ? card.brand : card.type,
           current_period_start:  Time.at(stripe_sub.current_period_start),
           current_period_end:    Time.at(stripe_sub.current_period_end),
           ended_at:              stripe_sub.ended_at ? Time.at(stripe_sub.ended_at) : nil,
@@ -44,6 +40,16 @@ module Payola
           stripe_status:         stripe_sub.status,
           cancel_at_period_end:  stripe_sub.cancel_at_period_end
         )
+
+        card = customer.sources.data.first
+        unless card.nil?
+          subscription.update_attributes(
+            card_last4:          card.last4,
+            card_expiration:     Date.new(card.exp_year, card.exp_month, 1),
+            card_type:           card.respond_to?(:brand) ? card.brand : card.type,
+          )
+        end
+        
         subscription.activate!
       rescue Stripe::StripeError, RuntimeError => e
         subscription.update_attributes(error: e.message)
