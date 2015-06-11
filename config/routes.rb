@@ -11,7 +11,5 @@ Payola::Engine.routes.draw do
   match '/change_quantity/:guid'          => 'subscriptions#change_quantity', via: :post, as: :change_subscription_quantity
   match '/update_card/:guid'              => 'subscriptions#update_card', via: :post, as: :update_card
 
-  match '/create_customer/:plan_class/:plan_id'=> 'subscriptions#create_customer', via: :post, as: :create_customer
-
   mount StripeEvent::Engine => '/events'
 end

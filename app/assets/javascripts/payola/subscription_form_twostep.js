@@ -8,38 +8,10 @@ var PayolaSubscriptionForm = {
     handleSubmit: function(form) {
         $(form).find(':submit').prop('disabled', true);
         $('.payola-spinner').show();
-        /*Stripe.card.createToken(form, function(status, response) {
+        Stripe.card.createToken(form, function(status, response) {
             PayolaSubscriptionForm.stripeResponseHandler(form, status, response);
-        });*/
-        PayolaSubscriptionForm.makeCustomer(form);
-        return false;
-    },
-
-    // DRY this later
-    makeCustomer: function(form) {
-        // How should I handle form validation?
-        // Stripe.js was doing that before but now we're creating the customer directly with no token
-        var email = form.find("[data-payola='email']").val();
-        var coupon = form.find("[data-payola='coupon']").val();
-        var quantity = form.find("[data-payola='quantity']").val();
-
-        var base_path = form.data('payola-base-path');
-        var plan_type = form.data('payola-plan-type');
-        var plan_id = form.data('payola-plan-id');
-
-        var data_form = $('<form></form>');
-        //data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
-        data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
-        data_form.append($('<input type="hidden" name="coupon">').val(coupon));
-        data_form.append($('<input type="hidden" name="quantity">').val(quantity));
-        data_form.append(PayolaSubscriptionForm.authenticityTokenInput());
-        $.ajax({
-            type: "POST",
-            url: base_path + "/subscribe/" + plan_type + "/" + plan_id,
-            data: data_form.serialize(),
-            success: function(data) { PayolaSubscriptionForm.poll(form, 60, data.guid, base_path); },
-            error: function(data) { PayolaSubscriptionForm.showError(form, data.responseJSON.error); }
         });
+        return false;
     },
 
     stripeResponseHandler: function(form, status, response) {
