@@ -21,7 +21,7 @@ module Payola
 
       it "should not validate nil stripe_token" do
         subscription = build(:subscription, stripe_token: nil)
-        expect(subscription.valid?).to be false
+        expect(subscription.valid?).to be true
       end
       
     end
