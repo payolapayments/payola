@@ -19,11 +19,11 @@ module Payola
         expect(subscription.valid?).to be false
       end
 
-      it "should validate stripe_token" do
+      it "should not validate nil stripe_token" do
         subscription = build(:subscription, stripe_token: nil)
-        expect(subscription.valid?).to be true
+        expect(subscription.valid?).to be false
       end
-
+      
     end
 
     describe "#sync_with!" do
