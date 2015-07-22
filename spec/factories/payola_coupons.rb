@@ -4,5 +4,6 @@ FactoryGirl.define do
   factory :payola_coupon, :class => 'Payola::Coupon' do
     code "MyString"
     percent_off 1
+    duration "once"
   end
 end
