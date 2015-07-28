@@ -24,6 +24,7 @@ module Payola
           plan: subscription.plan.stripe_id,
           quantity: subscription.quantity
         }
+        create_params[:trial_end] = subscription.trial_end.to_i if subscription.trial_end.present?
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?
         stripe_sub = customer.subscriptions.create(create_params)
 
@@ -63,6 +64,10 @@ module Payola
           customer = Stripe::Customer.retrieve(customer_id, secret_key)
           return customer unless customer.try(:deleted)
         end
+      end
+
+      unless subscription.stripe_token.present?
+        raise "stripeToken required for new customer subscription"
       end
 
       customer_create_params = {
