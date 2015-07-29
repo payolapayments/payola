@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141213205847) do
+ActiveRecord::Schema.define(version: 20150722013438) do
 
   create_table "owners", force: :cascade do |t|
     t.datetime "created_at"
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(version: 20141213205847) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active",      default: true
+    t.integer  "amount_off"
+    t.string   "duration"
+    t.integer  "duration_in_months"
   end
 
   create_table "payola_sales", force: :cascade do |t|
