@@ -13,8 +13,8 @@ FactoryGirl.define do
     current_period_start "2014-11-04 22:34:39"
     current_period_end "2014-11-04 22:34:39"
     ended_at "2014-11-04 22:34:39"
-    trial_start "2014-11-04 22:34:39"
-    trial_end "2014-11-04 22:34:39"
+    trial_start Time.now
+    trial_end Time.now + 7.days
     canceled_at "2014-11-04 22:34:39"
     email "jeremy@octolabs.com"
     stripe_token "yyz123"
