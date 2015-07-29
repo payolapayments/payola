@@ -1,17 +1,14 @@
 module Payola
   class ChangeSubscriptionPlan
-    def self.call(subscription, plan)
+    def self.call(subscription, plan, coupon_code = nil)
       secret_key = Payola.secret_key_for_sale(subscription)
       old_plan = subscription.plan
 
       begin
-        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
-        sub = customer.subscriptions.retrieve(subscription.stripe_id)
-
-        prorate = plan.respond_to?(:should_prorate?) ? plan.should_prorate?(subscription) : true
-
+        sub = retrieve_subscription_for_customer(subscription, secret_key)
         sub.plan = plan.stripe_id
-        sub.prorate = prorate
+        sub.prorate = should_prorate?(subscription, plan, coupon_code)
+        sub.coupon = coupon_code if coupon_code.present?
         sub.save
 
         subscription.plan = plan
@@ -24,6 +21,17 @@ module Payola
       end
 
       subscription
+    end
+
+    def self.retrieve_subscription_for_customer(subscription, secret_key)
+      customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
+      customer.subscriptions.retrieve(subscription.stripe_id)
+    end
+
+    def self.should_prorate?(subscription, plan, coupon_code)
+      prorate = plan.respond_to?(:should_prorate?) ? plan.should_prorate?(subscription) : true
+      prorate = false if coupon_code.present?
+      prorate
     end
   end
 end
