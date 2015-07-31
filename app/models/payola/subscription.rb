@@ -9,7 +9,7 @@ module Payola
     validates_presence_of :email
     validates_presence_of :plan_id
     validates_presence_of :plan_type
-    #validates_presence_of :stripe_token
+    validate :conditional_stripe_token
     validates_presence_of :currency
 
     belongs_to :plan,  polymorphic: true
@@ -124,6 +124,15 @@ module Payola
 
     def redirector
       plan
+    end
+
+    def conditional_stripe_token
+      return true if plan.nil?
+      if (plan.amount > 0 )
+        if plan.trial_period_days.nil? or ( plan.trial_period_days and !(plan.trial_period_days > 0) )
+          errors.add(:base, 'No Stripe token is present for a paid plan') if stripe_token.nil?
+        end
+      end
     end
 
     private

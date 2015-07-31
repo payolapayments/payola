@@ -19,11 +19,26 @@ module Payola
         expect(subscription.valid?).to be false
       end
 
-      it "should not validate nil stripe_token" do
-        subscription = build(:subscription, stripe_token: nil)
-        expect(subscription.valid?).to be true
+      it "should not validate nil stripe_token on paid plan" do
+        plan = create(:subscription_plan)
+        subscription = build(:subscription, stripe_token: nil, plan: plan)
+        expect(subscription.valid?).to be false
       end
       
+      it "should validate nil stripe_token on free plan" do
+        plan = create(:subscription_plan)
+        plan.amount = 0
+        subscription = build(:subscription, stripe_token: nil, plan: plan)
+        expect(subscription.valid?).to be true
+      end
+
+      it "should validate nil stripe_token on plan with trial" do
+        plan = create(:subscription_plan)
+        plan.trial_period_days = 30
+        subscription = build(:subscription, stripe_token: nil, plan: plan)
+        expect(subscription.valid?).to be true
+      end
+
     end
 
     describe "#sync_with!" do
