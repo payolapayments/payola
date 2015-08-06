@@ -93,8 +93,6 @@ module Payola
         StartSubscription.call(subscription2)
         expect(subscription.card_last4).to_not eq subscription2.card_last4
         expect(subscription.exp_year).to_not eq subscription2.exp_year
-
-        binding.pry
       end
     end
   end
