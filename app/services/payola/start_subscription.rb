@@ -27,7 +27,9 @@ module Payola
         }
         create_params[:trial_end] = subscription.trial_end.to_i if subscription.trial_end.present?
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?
-        create_params[:source] = subscription.stripe_token if subscription.stripe_token.present?
+        if should_update_token?
+          create_params[:source] = subscription.stripe_token
+        end
         stripe_sub = customer.subscriptions.create(create_params)
 
         subscription.update_attributes(
@@ -62,12 +64,29 @@ module Payola
       subscription
     end
 
-    def find_or_create_customer
-      subs = Subscription.where(owner: subscription.owner).where("state in ('active', 'canceled')") if subscription.owner
+    def should_update_token?
+      sub = first_subscription
+      (
+        subscription.stripe_token.present? &&
+        !sub.blank? &&
+        sub.stripe_token.present? &&
+        sub.stripe_token != subscription.stripe_token
+      )
+    end
 
-      if subs && subs.length >= 1
-        first_sub = subs.first
-        customer_id = first_sub.stripe_customer_id
+    def first_subscription
+      if subscription.owner
+        Subscription.where(owner: subscription.owner)
+          .where("state in ('active', 'canceled')").first
+      end
+      nil
+    end
+
+    def find_or_create_customer
+      sub = first_subscription
+
+      if sub
+        customer_id = sub.stripe_customer_id
         unless customer_id.blank?
           customer = Stripe::Customer.retrieve(customer_id, secret_key)
           return customer unless customer.try(:deleted)
