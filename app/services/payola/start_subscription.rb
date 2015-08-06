@@ -26,6 +26,7 @@ module Payola
         }
         create_params[:trial_end] = subscription.trial_end.to_i if subscription.trial_end.present?
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?
+        create_params[:source] = subscription.stripe_token if subscription.stripe_token.present?
         stripe_sub = customer.subscriptions.create(create_params)
 
         card = customer.sources.data.first
