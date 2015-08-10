@@ -55,6 +55,14 @@ module Payola
     end
 
     def find_or_create_customer
+
+
+      # check if owner has a stripe_id, if it does use that to find the customer
+      unless subscription.owner.blank? || subscription.owner.stripe_id.blank?
+        customer = Stripe::Customer.retrieve(subscription.owner.stripe_id, secret_key)
+        return customer unless customer.try(:deleted)
+      end
+
       subs = Subscription.where(owner: subscription.owner).where("state in ('active', 'canceled')") if subscription.owner
 
       if subs && subs.length >= 1

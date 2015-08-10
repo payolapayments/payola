@@ -81,6 +81,15 @@ module Payola
         expect(ii.amount).to eq 100
         expect(ii.description).to eq 'Random Mystery Fee'
       end
+
+      it "should use an existing customer via the owner objects stripe_id" do
+        plan = create(:subscription_plan)
+        cus = Stripe::Customer.create(email: 'test@test.com')
+        user.stripe_id = cus.stripe_id
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user)
+        StartSubscription.call(subscription)
+        expect(subscription.stripe_customer_id).to eq cus.stripe_id
+      end
     end
   end
 end
