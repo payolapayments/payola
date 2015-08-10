@@ -65,7 +65,6 @@ module Payola
         if customer.sources.total_count == 0
           customer.source = subscription.stripe_token
           customer.save
-          customer.reload
         end
 
         return customer unless customer.try(:deleted)
