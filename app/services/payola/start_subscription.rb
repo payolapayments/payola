@@ -60,6 +60,14 @@ module Payola
       # check if owner has a stripe_id, if it does use that to find the customer
       unless subscription.owner.blank? || subscription.owner.stripe_id.blank?
         customer = Stripe::Customer.retrieve(subscription.owner.stripe_id, secret_key)
+
+        # attach the card source if not attached yet
+        if customer.sources.total_count == 0
+          customer.source = subscription.stripe_token
+          customer.save
+          customer.reload
+        end
+
         return customer unless customer.try(:deleted)
       end
 
