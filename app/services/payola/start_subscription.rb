@@ -69,7 +69,7 @@ module Payola
 
     def first_subscription
       if subscription.owner
-        Subscription.where(owner: subscription.owner)
+        return Subscription.where(owner: subscription.owner)
           .where("state in ('active', 'canceled')").first
       end
       nil
