@@ -135,4 +135,11 @@ module Payola
       expect(Payola.additional_charge_attributes.call(sale, customer)).to eq({})
     end
   end
+
+  describe "#create_stripe_plans" do
+    it "defaults to true" do
+      Payola.reset!
+      expect(Payola.create_stripe_plans).to be true
+    end
+  end
 end
