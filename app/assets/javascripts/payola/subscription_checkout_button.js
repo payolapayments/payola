@@ -55,7 +55,8 @@ var PayolaSubscriptionCheckout = {
         var error_div = $("#" + options.error_div_id);
         error_div.html(error);
         error_div.show();
-        $(".payola-subscription-checkout-button").prop("disabled", false);
+        $(".payola-subscription-checkout-button").prop("disabled", false)
+                                                 .trigger("error", error);
         $(".payola-subscription-checkout-button-spinner").hide();
         $(".payola-subscription-checkout-button-text").show();
     },

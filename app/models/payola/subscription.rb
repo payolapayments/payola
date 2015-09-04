@@ -9,6 +9,7 @@ module Payola
     validates_presence_of :email
     validates_presence_of :plan_id
     validates_presence_of :plan_type
+
     validate :conditional_stripe_token
     validates_presence_of :currency
 

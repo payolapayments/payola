@@ -24,6 +24,11 @@ module Payola
         subscription = build(:subscription, stripe_token: nil, plan: plan)
         expect(subscription.valid?).to be false
       end
+
+      it "should validate stripe_token" do
+        subscription = build(:subscription, stripe_token: nil)
+        expect(subscription.valid?).to be true
+      end
       
       it "should validate nil stripe_token on free plan" do
         plan = create(:subscription_plan)

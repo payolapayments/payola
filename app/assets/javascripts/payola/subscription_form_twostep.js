@@ -72,7 +72,9 @@ var PayolaSubscriptionForm = {
 
     showError: function(form, message) {
         $('.payola-spinner').hide();
-        $(form).find(':submit').prop('disabled', false);
+        $(form).find(':submit')
+               .prop('disabled', false)
+               .trigger('error', message);
         var error_selector = form.data('payola-error-selector');
         if (error_selector) {
             $(error_selector).text(message);
