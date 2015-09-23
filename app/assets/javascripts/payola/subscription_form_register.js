@@ -37,7 +37,7 @@ var PayolaRegistrationForm = {
             url: "/users",
             data: form.serialize(),
             success: function(data) { PayolaRegistrationForm.poll(form, 60, data.guid, base_path); },
-            error: function(data) { PayolaRegistrationForm.showError(form, data.responseJSON.error); }
+            error: function(data) { PayolaRegistrationForm.showError(form, jQuery.parseJSON(data.responseText).error); }
         });
     },
 
@@ -55,8 +55,9 @@ var PayolaRegistrationForm = {
             }
         };
         var errorHandler = function(jqXHR){
-          if(jqXHR.responseJSON.status === "errored"){
-            PayolaRegistrationForm.showError(form, jqXHR.responseJSON.error);
+          var responseJSON = jQuery.parseJSON(jqXHR.responseText);
+          if(responseJSON.status === "errored"){
+            PayolaRegistrationForm.showError(form, responseJSON.error);
           }
         };
 
