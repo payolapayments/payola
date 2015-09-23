@@ -37,7 +37,7 @@ var PayolaSubscriptionForm = {
                 url: base_path + "/subscribe/" + plan_type + "/" + plan_id,
                 data: data_form.serialize(),
                 success: function(data) { PayolaSubscriptionForm.poll(form, 60, data.guid, base_path); },
-                error: function(data) { PayolaSubscriptionForm.showError(form, data.responseJSON.error); }
+                error: function(data) { PayolaSubscriptionForm.showError(form, jQuery.parseJSON(data.responseText).error); }
             });
         }
     },
@@ -56,8 +56,9 @@ var PayolaSubscriptionForm = {
             }
         };
         var errorHandler = function(jqXHR){
-          if(jqXHR.responseJSON.status === "errored"){
-            PayolaSubscriptionForm.showError(form, jqXHR.responseJSON.error);
+          var responseJSON = jQuery.parseJSON(jqXHR.responseText);
+          if(responseJSON.status === "errored"){
+            PayolaSubscriptionForm.showError(form, responseJSON.error);
           }
         };
 

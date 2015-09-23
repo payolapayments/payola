@@ -47,7 +47,7 @@ var PayolaSubscriptionCheckout = {
             url: form.attr('action'),
             data: form.serialize(),
             success: function(data) { PayolaSubscriptionCheckout.poll(data.guid, 60, options); },
-            error: function(data) { PayolaSubscriptionCheckout.showError(data.responseJSON.error, options); }
+            error: function(data) { PayolaSubscriptionCheckout.showError(jQuery.parseJSON(data.responseText).error, options); }
         });
     },
 
@@ -81,7 +81,7 @@ var PayolaSubscriptionCheckout = {
             type: "GET",
             url: options.base_path + "/subscription_status/" + guid,
             success: handler,
-            error: function(xhr) { handler(xhr.responseJSON) }
+            error: function(xhr) { handler(jQuery.parseJSON(xhr.responseText)) }
         });
     }
 };

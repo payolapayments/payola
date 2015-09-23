@@ -108,7 +108,7 @@
           url: "<%= payola.buy_url(product_class: sale.product.product_class, permalink: sale.product.permalink) %>",
           data: $('#payment-form').serialize(),
           success: function(data) { poll(data.guid, 60) },
-          error: function(data) { showError(data.responseJSON.error) }
+          error: function(data) { showError(jQuery.parseJSON(data.responseText).error) }
         });
       }
     }

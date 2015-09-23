@@ -40,7 +40,7 @@ var PayolaOnestepSubscriptionForm = {
                 url: action,
                 data: form.serialize(),
                 success: function(data) { PayolaOnestepSubscriptionForm.poll(form, 60, data.guid, base_path); },
-                error: function(data) { PayolaOnestepSubscriptionForm.showError(form, data.responseJSON.error); }
+                error: function(data) { PayolaOnestepSubscriptionForm.showError(form, jQuery.parseJSON(data.responseText).error); }
             });
         }
     },
@@ -57,7 +57,7 @@ var PayolaOnestepSubscriptionForm = {
             }
         };
         var errorHandler = function(jqXHR){
-            PayolaOnestepSubscriptionForm.showError(form, jqXHR.responseJSON.error);
+            PayolaOnestepSubscriptionForm.showError(form, jQuery.parseJSON(jqXHR.responseText).error);
         };
 
         $.ajax({

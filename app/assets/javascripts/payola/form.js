@@ -34,7 +34,7 @@ var PayolaPaymentForm = {
                 url: base_path + "/buy/" + product + "/" + permalink,
                 data: data_form.serialize(),
                 success: function(data) { PayolaPaymentForm.poll(form, 60, data.guid, base_path); },
-                error: function(data) { PayolaPaymentForm.showError(form, data.responseJSON.error); }
+                error: function(data) { PayolaPaymentForm.showError(form, jQuery.parseJSON(data.responseText).error); }
             });
         }
     },

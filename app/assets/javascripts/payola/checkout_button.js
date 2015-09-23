@@ -47,7 +47,7 @@ var PayolaCheckout = {
             url: options.base_path + "/buy/" + options.product_class + "/" + options.product_permalink,
             data: form.serialize(),
             success: function(data) { PayolaCheckout.poll(data.guid, 60, options); },
-            error: function(data) { PayolaCheckout.showError(data.responseJSON.error, options); }
+            error: function(data) { PayolaCheckout.showError(jQuery.parseJSON(data.responseText).error, options); }
         });
     },
 
@@ -80,7 +80,7 @@ var PayolaCheckout = {
             type: "GET",
             url: options.base_path + "/status/" + guid,
             success: handler,
-            error: function(xhr){ handler(xhr.responseJSON) }
+            error: function(xhr){ handler(jQuery.parseJSON(xhr.responseText)) }
         });
     }
 };
