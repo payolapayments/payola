@@ -130,7 +130,7 @@ module Payola
     def conditional_stripe_token
       return true if plan.nil?
       if (plan.amount > 0 )
-        if plan.trial_period_days.nil? or ( plan.trial_period_days and !(plan.trial_period_days > 0) )
+        if plan.respond_to?(:trial_period_days) and (plan.trial_period_days.nil? or ( plan.trial_period_days and !(plan.trial_period_days > 0) ))
           errors.add(:base, 'No Stripe token is present for a paid plan') if stripe_token.nil?
         end
       end
