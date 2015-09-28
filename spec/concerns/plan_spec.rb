@@ -48,7 +48,8 @@ module Payola
     end
 
     context "with Payola.create_stripe_plans set to false" do
-      before { Payola.create_stripe_plans = false }
+      before(:example) { Payola.create_stripe_plans = false }
+      after(:example) { Payola.create_stripe_plans = true }
 
       it "should not try to create the plan at stripe before the model is created" do
         subscription_plan = build(:subscription_plan)
