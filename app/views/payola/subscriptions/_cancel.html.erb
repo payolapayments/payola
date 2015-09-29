@@ -5,9 +5,11 @@
   confirm_text = local_assigns.fetch :confirm_text, "Are you sure?"
   disabled = !subscription.active?
   url = local_assigns.fetch :url, payola.cancel_subscription_path(subscription.guid)
+  at_period_end = local_assigns.fetch :at_period_end, false
 %>
 
 <%= form_tag url, :method => :delete do %>
+  <%= hidden_field_tag :at_period_end, at_period_end %>
   <%= button_tag type: 'submit', class: button_class, disabled: disabled, data: { confirm: confirm_text } do %>
     <%= content_tag(:span, button_text, class: 'payola-subscription-cancel-buton-text') %>
   <% end -%>
