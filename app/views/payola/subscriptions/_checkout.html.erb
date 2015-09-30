@@ -25,6 +25,7 @@
   form_id = "#{button_id}-form"
 
   currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
+  tax_percent = (local_assigns.fetch :tax_percent ? plan.currency : Payola.default_tax_percent).to_i
 
   error_div_id = local_assigns.fetch :error_div_id, ''
   if error_div_id.present?
@@ -46,6 +47,7 @@
     name: name,
     description: description,
     currency: currency,
+    tax_percent: tax_percent,
     plan_image_path: plan_image_path,
     publishable_key: Payola.publishable_key_for_sale(sale),
     panel_label: panel_label,

@@ -16,7 +16,7 @@ var PayolaSubscriptionCheckout = {
             token: function(token) { PayolaSubscriptionCheckout.tokenHandler(token, options); },
             name: options.name,
             description: options.description,
-            amount: options.price,
+            amount: options.price+(options.price*options.tax_percent),
             panelLabel: options.panel_label,
             allowRememberMe: options.allow_remember_me,
             zipCode: options.verify_zip_code,
@@ -35,6 +35,7 @@ var PayolaSubscriptionCheckout = {
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
         form.append($('<input type="hidden" name="quantity">').val(options.quantity));
+        form.append($('<input type="hidden" name="tax_percent">').val(options.tax_percent));
         if (options.signed_custom_fields) {
           form.append($('<input type="hidden" name="signed_custom_fields">').val(options.signed_custom_fields));
         }
