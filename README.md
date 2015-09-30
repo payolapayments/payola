@@ -55,7 +55,7 @@ Payola does not currently play nice with turbolinks. Disable it by removing the 
 
 ## Upgrade to Pro
 
-I also sell **Payola Pro**, a collection of add-ons to Payola that enables things like drop-in Mailchimp and Mixpanel integration, as well as Stripe Connect support. It also comes with priority support and a lawyer-friendly commercial license. You can see all of the details on the [Payola Pro homepage](https://www.payola.io/pro).
+I also sell **Payola Pro**, which includeds priority support and a lawyer-friendly commercial license. You can see all of the details on the [Payola Pro homepage](https://www.payola.io/pro).
 
 ## TODO
 
