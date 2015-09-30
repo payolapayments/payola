@@ -25,7 +25,7 @@
   form_id = "#{button_id}-form"
 
   currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
-  tax_percent = (local_assigns.fetch :tax_percent ? plan.currency : Payola.default_tax_percent).to_i
+  tax_percent = local_assigns.fetch(:tax_percent, Payola.default_tax_percent).to_i
 
   error_div_id = local_assigns.fetch :error_div_id, ''
   if error_div_id.present?
