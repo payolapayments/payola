@@ -16,7 +16,7 @@ var PayolaSubscriptionCheckout = {
             token: function(token) { PayolaSubscriptionCheckout.tokenHandler(token, options); },
             name: options.name,
             description: options.description,
-            amount: options.price+(options.price*options.tax_percent),
+            amount: options.price+(options.price*(options.tax_percent/100)),
             panelLabel: options.panel_label,
             allowRememberMe: options.allow_remember_me,
             zipCode: options.verify_zip_code,
