@@ -10,3 +10,4 @@ Gemfile.lock
 coverage
 .rspec
 *.sublime-*
+.idea

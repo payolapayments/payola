@@ -22,7 +22,8 @@ module Payola
 
         create_params = {
           plan: subscription.plan.stripe_id,
-          quantity: subscription.quantity
+          quantity: subscription.quantity,
+          tax_percent: subscription.tax_percent
         }
         create_params[:trial_end] = subscription.trial_end.to_i if subscription.trial_end.present?
         create_params[:coupon] = subscription.coupon if subscription.coupon.present?

@@ -10,6 +10,9 @@ module Payola
     end
 
     describe '#create' do
+
+      let(:tax_percent) { 20 }
+
       it "should pass args to CreateSubscription" do
         subscription = double
         subscription.should_receive(:save).and_return(true)
@@ -23,6 +26,7 @@ module Payola
         CreateSubscription.should_receive(:call).with(
           'plan_class' => 'subscription_plan',
           'plan_id' => @plan.id.to_s,
+          'tax_percent' => tax_percent.to_s,
           'controller' => 'payola/subscriptions',
           'action' => 'create',
           'plan' => @plan,
@@ -31,7 +35,7 @@ module Payola
           'affiliate' => nil
         ).and_return(subscription)
 
-        post :create, plan_class: @plan.plan_class, plan_id: @plan.id
+        post :create, plan_class: @plan.plan_class, plan_id: @plan.id, tax_percent: tax_percent
 
         expect(response.status).to eq 200
         parsed_body = JSON.load(response.body)

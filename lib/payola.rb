@@ -27,6 +27,7 @@ module Payola
       :subscribables,
       :charge_verifier,
       :default_currency,
+      :default_tax_percent,
       :additional_charge_attributes,
       :guid_generator,
       :pdf_receipt,
@@ -84,6 +85,7 @@ module Payola
       self.publishable_key_retriever = lambda { |sale| Payola.publishable_key }
       self.support_email = 'sales@example.com'
       self.default_currency = 'usd'
+      self.default_tax_percent = nil
       self.sellables = {}
       self.subscribables = {}
       self.additional_charge_attributes = lambda { |sale, customer| { } }
