@@ -21,7 +21,7 @@ module Payola
 
     def destroy
       subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::CancelSubscription.call(subscription)
+      Payola::CancelSubscription.call(subscription, at_period_end: ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(params[:at_period_end]))
       redirect_to confirm_subscription_path(subscription)
     end
 

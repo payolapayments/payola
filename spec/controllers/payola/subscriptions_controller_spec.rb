@@ -115,6 +115,11 @@ module Payola
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
+
+      it "coerce the at_period_end param to a boolean, and pass it through to Payola::CancelSubscription" do
+        Payola::CancelSubscription.should_receive(:call).with(instance_of(Payola::Subscription), at_period_end: true)
+        delete :destroy, guid: @subscription.guid, at_period_end: 'true'
+      end
     end
 
     describe '#change_plan' do
