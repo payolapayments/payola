@@ -17,6 +17,7 @@
   billing_address = local_assigns.fetch :billing_address, false
   shipping_address = local_assigns.fetch :shipping_address, false
   form_url = local_assigns.fetch :form_url, payola.subscribe_path(plan_class: plan_class, plan_id: plan_id)
+  include_stripe_checkout_assets = local_assigns.fetch :include_stripe_checkout_assets, true
 
   sale = Payola::Subscription.new(plan: plan)
 
@@ -67,8 +68,10 @@
   html_hash["id"] = form_id
 %>
 
-<script src="https://checkout.stripe.com/checkout.js"></script>
-<link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
+<% if include_stripe_checkout_assets %>
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+  <link rel="stylesheet" href="https://checkout.stripe.com/v3/checkout/button.css"></link>
+<% end %>
 
 <%= form_tag form_url, html_hash do %>
   <button class="<%= button_class %> payola-subscription-checkout-button" id="<%= button_id %>">
