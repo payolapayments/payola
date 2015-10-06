@@ -97,7 +97,7 @@ module Payola
 
     describe '#destroy' do
       before :each do
-        @subscription = create(:subscription, :state => :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
       end
       it "call Payola::CancelSubscription and redirect" do
         Payola::CancelSubscription.should_receive(:call)
@@ -124,7 +124,7 @@ module Payola
 
     describe '#change_plan' do
       before :each do
-        @subscription = create(:subscription, state: :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
         @plan = create(:subscription_plan)
       end
 
@@ -158,7 +158,7 @@ module Payola
 
     describe '#change_quantity' do
       before :each do
-        @subscription = create(:subscription, state: :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
         @plan = create(:subscription_plan)
       end
 
@@ -192,7 +192,7 @@ module Payola
 
     describe "#update_card" do
       before :each do
-        @subscription = create(:subscription, state: :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
         @plan = create(:subscription_plan)
       end
 
