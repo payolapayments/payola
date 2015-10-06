@@ -33,6 +33,24 @@ module Payola
         end
       end
 
+      it "should re-use an explicitly specified customer" do
+        plan = create(:subscription_plan)
+        stripe_customer = Stripe::Customer.create
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, stripe_customer_id: stripe_customer.id)
+        expect(Stripe::Customer).to_not receive(:create)
+        StartSubscription.call(subscription)
+      end
+
+      it "should fail if the explicitly specified customer has been deleted" do
+        plan = create(:subscription_plan)
+        stripe_customer = Stripe::Customer.create
+        stripe_customer.delete
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, stripe_customer_id: stripe_customer.id)
+        expect(subscription).to receive(:fail!)
+        StartSubscription.call(subscription)
+        expect(subscription.reload.error).to eq "stripeToken required for new customer subscription"
+      end
+
       it "should re-use an existing customer" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user)
