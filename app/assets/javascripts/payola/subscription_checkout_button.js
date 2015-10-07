@@ -10,23 +10,29 @@ var PayolaSubscriptionCheckout = {
         var form = button.parent('form');
         var options = form.data();
 
-        var handler = StripeCheckout.configure({
-            key: options.publishable_key,
-            image: options.plan_image_path,
-            token: function(token) { PayolaSubscriptionCheckout.tokenHandler(token, options); },
-            name: options.name,
-            description: options.description,
-            amount: options.price+(options.price*(options.tax_percent/100)),
-            panelLabel: options.panel_label,
-            allowRememberMe: options.allow_remember_me,
-            zipCode: options.verify_zip_code,
-            billingAddress: options.billing_address,
-            shippingAddress: options.shipping_address,
-            currency: options.currency,
-            email: options.email || undefined
-        });
+        if (options.stripe_customer_id) {
+          // If an existing Stripe customer id is specified, don't open the Stripe Checkout - just AJAX submit the form
+          PayolaSubscriptionCheckout.submitForm(form.attr('action'), { stripe_customer_id: options.stripe_customer_id }, options);
+        } else {
+          // Open a Stripe Checkout to collect the customer's billing details
+          var handler = StripeCheckout.configure({
+              key: options.publishable_key,
+              image: options.plan_image_path,
+              token: function(token) { PayolaSubscriptionCheckout.tokenHandler(token, options); },
+              name: options.name,
+              description: options.description,
+              amount: options.price+(options.price*(options.tax_percent/100)),
+              panelLabel: options.panel_label,
+              allowRememberMe: options.allow_remember_me,
+              zipCode: options.verify_zip_code,
+              billingAddress: options.billing_address,
+              shippingAddress: options.shipping_address,
+              currency: options.currency,
+              email: options.email || undefined
+          });
 
-        handler.open();
+          handler.open();
+        }
     },
 
     tokenHandler: function(token, options) {
@@ -40,13 +46,17 @@ var PayolaSubscriptionCheckout = {
           form.append($('<input type="hidden" name="signed_custom_fields">').val(options.signed_custom_fields));
         }
 
+        PayolaSubscriptionCheckout.submitForm(form.attr('action'), form.serialize(), options);
+    },
+
+    submitForm: function(url, data, options) {
         $(".payola-subscription-checkout-button").prop("disabled", true);
         $(".payola-subscription-checkout-button-text").hide();
         $(".payola-subscription-checkout-button-spinner").show();
         $.ajax({
             type: "POST",
-            url: form.attr('action'),
-            data: form.serialize(),
+            url: url,
+            data: data,
             success: function(data) { PayolaSubscriptionCheckout.poll(data.guid, 60, options); },
             error: function(data) { PayolaSubscriptionCheckout.showError(jQuery.parseJSON(data.responseText).error, options); }
         });

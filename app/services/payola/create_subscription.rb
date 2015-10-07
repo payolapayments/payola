@@ -4,9 +4,16 @@ module Payola
       plan = params[:plan]
       affiliate = params[:affiliate]
 
+      if params[:stripe_customer_id].present?
+        customer = Stripe::Customer.retrieve(params[:stripe_customer_id])
+        email = customer.email
+      else
+        email = params[:stripeEmail]
+      end
+
       sub = Payola::Subscription.new do |s|
         s.plan = plan
-        s.email = params[:stripeEmail]
+        s.email = email
         s.stripe_token = params[:stripeToken] if plan.amount > 0
         s.affiliate_id = affiliate.try(:id)
         s.currency = plan.respond_to?(:currency) ? plan.currency : Payola.default_currency
@@ -16,6 +23,7 @@ module Payola
         s.quantity = params[:quantity]
         s.trial_end = params[:trial_end]
         s.tax_percent = params[:tax_percent]
+        s.stripe_customer_id = customer.id if customer
 
         s.owner = owner
         s.amount = plan.amount
