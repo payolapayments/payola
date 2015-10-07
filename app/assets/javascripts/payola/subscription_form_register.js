@@ -24,6 +24,8 @@ var PayolaRegistrationForm = {
         var plan_type = form.data('payola-plan-type');
         var plan_id = form.data('payola-plan-id');
 
+        var action = $(form).attr('action');
+
         form.append($('<input type="hidden" name="[user]plan_id">').val(plan_id));
         form.append($('<input type="hidden" name="plan_type">').val(plan_type));
         form.append($('<input type="hidden" name="plan_id">').val(plan_id));
@@ -34,7 +36,7 @@ var PayolaRegistrationForm = {
 
         $.ajax({
             type: "POST",
-            url: "/users",
+            url: action,
             data: form.serialize(),
             success: function(data) { PayolaRegistrationForm.poll(form, 60, data.guid, base_path); },
             error: function(data) { PayolaRegistrationForm.showError(form, jQuery.parseJSON(data.responseText).error); }
