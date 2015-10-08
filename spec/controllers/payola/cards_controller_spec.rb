@@ -5,6 +5,7 @@ module Payola
     routes { Payola::Engine.routes }
   
     before do
+      Payola.secret_key = 'sk_test_12345'
       request.env["HTTP_REFERER"] = "/my/cards"
     end
 
@@ -36,6 +37,13 @@ module Payola
         expect(flash[:alert]).to eq "Could not create new card"
         expect(flash[:notice]).to_not be_present
       end
+
+      it "should return to the passed return path" do
+        post :create, customer_id: customer.id, stripeToken: StripeMock.generate_card_token({}), return_to: "/another/path"
+
+        expect(response.status).to eq 302
+        expect(response).to redirect_to "/another/path"
+      end
     end
 
     describe '#destroy' do
@@ -56,6 +64,13 @@ module Payola
         expect(response).to redirect_to "/my/cards"
         expect(flash[:notice]).to eq "Succesfully removed the card"
         expect(flash[:alert]).to_not be_present
+      end
+
+      it "should return to the passed return path" do
+        delete :destroy, id: customer.sources.first.id, customer_id: customer.id, return_to: "/another/path"
+
+        expect(response.status).to eq 302
+        expect(response).to redirect_to "/another/path"
       end
     end
 
