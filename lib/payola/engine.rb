@@ -33,6 +33,7 @@ module Payola
         config.subscribe 'invoice.payment_succeeded',     Payola::InvoicePaid
         config.subscribe 'invoice.payment_failed',        Payola::InvoiceFailed
         config.subscribe 'customer.subscription.updated', Payola::SyncSubscription
+        config.subscribe 'customer.subscription.deleted', Payola::SubscriptionDeleted
       end
     end
   end
