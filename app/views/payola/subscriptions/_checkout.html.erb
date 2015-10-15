@@ -5,6 +5,7 @@
   plan_class = plan.plan_class
   plan_id = plan.id
   quantity = local_assigns.fetch :quantity, 1
+  coupon = local_assigns.fetch :coupon, nil
   price = local_assigns.fetch :price, plan.amount * quantity
   name = local_assigns.fetch :name, plan.name
   description = local_assigns.fetch :description, "#{name} (#{formatted_price(price)} per month)"
@@ -44,6 +45,7 @@
     plan_class: plan_class,
     plan_id: plan_id,
     quantity: quantity,
+    coupon: coupon,
     price: price,
     name: name,
     description: description,
