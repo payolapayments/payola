@@ -23,6 +23,6 @@ Payola.configure do |config|
   # Keep this subscription unless you want to disable refund handling
   config.subscribe 'charge.refunded' do |event|
     sale = Payola::Sale.find_by(stripe_id: event.data.object.id)
-    sale.refund!
+    sale.refund! unless sale.refunded?
   end
 end
