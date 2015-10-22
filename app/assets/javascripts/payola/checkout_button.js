@@ -32,7 +32,6 @@ var PayolaCheckout = {
 
     tokenHandler: function(token, options) {
         var form = $("#" + options.form_id);
-        console.log(options.form_id);
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
         if (options.signed_custom_fields) {
