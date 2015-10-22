@@ -8,7 +8,6 @@ FactoryGirl.define do
     status "MyString"
     owner_type "Owner"
     owner_id 1
-    stripe_customer_id "MyString"
     cancel_at_period_end false
     current_period_start "2014-11-04 22:34:39"
     current_period_end "2014-11-04 22:34:39"

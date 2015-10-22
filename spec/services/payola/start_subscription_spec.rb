@@ -52,7 +52,7 @@ module Payola
         deleted_customer_id = subscription.reload.stripe_customer_id
         Stripe::Customer.retrieve(deleted_customer_id).delete
 
-        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user)
+        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user, stripe_customer_id: 'MyString')
         StartSubscription.call(subscription2)
         expect(subscription2.reload.stripe_customer_id).to_not be_nil
         expect(subscription2.reload.stripe_customer_id).to_not eq deleted_customer_id
