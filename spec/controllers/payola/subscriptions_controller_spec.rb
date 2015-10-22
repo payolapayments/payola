@@ -124,7 +124,7 @@ module Payola
 
     describe '#change_plan' do
       before :each do
-        @subscription = create(:subscription, state: :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: 'MyString')
         @plan = create(:subscription_plan)
       end
 
@@ -158,7 +158,7 @@ module Payola
 
     describe '#change_quantity' do
       before :each do
-        @subscription = create(:subscription, state: :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: 'MyString')
         @plan = create(:subscription_plan)
       end
 
@@ -192,7 +192,7 @@ module Payola
 
     describe "#update_card" do
       before :each do
-        @subscription = create(:subscription, state: :active)
+        @subscription = create(:subscription, state: :active, stripe_customer_id: 'MyString')
         @plan = create(:subscription_plan)
       end
 
