@@ -7,7 +7,7 @@
   quantity = local_assigns.fetch :quantity, 1
   price = local_assigns.fetch :price, plan.amount * quantity
   name = local_assigns.fetch :name, plan.name
-  description = local_assigns.fetch :description, "#{name} (#{formatted_price(price)} per month)"
+  description = local_assigns.fetch :description, "#{name} (#{formatted_price(price)} per #{plan.interval})"
   plan_image_path = local_assigns.fetch :plan_image_path , ''
   panel_label = local_assigns.fetch :panel_label, ''
   allow_remember_me = local_assigns.fetch :allow_remember_me, false
