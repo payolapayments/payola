@@ -30,6 +30,20 @@ module Payola
         expect(subscription.valid?).to be true
       end
       
+      it "should validate nil stripe_token when the subscription owner is present" do
+        plan = create(:subscription_plan)
+        plan.amount = 0
+        subscription = build(:subscription, stripe_token: nil, owner: build(:sale))
+        expect(subscription.valid?).to be true
+      end
+
+      it "should validate nil stripe_token when the stripe_customer_id is specified" do
+        plan = create(:subscription_plan)
+        plan.amount = 0
+        subscription = build(:subscription, stripe_token: nil, stripe_customer_id: "cus_123456")
+        expect(subscription.valid?).to be true
+      end
+
       it "should validate nil stripe_token on free plan" do
         plan = create(:subscription_plan)
         plan.amount = 0

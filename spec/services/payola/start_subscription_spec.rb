@@ -33,6 +33,24 @@ module Payola
         end
       end
 
+      it "should re-use an explicitly specified customer" do
+        plan = create(:subscription_plan)
+        stripe_customer = Stripe::Customer.create
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, stripe_customer_id: stripe_customer.id)
+        expect(Stripe::Customer).to_not receive(:create)
+        StartSubscription.call(subscription)
+      end
+
+      it "should fail if the explicitly specified customer has been deleted" do
+        plan = create(:subscription_plan)
+        stripe_customer = Stripe::Customer.create
+        stripe_customer.delete
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, stripe_customer_id: stripe_customer.id)
+        expect(subscription).to receive(:fail!)
+        StartSubscription.call(subscription)
+        expect(subscription.reload.error).to eq "stripeToken required for new customer subscription"
+      end
+
       it "should re-use an existing customer" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user)
@@ -52,10 +70,10 @@ module Payola
         deleted_customer_id = subscription.reload.stripe_customer_id
         Stripe::Customer.retrieve(deleted_customer_id).delete
 
-        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user)
+        subscription2 = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, owner: user)
+        expect(subscription2).to receive(:fail!)
         StartSubscription.call(subscription2)
-        expect(subscription2.reload.stripe_customer_id).to_not be_nil
-        expect(subscription2.reload.stripe_customer_id).to_not eq deleted_customer_id
+        expect(subscription2.reload.error).to eq "stripeToken required for new customer subscription"
       end
 
       it "should create an invoice item with a setup fee" do

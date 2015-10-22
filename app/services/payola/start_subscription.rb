@@ -62,15 +62,18 @@ module Payola
     end
 
     def find_or_create_customer
-      subs = Subscription.where(owner: subscription.owner).where("state in ('active', 'canceled')") if subscription.owner
+      if subscription.stripe_customer_id.present?
+        # If an existing Stripe customer id is specified, use it
+        stripe_customer_id = subscription.stripe_customer_id
+      elsif subscription.owner
+        # Look for an existing successful Subscription for the same owner, and use its Stripe customer id
+        stripe_customer_id = Subscription.where(owner: subscription.owner).where("stripe_customer_id IS NOT NULL").where("state in ('active', 'canceled')").pluck(:stripe_customer_id).first
+      end
 
-      if subs && subs.length >= 1
-        first_sub = subs.first
-        customer_id = first_sub.stripe_customer_id
-        unless customer_id.blank?
-          customer = Stripe::Customer.retrieve(customer_id, secret_key)
-          return customer unless customer.try(:deleted)
-        end
+      if stripe_customer_id
+        # Retrieve the customer from Stripe and use it for this subscription
+        customer = Stripe::Customer.retrieve(stripe_customer_id, secret_key)
+        return customer unless customer.try(:deleted)
       end
 
       unless subscription.stripe_token.present?

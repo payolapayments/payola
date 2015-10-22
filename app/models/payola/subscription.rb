@@ -128,6 +128,10 @@ module Payola
     end
 
     def conditional_stripe_token
+      # Don't require a Stripe token if the subscription has an owner - we'll try to reuse the Stripe customer from an existing successful subscription
+      return true if owner.present?
+      # Don't require a Stripe token if we're creating a subscription for an existing Stripe customer
+      return true if stripe_customer_id.present?
       return true if plan.nil?
       if (plan.amount > 0 )
         if plan.respond_to?(:trial_period_days) and (plan.trial_period_days.nil? or ( plan.trial_period_days and !(plan.trial_period_days > 0) ))
