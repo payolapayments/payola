@@ -5,7 +5,7 @@ module Payola
       affiliate = params[:affiliate]
 
       if params[:stripe_customer_id].present?
-        customer = Stripe::Customer.retrieve(params[:stripe_customer_id])
+        customer = Stripe::Customer.retrieve(params[:stripe_customer_id], Payola.secret_key)
         email = customer.email
       else
         email = params[:stripeEmail]
