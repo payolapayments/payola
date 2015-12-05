@@ -49,7 +49,7 @@ module Payola
 
     describe "#call" do
       it "should call perform_async" do
-        Payola::Worker::Sidekiq.should_receive(:perform_async)
+        expect(Payola::Worker::Sidekiq).to receive(:perform_async)
         Payola::Worker::Sidekiq.call(Payola::TestService, double)
       end
     end
@@ -88,7 +88,7 @@ module Payola
 
     describe "#call" do
       it "should call perform_later" do
-        Payola::Worker::ActiveJob.should_receive(:perform_later)
+        expect(Payola::Worker::ActiveJob).to receive(:perform_later)
         Payola::Worker::ActiveJob.call(Payola::TestService, double)
       end
     end

@@ -15,15 +15,15 @@ module Payola
 
       it "should pass args to CreateSubscription" do
         subscription = double
-        subscription.should_receive(:save).and_return(true)
-        subscription.should_receive(:guid).at_least(1).times.and_return(1)
-        subscription.should_receive(:error).and_return(nil)
+        expect(subscription).to receive(:save).and_return(true)
+        expect(subscription).to receive(:guid).at_least(1).times.and_return(1)
+        expect(subscription).to receive(:error).and_return(nil)
         errors = double
-        errors.should_receive(:full_messages).and_return([])
-        subscription.should_receive(:errors).and_return(errors)
-        subscription.should_receive(:state).and_return('pending')
+        expect(errors).to receive(:full_messages).and_return([])
+        expect(subscription).to receive(:errors).and_return(errors)
+        expect(subscription).to receive(:state).and_return('pending')
 
-        CreateSubscription.should_receive(:call).with(
+        expect(CreateSubscription).to receive(:call).with(
           'plan_class' => 'subscription_plan',
           'plan_id' => @plan.id.to_s,
           'tax_percent' => tax_percent.to_s,
@@ -45,17 +45,17 @@ module Payola
       describe "with an error" do
         it "should return an error in json" do
           subscription = double
-          subscription.should_receive(:save).and_return(false)
+          expect(subscription).to receive(:save).and_return(false)
           error = double
-          error.should_receive(:full_messages).and_return(['done did broke'])
-          subscription.should_receive(:errors).and_return(error)
-          subscription.should_receive(:state).and_return('errored')
-          subscription.should_receive(:error).and_return('')
-          subscription.should_receive(:guid).and_return('blah')
+          expect(error).to receive(:full_messages).and_return(['done did broke'])
+          expect(subscription).to receive(:errors).and_return(error)
+          expect(subscription).to receive(:state).and_return('errored')
+          expect(subscription).to receive(:error).and_return('')
+          expect(subscription).to receive(:guid).and_return('blah')
 
 
-          CreateSubscription.should_receive(:call).and_return(subscription)
-          Payola.should_not_receive(:queue!)
+          expect(CreateSubscription).to receive(:call).and_return(subscription)
+          expect(Payola).to_not receive(:queue!)
 
           post :create, plan_class: @plan.plan_class, plan_id: @plan.id
 
@@ -100,7 +100,7 @@ module Payola
         @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
       end
       it "call Payola::CancelSubscription and redirect" do
-        Payola::CancelSubscription.should_receive(:call)
+        expect(Payola::CancelSubscription).to receive(:call)
         delete :destroy, guid: @subscription.guid
         # TODO : Figure out why this needs to be a hardcoded path.
         # Why doesn't subscription_path(@subscription) work?
@@ -117,7 +117,7 @@ module Payola
       end
 
       it "coerce the at_period_end param to a boolean, and pass it through to Payola::CancelSubscription" do
-        Payola::CancelSubscription.should_receive(:call).with(instance_of(Payola::Subscription), at_period_end: true)
+        expect(Payola::CancelSubscription).to receive(:call).with(instance_of(Payola::Subscription), at_period_end: true)
         delete :destroy, guid: @subscription.guid, at_period_end: 'true'
       end
     end

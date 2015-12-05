@@ -25,15 +25,15 @@ module Payola
 
   describe "instrumentation" do
     it "should pass subscribe to StripeEvent" do
-      StripeEvent.should_receive(:subscribe)
+      expect(StripeEvent).to receive(:subscribe)
       Payola.subscribe('foo', 'blah')
     end
     it "should pass instrument to StripeEvent.backend" do
-      ActiveSupport::Notifications.should_receive(:instrument)
+      expect(ActiveSupport::Notifications).to receive(:instrument)
       Payola.instrument('foo', 'blah')
     end
     it "should pass all to StripeEvent" do
-      StripeEvent.should_receive(:all)
+      expect(StripeEvent).to receive(:all)
       Payola.all('blah')
     end
   end
@@ -48,7 +48,7 @@ module Payola
 
     describe "with symbol" do
       it "should find the correct background worker" do
-        FakeWorker.should_receive(:call)
+        expect(FakeWorker).to receive(:call)
 
         Payola.background_worker = :fake
         Payola.queue!('blah')
@@ -76,8 +76,8 @@ module Payola
 
     describe "with nothing" do
       it "should call autofind" do
-        FakeWorker.should_receive(:call).and_return(:true)
-        Payola::Worker.should_receive(:autofind).and_return(FakeWorker)
+        expect(FakeWorker).to receive(:call).and_return(:true)
+        expect(Payola::Worker).to receive(:autofind).and_return(FakeWorker)
         Payola.queue!('blah')
       end
     end
@@ -98,7 +98,7 @@ module Payola
         end
       end
 
-      FakeWorker.should_receive(:call).with(Payola::SendMail, 'Payola::FakeMailer', 'receipt', 1, 2)
+      expect(FakeWorker).to receive(:call).with(Payola::SendMail, 'Payola::FakeMailer', 'receipt', 1, 2)
       Payola.send_mail(FakeMailer, :receipt, 1, 2)
     end
   end
@@ -109,7 +109,7 @@ module Payola
     end
 
     it "should set up listeners for auto emails" do
-      Payola.should_receive(:subscribe).with('payola.sale.finished').at_least(2)
+      expect(Payola).to receive(:subscribe).with('payola.sale.finished').at_least(2)
       Payola.send_email_for :receipt, :admin_receipt
     end
   end
