@@ -51,7 +51,7 @@ module Payola
             card_type:           card.respond_to?(:brand) ? card.brand : card.type,
           )
         end
-        
+
         subscription.activate!
       rescue Stripe::StripeError, RuntimeError => e
         subscription.update_attributes(error: e.message)
@@ -76,8 +76,8 @@ module Payola
         return customer unless customer.try(:deleted)
       end
 
-      unless subscription.stripe_token.present?
-        raise "stripeToken required for new customer subscription"
+      if subscription.plan.amount > 0 and not subscription.stripe_token.present?
+        raise "stripeToken required for new customer with paid subscription"
       end
 
       customer_create_params = {

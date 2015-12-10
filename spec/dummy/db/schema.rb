@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151003120400) do
+ActiveRecord::Schema.define(version: 20150930164135) do
 
   create_table "owners", force: :cascade do |t|
     t.datetime "created_at"
@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 20151003120400) do
     t.text     "customer_address"
     t.text     "business_address"
     t.integer  "setup_fee"
-    t.decimal  "tax_percent"
+    t.integer  "tax_percent"
   end
 
   add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid"
