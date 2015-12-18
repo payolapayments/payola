@@ -13,6 +13,12 @@ module Payola
         StartSubscription.call(subscription)
         expect(subscription.reload.stripe_customer_id).to_not be_nil
       end
+      it "should create a customer with free plan without stripe_token" do
+        plan = create(:subscription_plan, amount:0)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil)
+        StartSubscription.call(subscription)
+        expect(subscription.reload.stripe_customer_id).to_not be_nil
+      end
       it "should capture credit card info" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token)
@@ -48,7 +54,7 @@ module Payola
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, stripe_customer_id: stripe_customer.id)
         expect(subscription).to receive(:fail!)
         StartSubscription.call(subscription)
-        expect(subscription.reload.error).to eq "stripeToken required for new customer subscription"
+        expect(subscription.reload.error).to eq "stripeToken required for new customer with paid subscription"
       end
 
       it "should re-use an existing customer" do
@@ -73,7 +79,7 @@ module Payola
         subscription2 = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, owner: user)
         expect(subscription2).to receive(:fail!)
         StartSubscription.call(subscription2)
-        expect(subscription2.reload.error).to eq "stripeToken required for new customer subscription"
+        expect(subscription2.reload.error).to eq "stripeToken required for new customer with paid subscription"
       end
 
       it "should create an invoice item with a setup fee" do
