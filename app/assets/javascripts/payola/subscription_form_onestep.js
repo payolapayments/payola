@@ -1,6 +1,6 @@
 var PayolaOnestepSubscriptionForm = {
     initialize: function() {
-        $(document).on('submit', '.payola-onestep-subscription-form', function() {
+        $('.payola-onestep-subscription-form').on('submit', function() {
             return PayolaOnestepSubscriptionForm.handleSubmit($(this));
         });
     },

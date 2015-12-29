@@ -1,6 +1,6 @@
 var PayolaPaymentForm = {
     initialize: function() {
-        $(document).on('submit', '.payola-payment-form', function() {
+        $('.payola-payment-form').on('submit', function() {
             return PayolaPaymentForm.handleSubmit($(this));
         });
     },

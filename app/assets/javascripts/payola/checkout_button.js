@@ -1,6 +1,6 @@
 var PayolaCheckout = {
     initialize: function() {
-        $(document).on('click', '.payola-checkout-button', function(e) {
+        $('.payola-checkout-button').on('click', function(e) {
             e.preventDefault();
             PayolaCheckout.handleCheckoutButtonClick($(this));
         });

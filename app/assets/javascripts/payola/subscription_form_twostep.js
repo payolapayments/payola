@@ -1,6 +1,6 @@
 var PayolaSubscriptionForm = {
     initialize: function() {
-        $(document).on('submit', '.payola-subscription-form', function() {
+        $('.payola-subscription-form').on('submit', function() {
             return PayolaSubscriptionForm.handleSubmit($(this));
         });
     },
