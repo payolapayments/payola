@@ -90,4 +90,8 @@ var PayolaOnestepSubscriptionForm = {
     }
 };
 
-$(function() { PayolaOnestepSubscriptionForm.initialize() } );
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaOnestepSubscriptionForm.initialize);
+} else {
+    $(document).ready(PayolaOnestepSubscriptionForm.initialize);
+}

@@ -91,4 +91,8 @@ var PayolaSubscriptionForm = {
     }
 };
 
-$(function() { PayolaSubscriptionForm.initialize() } );
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaSubscriptionForm.initialize);
+} else {
+    $(document).ready(PayolaSubscriptionForm.initialize);
+}

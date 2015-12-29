@@ -74,4 +74,8 @@ var PayolaPaymentForm = {
     }
 };
 
-$(function() { PayolaPaymentForm.initialize(); } );
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaPaymentForm.initialize);
+} else {
+    $(document).ready(PayolaPaymentForm.initialize);
+}

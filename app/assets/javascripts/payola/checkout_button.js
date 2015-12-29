@@ -83,4 +83,9 @@ var PayolaCheckout = {
         });
     }
 };
-$(function() { PayolaCheckout.initialize(); });
+
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaCheckout.initialize);
+} else {
+    $(document).ready(PayolaCheckout.initialize);
+}
