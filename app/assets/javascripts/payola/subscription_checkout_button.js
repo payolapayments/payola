@@ -1,6 +1,6 @@
 var PayolaSubscriptionCheckout = {
     initialize: function() {
-        $(document).on('click', '.payola-subscription-checkout-button', function(e) {
+        $('.payola-subscription-checkout-button').on('click', function(e) {
             e.preventDefault();
             PayolaSubscriptionCheckout.handleCheckoutButtonClick($(this));
         });
@@ -96,4 +96,9 @@ var PayolaSubscriptionCheckout = {
         });
     }
 };
-$(function() { PayolaSubscriptionCheckout.initialize(); });
+
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaSubscriptionCheckout.initialize);
+} else {
+    $(document).ready(PayolaSubscriptionCheckout.initialize);
+}

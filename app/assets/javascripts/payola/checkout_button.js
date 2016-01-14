@@ -1,6 +1,6 @@
 var PayolaCheckout = {
     initialize: function() {
-        $(document).on('click', '.payola-checkout-button', function(e) {
+        $('.payola-checkout-button').on('click', function(e) {
             e.preventDefault();
             PayolaCheckout.handleCheckoutButtonClick($(this));
         });
@@ -83,4 +83,9 @@ var PayolaCheckout = {
         });
     }
 };
-$(function() { PayolaCheckout.initialize(); });
+
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaCheckout.initialize);
+} else {
+    $(document).ready(PayolaCheckout.initialize);
+}

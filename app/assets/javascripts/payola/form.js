@@ -1,6 +1,6 @@
 var PayolaPaymentForm = {
     initialize: function() {
-        $(document).on('submit', '.payola-payment-form', function() {
+        $('.payola-payment-form').on('submit', function() {
             return PayolaPaymentForm.handleSubmit($(this));
         });
     },
@@ -74,4 +74,8 @@ var PayolaPaymentForm = {
     }
 };
 
-$(function() { PayolaPaymentForm.initialize(); } );
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaPaymentForm.initialize);
+} else {
+    $(document).ready(PayolaPaymentForm.initialize);
+}

@@ -1,6 +1,6 @@
 var PayolaRegistrationForm = {
     initialize: function() {
-        $(document).on('submit', '.payola-register-form', function(e) {
+        $('.payola-register-form').on('submit', function(e) {
             e.preventDefault();
             return PayolaRegistrationForm.handleSubmit($(this));
         });
@@ -90,4 +90,8 @@ var PayolaRegistrationForm = {
     }
 };
 
-$(function() { PayolaRegistrationForm.initialize() } );
+if ('undefined' !== typeof Turbolinks) {
+    $(document).on('page:change', PayolaRegistrationForm.initialize);
+} else {
+    $(document).ready(PayolaRegistrationForm.initialize);
+}
