@@ -5,7 +5,7 @@ module Payola
 
       sub = Payola::Subscription.find_by!(stripe_id: stripe_sub.id)
 
-      sub.cancel!
+      sub.cancel! if sub.may_cancel?
     end
   end
 end
