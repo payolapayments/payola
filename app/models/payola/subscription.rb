@@ -101,6 +101,8 @@ module Payola
       self.canceled_at          = Time.at(stripe_sub.canceled_at) if stripe_sub.canceled_at
       self.quantity             = stripe_sub.quantity
       self.stripe_status        = stripe_sub.status
+      self.amount               = stripe_sub.plan.amount
+      self.currency             = stripe_sub.plan.respond_to?(:currency) ? stripe_sub.plan.currency : Payola.default_currency
       self.cancel_at_period_end = stripe_sub.cancel_at_period_end
 
       self.save!
