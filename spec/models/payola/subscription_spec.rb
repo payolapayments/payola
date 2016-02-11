@@ -29,7 +29,7 @@ module Payola
         subscription = build(:subscription, stripe_token: nil)
         expect(subscription.valid?).to be true
       end
-      
+
       it "should validate nil stripe_token when the subscription owner is present" do
         plan = create(:subscription_plan)
         plan.amount = 0
@@ -85,8 +85,8 @@ module Payola
       end
 
       it "should sync non-timestamp fields" do
-        plan = create(:subscription_plan)
-        subscription = build(:subscription, plan: plan)
+        plan = create(:subscription_plan, amount: 200)
+        subscription = build(:subscription, plan: plan, amount: 50)
         stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
 
         expect(stripe_sub).to receive(:quantity).and_return(10).at_least(1)
@@ -97,6 +97,7 @@ module Payola
         subscription.reload
 
         expect(subscription.quantity).to eq 10
+        expect(subscription.amount).to eq 200
         expect(subscription.stripe_status).to eq 'active'
         expect(subscription.cancel_at_period_end).to eq true
       end
