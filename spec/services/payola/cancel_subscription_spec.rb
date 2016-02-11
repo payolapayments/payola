@@ -10,10 +10,26 @@ module Payola
         @subscription = create(:subscription, plan: plan, stripe_token: token)
         @subscription.process!
       end
-      it "should cancel a subscription" do
-        CancelSubscription.call(@subscription)
-        expect(@subscription.reload.state).to eq 'canceled'
+
+      context "when at_period_end is true" do
+        it "leaves the subscription in the active state" do
+          CancelSubscription.call(@subscription, at_period_end: true)
+          expect(@subscription.reload.state).to eq 'active'
+        end
+
+        it "sets subscription.cancel_at_period_end to true" do
+          CancelSubscription.call(@subscription, at_period_end: true)
+          expect(@subscription.reload.cancel_at_period_end).to be true
+        end
       end
+
+      context "when at_period_end is not true" do
+        it "cancels the subscription immediately" do
+          CancelSubscription.call(@subscription)
+          expect(@subscription.reload.state).to eq 'canceled'
+        end
+      end
+
       it "should not change the state if an error occurs" do
         custom_error = StandardError.new("Customer not found")
         StripeMock.prepare_error(custom_error, :get_customer)
