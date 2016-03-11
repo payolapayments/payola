@@ -33,7 +33,7 @@ module Payola
       it "should not change the state if an error occurs" do
         custom_error = StandardError.new("Customer not found")
         StripeMock.prepare_error(custom_error, :get_customer)
-        expect { CancelSubscription.call(@subscription) }.to raise_error
+        expect { CancelSubscription.call(@subscription) }.to raise_error("Customer not found")
         
         expect(@subscription.reload.state).to eq 'active'
       end

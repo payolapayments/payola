@@ -33,7 +33,7 @@ module Payola
 
       it "should create the plan at stripe before the model is created" do
         subscription_plan = build(:subscription_plan)
-        Payola::CreatePlan.should_receive(:call)
+        expect(Payola::CreatePlan).to receive(:call)
         subscription_plan.save!
       end
 
@@ -42,7 +42,7 @@ module Payola
         subscription_plan.save!
         subscription_plan.name = "new name"
 
-        Payola::CreatePlan.should_not_receive(:call)
+        expect(Payola::CreatePlan).to_not receive(:call)
         subscription_plan.save!
       end
     end
@@ -53,7 +53,7 @@ module Payola
 
       it "should not try to create the plan at stripe before the model is created" do
         subscription_plan = build(:subscription_plan)
-        Payola::CreatePlan.should_not_receive(:call)
+        expect(Payola::CreatePlan).to_not receive(:call)
         subscription_plan.save!
       end
 
@@ -62,7 +62,7 @@ module Payola
         subscription_plan.save!
         subscription_plan.name = "new name"
 
-        Payola::CreatePlan.should_not_receive(:call)
+        expect(Payola::CreatePlan).to_not receive(:call)
         subscription_plan.save!
       end
     end

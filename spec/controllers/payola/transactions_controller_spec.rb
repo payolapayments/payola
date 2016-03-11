@@ -13,14 +13,14 @@ module Payola
       it "should pass args to CreateSale and queue the job" do
         sale = double
         errors = double
-        errors.should_receive(:full_messages).and_return([])
-        sale.should_receive(:state).and_return('pending')
-        sale.should_receive(:error).and_return(nil)
-        sale.should_receive(:errors).and_return(errors)
-        sale.should_receive(:save).and_return(true)
-        sale.should_receive(:guid).at_least(1).times.and_return('blah')
+        expect(errors).to receive(:full_messages).and_return([])
+        expect(sale).to receive(:state).and_return('pending')
+        expect(sale).to receive(:error).and_return(nil)
+        expect(sale).to receive(:errors).and_return(errors)
+        expect(sale).to receive(:save).and_return(true)
+        expect(sale).to receive(:guid).at_least(1).times.and_return('blah')
 
-        CreateSale.should_receive(:call).with(
+        expect(CreateSale).to receive(:call).with(
           'product_class' => 'product',
           'permalink' => @product.permalink,
           'controller' => 'payola/transactions',
@@ -30,7 +30,7 @@ module Payola
           'affiliate' => nil
         ).and_return(sale)
 
-        Payola.should_receive(:queue!)
+        expect(Payola).to receive(:queue!)
         post :create, product_class: @product.product_class, permalink: @product.permalink
 
         expect(response.status).to eq 200
@@ -41,16 +41,16 @@ module Payola
       describe "with an error" do
         it "should return an error in json" do
           sale = double
-          sale.should_receive(:error).and_return(nil)
-          sale.should_receive(:save).and_return(false)
-          sale.should_receive(:state).and_return('failed')
-          sale.should_receive(:guid).at_least(1).times.and_return('blah')
+          expect(sale).to receive(:error).and_return(nil)
+          expect(sale).to receive(:save).and_return(false)
+          expect(sale).to receive(:state).and_return('failed')
+          expect(sale).to receive(:guid).at_least(1).times.and_return('blah')
           error = double
-          error.should_receive(:full_messages).and_return(['done did broke'])
-          sale.should_receive(:errors).and_return(error)
+          expect(error).to receive(:full_messages).and_return(['done did broke'])
+          expect(sale).to receive(:errors).and_return(error)
 
-          CreateSale.should_receive(:call).and_return(sale)          
-          Payola.should_not_receive(:queue!)
+          expect(CreateSale).to receive(:call).and_return(sale)          
+          expect(Payola).to_not receive(:queue!)
 
           post :create, product_class: @product.product_class, permalink: @product.permalink
 

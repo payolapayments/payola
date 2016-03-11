@@ -40,7 +40,7 @@ module Payola
 
     describe "#process!" do
       it "should charge the card" do
-        Payola::ChargeCard.should_receive(:call)
+        expect(Payola::ChargeCard).to receive(:call)
 
         sale = create(:sale)
         sale.process!
@@ -50,8 +50,8 @@ module Payola
     describe "#finish" do
       it "should instrument finish" do
         sale = create(:sale, state: 'processing')
-        Payola.should_receive(:instrument).with('payola.product.sale.finished', sale)
-        Payola.should_receive(:instrument).with('payola.sale.finished', sale)
+        expect(Payola).to receive(:instrument).with('payola.product.sale.finished', sale)
+        expect(Payola).to receive(:instrument).with('payola.sale.finished', sale)
 
         sale.finish!
       end
@@ -60,8 +60,8 @@ module Payola
     describe "#fail" do
       it "should instrument fail" do
         sale = create(:sale, state: 'processing')
-        Payola.should_receive(:instrument).with('payola.product.sale.failed', sale)
-        Payola.should_receive(:instrument).with('payola.sale.failed', sale)
+        expect(Payola).to receive(:instrument).with('payola.product.sale.failed', sale)
+        expect(Payola).to receive(:instrument).with('payola.sale.failed', sale)
 
         sale.fail!
       end
@@ -70,8 +70,8 @@ module Payola
     describe "#refund" do
       it "should instrument refund" do
         sale = create(:sale, state: 'finished')
-        Payola.should_receive(:instrument).with('payola.product.sale.refunded', sale)
-        Payola.should_receive(:instrument).with('payola.sale.refunded', sale)
+        expect(Payola).to receive(:instrument).with('payola.product.sale.refunded', sale)
+        expect(Payola).to receive(:instrument).with('payola.sale.refunded', sale)
         sale.refund!
       end
     end
