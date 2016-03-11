@@ -10,24 +10,30 @@ var PayolaCheckout = {
         var form = button.parent('form');
         var options = form.data();
 
-        var handler = StripeCheckout.configure({
-            key: options.publishable_key,
-            image: options.product_image_path,
-            token: function(token) { PayolaCheckout.tokenHandler(token, options); },
-            name: options.name,
-            description: options.description,
-            amount: options.price,
-            panelLabel: options.panel_label,
-            allowRememberMe: options.allow_remember_me,
-            zipCode: options.verify_zip_code,
-            billingAddress: options.billing_address,
-            shippingAddress: options.shipping_address,
-            currency: options.currency,
-            bitcoin: options.bitcoin,
-            email: options.email || undefined
-        });
+        if (options.stripe_customer_id) {
+          // If an existing Stripe customer id is specified, don't open the Stripe Checkout - just AJAX submit the form
+          PayolaCheckout.submitForm(form.attr('action'), { stripe_customer_id: options.stripe_customer_id }, options);
+        } else {
+          // Open a Stripe Checkout to collect the customer's billing details
+          var handler = StripeCheckout.configure({
+              key: options.publishable_key,
+              image: options.product_image_path,
+              token: function(token) { PayolaCheckout.tokenHandler(token, options); },
+              name: options.name,
+              description: options.description,
+              amount: options.price,
+              panelLabel: options.panel_label,
+              allowRememberMe: options.allow_remember_me,
+              zipCode: options.verify_zip_code,
+              billingAddress: options.billing_address,
+              shippingAddress: options.shipping_address,
+              currency: options.currency,
+              bitcoin: options.bitcoin,
+              email: options.email || undefined
+          });
 
-        handler.open();
+          handler.open();
+        }
     },
 
     tokenHandler: function(token, options) {
@@ -38,13 +44,17 @@ var PayolaCheckout = {
           form.append($('<input type="hidden" name="signed_custom_fields">').val(options.signed_custom_fields));
         }
 
+        PayolaCheckout.submitForm(form.attr('action'), form.serialize(), options);
+    },
+
+    submitForm: function(url, data, options) {
         $(".payola-checkout-button").prop("disabled", true);
         $(".payola-checkout-button-text").hide();
         $(".payola-checkout-button-spinner").show();
         $.ajax({
             type: "POST",
-            url: options.base_path + "/buy/" + options.product_class + "/" + options.product_permalink,
-            data: form.serialize(),
+            url: url,
+            data: data,
             success: function(data) { PayolaCheckout.poll(data.guid, 60, options); },
             error: function(data) { PayolaCheckout.showError(jQuery.parseJSON(data.responseText).error, options); }
         });

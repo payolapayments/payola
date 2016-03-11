@@ -5,13 +5,23 @@ module Payola
       affiliate = params[:affiliate]
       coupon    = params[:coupon]
 
+      if params[:stripe_customer_id].present?
+        customer = Stripe::Customer.retrieve(params[:stripe_customer_id], Payola.secret_key)
+        email = customer.email
+        token = customer.default_source
+      else
+        email = params[:stripeEmail]
+        token = params[:stripeToken]
+      end
+
       Payola::Sale.new do |s|
         s.product = product
-        s.email = params[:stripeEmail]
-        s.stripe_token = params[:stripeToken]
+        s.email = email
+        s.stripe_token = token
         s.affiliate_id = affiliate.try(:id)
         s.currency = product.respond_to?(:currency) ? product.currency : Payola.default_currency
         s.signed_custom_fields = params[:signed_custom_fields]
+        s.stripe_customer_id = customer.id if customer
 
         if coupon
           s.coupon = coupon
