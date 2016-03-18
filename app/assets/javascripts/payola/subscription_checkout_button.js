@@ -39,6 +39,7 @@ var PayolaSubscriptionCheckout = {
         var form = $("#" + options.form_id);
         form.append($('<input type="hidden" name="stripeToken">').val(token.id));
         form.append($('<input type="hidden" name="stripeEmail">').val(token.email));
+        form.append($('<input type="hidden" name="plan_id">').val(options.plan_id));
         form.append($('<input type="hidden" name="quantity">').val(options.quantity));
         form.append($('<input type="hidden" name="coupon">').val(options.coupon));
         form.append($('<input type="hidden" name="tax_percent">').val(options.tax_percent));
