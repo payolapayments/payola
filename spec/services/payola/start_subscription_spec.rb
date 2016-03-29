@@ -73,7 +73,7 @@ module Payola
         plan = create(:subscription_plan, amount:0)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil)
         StartSubscription.call(subscription)
-        expect(Stripe::Customer.retrieve(stripe_customer_id).default_source).to be_nil
+        expect(Stripe::Customer.retrieve(subscription.reload.stripe_customer_id).default_source).to be_nil
 
         plan2 = create(:subscription_plan)
         subscription2 = create(:subscription, state: 'processing', plan: plan2, stripe_token: token, owner: user)
