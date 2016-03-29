@@ -69,6 +69,21 @@ module Payola
         expect(subscription2.reload.stripe_customer_id).to eq subscription.reload.stripe_customer_id
       end
 
+      it "should assign a passed payment source to an existing customer without one" do
+        plan = create(:subscription_plan, amount:0)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, owner: user)
+        StartSubscription.call(subscription)
+        expect(Stripe::Customer.retrieve(subscription.reload.stripe_customer_id).default_source).to be_nil
+
+        plan2 = create(:subscription_plan)
+        subscription2 = create(:subscription, state: 'processing', plan: plan2, stripe_token: token, owner: user)
+        StartSubscription.call(subscription2)
+
+        stripe_customer_id = subscription2.reload.stripe_customer_id
+        expect(stripe_customer_id).to eq subscription.reload.stripe_customer_id
+        expect(Stripe::Customer.retrieve(stripe_customer_id).default_source).to_not be_nil
+      end
+
       it "should not re-use an existing customer that has been deleted" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user)
