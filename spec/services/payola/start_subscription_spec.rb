@@ -71,7 +71,7 @@ module Payola
 
       it "should assign a passed payment source to an existing customer without one" do
         plan = create(:subscription_plan, amount:0)
-        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil, owner: user)
         StartSubscription.call(subscription)
         expect(Stripe::Customer.retrieve(subscription.reload.stripe_customer_id).default_source).to be_nil
 
