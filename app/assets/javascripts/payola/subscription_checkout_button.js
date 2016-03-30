@@ -12,7 +12,12 @@ var PayolaSubscriptionCheckout = {
 
         if (options.stripe_customer_id) {
           // If an existing Stripe customer id is specified, don't open the Stripe Checkout - just AJAX submit the form
-          PayolaSubscriptionCheckout.submitForm(form.attr('action'), { stripe_customer_id: options.stripe_customer_id }, options);
+          PayolaSubscriptionCheckout.submitForm(form.attr('action'), {
+            stripe_customer_id: options.stripe_customer_id,
+            coupon: options.coupon,
+            tax_percent: options.tax_percent,
+            signed_custom_fields: options.signed_custom_fields || undefined
+          }, options);
         } else {
           // Open a Stripe Checkout to collect the customer's billing details
           var handler = StripeCheckout.configure({
