@@ -65,6 +65,7 @@ module Payola
         plan = create(:subscription_plan)
         subscription = build(:subscription, plan: plan)
         stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
+
         old_start = subscription.current_period_start
         old_end = subscription.current_period_end
         trial_start = subscription.trial_start
@@ -88,6 +89,8 @@ module Payola
         plan = create(:subscription_plan, amount: 200)
         subscription = build(:subscription, plan: plan, amount: 50)
         stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
+        coupon = create(:payola_coupon)        
+        stripe_sub.stub_chain(:discount, :coupon, :id).and_return(coupon.code)        
 
         expect(stripe_sub).to receive(:quantity).and_return(10).at_least(1)
         expect(stripe_sub).to receive(:cancel_at_period_end).and_return(true).at_least(1)
@@ -100,6 +103,7 @@ module Payola
         expect(subscription.amount).to eq 200
         expect(subscription.stripe_status).to eq 'active'
         expect(subscription.cancel_at_period_end).to eq true
+        expect(subscription.coupon).to eq coupon.code
       end
     end
   end
