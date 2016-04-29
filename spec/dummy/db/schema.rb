@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20160429161549) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active",             default: true
-    t.integer  "amount_off",         default: 1
+    t.integer  "amount_off"
     t.string   "duration",           default: "once"
     t.integer  "duration_in_months"
     t.integer  "max_redemptions"
