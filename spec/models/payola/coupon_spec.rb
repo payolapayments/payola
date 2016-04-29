@@ -26,5 +26,45 @@ module Payola
         expect(c1.active?).to be_truthy
       end
     end
+
+    context "with Payola.create_stripe_coupons set to false" do
+
+      it "should not try to create the coupon at stripe before the model is created" do
+        coupon = build(:payola_coupon)
+        expect(Payola::CreateCoupon).to_not receive(:call)
+        coupon.save!
+      end
+
+      it "should not try to create the coupon at stripe before the model is updated" do
+        coupon = build(:payola_coupon)
+        coupon.save!
+        coupon.redeem_by = 1.week.from_now
+
+        expect(Payola::CreateCoupon).to_not receive(:call)
+        coupon.save!
+      end
+    end
+
+    context "with Payola.create_stripe_coupons set to true" do
+      before do
+        Payola.create_stripe_coupons = true
+        Payola.secret_key = 'sk_test_12345'
+      end
+
+      it "should create the coupon at stripe before the model is created" do
+        coupon = build(:payola_coupon)
+        expect(Payola::CreateCoupon).to receive(:call)
+        coupon.save!
+      end
+
+      it "should not try to create the coupon at stripe before the model is updated" do
+        coupon = build(:payola_coupon)
+        coupon.save!
+        coupon.redeem_by = 1.week.from_now
+
+        expect(Payola::CreateCoupon).to_not receive(:call)
+        coupon.save!
+      end
+    end
   end
 end
