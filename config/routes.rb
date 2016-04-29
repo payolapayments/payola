@@ -15,6 +15,9 @@ Payola::Engine.routes.draw do
 
   match '/create_card/:customer_id'       => 'cards#create', via: :post, as: :create_card
   match '/destroy_card/:id/:customer_id'  => 'cards#destroy', via: :delete, as: :destroy_card
+
+  match '/create_coupon'       => 'coupons#create', via: :post, as: :create_coupon
+  match '/destroy_coupon/:id'  => 'coupons#destroy', via: :delete, as: :destroy_coupon
   
   mount StripeEvent::Engine => '/events'
 end
