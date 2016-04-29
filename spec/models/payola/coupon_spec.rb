@@ -2,6 +2,9 @@ require 'spec_helper'
 
 module Payola
   describe Coupon do
+
+    before { Payola.create_stripe_coupons = false }
+
     describe "validations" do
       it "should validate uniqueness of coupon code" do
         c1 = Coupon.create(code: 'abc')

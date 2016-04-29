@@ -35,6 +35,8 @@ module Payola
       end
 
       describe "with coupon" do
+        before { Payola.create_stripe_coupons = false }
+
         it "should include the coupon" do
           coupon = create(:payola_coupon)
 
