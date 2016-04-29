@@ -29,7 +29,7 @@ module Payola
         amount_off:  params[:amount_off].presence,
         percent_off: params[:percent_off].presence,
         currency:  currency,
-        redeem_by: redeem_by,
+        redeem_by: redeem_by.to_i,
         metadata:  params[:metadata].presence
       }, secret_key)
     end
