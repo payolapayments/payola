@@ -16,7 +16,7 @@ module Payola
       end
 
       begin
-        return Stripe::Coupon.retrieve(code)
+        return Stripe::Coupon.retrieve(code, secret_key)
       rescue Stripe::InvalidRequestError
         # fall through
       end
