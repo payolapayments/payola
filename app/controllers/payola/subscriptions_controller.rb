@@ -27,7 +27,7 @@ module Payola
 
     def change_plan
       @subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::ChangeSubscriptionPlan.call(@subscription, @plan)
+      Payola::ChangeSubscriptionPlan.call(@subscription, @plan, @quantity)
 
       confirm_with_message("Subscription plan updated")
     end

@@ -1,6 +1,6 @@
 module Payola
   class ChangeSubscriptionPlan
-    def self.call(subscription, plan, coupon_code = nil)
+    def self.call(subscription, plan, quantity = 1, coupon_code = nil)
       secret_key = Payola.secret_key_for_sale(subscription)
       old_plan = subscription.plan
 
@@ -9,9 +9,11 @@ module Payola
         sub.plan = plan.stripe_id
         sub.prorate = should_prorate?(subscription, plan, coupon_code)
         sub.coupon = coupon_code if coupon_code.present?
+        sub.quantity = quantity
         sub.save
 
         subscription.plan = plan
+        subscription.quantity = quantity
         subscription.save!
 
         subscription.instrument_plan_changed(old_plan)
