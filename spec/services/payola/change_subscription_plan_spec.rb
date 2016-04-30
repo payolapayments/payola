@@ -50,7 +50,8 @@ module Payola
         context "set" do
           before do
             @coupon = build :payola_coupon
-            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2, @coupon)
+            @quantity = 1
+            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2, @quantity, @coupon)
           end
 
           it "should have the coupon" do

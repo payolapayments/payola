@@ -1,4 +1,5 @@
 <%
+  quantity = local_assigns.fetch :quantity, 1
   button_class = local_assigns.fetch :button_class, 'stripe-button-el'
   button_text = local_assigns.fetch :button_text, "Update Plan"
 %>
@@ -6,5 +7,6 @@
 <%= form_for subscription, method: :post, url: payola.change_subscription_plan_path(subscription) do |f| %>
   <%= hidden_field_tag 'plan_class', new_plan.plan_class %>
   <%= hidden_field_tag 'plan_id', new_plan.id %>
+  <%= hidden_field_tag 'quantity', quantity %>
   <%= button_tag button_text, class: button_class %>
 <% end %>

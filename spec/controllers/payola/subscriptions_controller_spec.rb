@@ -126,10 +126,11 @@ module Payola
       before :each do
         @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
         @plan = create(:subscription_plan)
+        @quantity = 1
       end
 
       it "should call Payola::ChangeSubscriptionPlan and redirect" do
-        expect(Payola::ChangeSubscriptionPlan).to receive(:call).with(@subscription, @plan)
+        expect(Payola::ChangeSubscriptionPlan).to receive(:call).with(@subscription, @plan, @quantity)
 
         post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id
 
