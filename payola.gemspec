@@ -30,8 +30,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sucker_punch", "~> 1.2.1"
   s.add_development_dependency "docverter"
 
-  s.post_install_message = <<-HERE
-Payola v#{Payola::VERSION}. See LICENSE and the LGPL-3.0 for licensing details.
-Upgrade to Payola Pro for more features and support. https://www.payola.io/pro
-  HERE
 end

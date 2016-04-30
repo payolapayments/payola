@@ -52,11 +52,6 @@ Payola does not currently play nice with turbolinks. Disable it by removing the 
 
 [Subscriptions](https://github.com/peterkeen/payola/wiki/Subscriptions)
 
-
-## Upgrade to Pro
-
-I also sell **Payola Pro**, which includeds priority support and a lawyer-friendly commercial license. You can see all of the details on the [Payola Pro homepage](https://www.payola.io/pro).
-
 ## TODO
 
 * Multiple subscriptions per customer
