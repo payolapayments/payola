@@ -13,6 +13,17 @@ module Payola
         c2 = Coupon.new(code: 'abc')
         expect(c2.valid?).to be_falsey
       end
+
+      it "validates percent_off is between 1 and 100" do
+        c1 = create(:payola_coupon, percent_off: 60)
+        expect(c1.valid?).to be_truthy
+
+        c2 = build(:payola_coupon, percent_off: 0)
+        expect(c2.valid?).to be_falsey
+
+        c3 = build(:payola_coupon, percent_off: 101)
+        expect(c3.valid?).to be_falsey
+      end
     end
 
     describe "active" do
