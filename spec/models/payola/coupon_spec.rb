@@ -7,10 +7,10 @@ module Payola
 
     describe "validations" do
       it "should validate uniqueness of coupon code" do
-        c1 = Coupon.create(code: 'abc')
+        c1 = create(:payola_coupon, code: 'abc')
         expect(c1.valid?).to be_truthy
 
-        c2 = Coupon.new(code: 'abc')
+        c2 = build(:payola_coupon, code: 'abc')
         expect(c2.valid?).to be_falsey
       end
 
