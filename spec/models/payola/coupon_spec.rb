@@ -24,6 +24,17 @@ module Payola
         c3 = build(:payola_coupon, percent_off: 101)
         expect(c3.valid?).to be_falsey
       end
+
+      it "allows percentage off or amount off, but not both" do
+        c1 = build(:payola_coupon, percent_off: 60)
+        expect(c1.valid?).to be_truthy
+
+        c2 = build(:payola_coupon, :flat_amount)
+        expect(c2.valid?).to be_truthy
+
+        c3 = build(:payola_coupon, percent_off: 60, amount_off: 20)
+        expect(c3.valid?).to be_falsey
+      end
     end
 
     describe "active" do
