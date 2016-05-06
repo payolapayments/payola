@@ -14,7 +14,8 @@ module Payola
 
       before_create :create_stripe_plan, if: -> { Payola.create_stripe_plans }
 
-      has_many :subscriptions, :class_name => "Payola::Subscription"
+      has_many :subscriptions, :class_name => "Payola::Subscription", as: :plan,
+        dependent: :restrict_with_exception
 
       Payola.register_subscribable(self)
     end

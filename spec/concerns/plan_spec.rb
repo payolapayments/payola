@@ -28,6 +28,18 @@ module Payola
       expect(subscription_plan.valid?).to be false
     end
 
+    context "with an associated subscription" do
+      let :subscription do
+        create(:subscription, plan: create(:subscription_plan))
+      end
+
+      it "should fail when attempting to destroy it" do
+        expect {
+          subscription.plan.destroy
+        }.to raise_error(ActiveRecord::DeleteRestrictionError)
+      end
+    end
+
     context "with Payola.create_stripe_plans set to true" do
       before { Payola.create_stripe_plans = true }
 
