@@ -89,8 +89,8 @@ module Payola
         plan = create(:subscription_plan, amount: 200)
         subscription = build(:subscription, plan: plan, amount: 50)
         stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
-        coupon = create(:payola_coupon)        
-        stripe_sub.stub_chain(:discount, :coupon, :id).and_return(coupon.code)        
+        coupon = create(:payola_coupon)
+        allow(stripe_sub).to receive_message_chain(:discount, :coupon, :id).and_return(coupon.code)
 
         expect(stripe_sub).to receive(:quantity).and_return(10).at_least(1)
         expect(stripe_sub).to receive(:cancel_at_period_end).and_return(true).at_least(1)
