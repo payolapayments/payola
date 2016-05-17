@@ -4,6 +4,10 @@
 
 Payments with Stripe for your Rails application.
 
+** This project is currently unmaintained**
+
+If you're a contributor and would like to take over maintenance, [email me](mailto:pete@petekeen.net).
+
 ## What does this do?
 
 Payola is a drop-in Rails engine that lets you sell one or more products by just including a module in your models. It includes:
