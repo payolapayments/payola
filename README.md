@@ -4,7 +4,7 @@
 
 Payments with Stripe for your Rails application.
 
-** This project is currently unmaintained**
+**This project is currently unmaintained**
 
 If you're a contributor and would like to take over maintenance, [email me](mailto:pete@petekeen.net).
 
