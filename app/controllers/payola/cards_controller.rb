@@ -6,7 +6,7 @@ module Payola
     def create
       if params[:customer_id].present? && params[:stripeToken].present?
         Payola::CreateCard.call(params[:customer_id], params[:stripeToken])
-        redirect_to return_to, notice: "Succesfully created new card"
+        redirect_to return_to, notice: "Successfully created new card"
       else
         redirect_to return_to, alert: "Could not create new card"
       end  
@@ -15,7 +15,7 @@ module Payola
     def destroy
       if params[:id].present? && params[:customer_id].present?
         Payola::DestroyCard.call(params[:id], params[:customer_id])
-        redirect_to return_to, notice: "Succesfully removed the card"
+        redirect_to return_to, notice: "Successfully removed the card"
       else
         redirect_to return_to, alert: "Could not remove the card"
       end  

@@ -6,7 +6,7 @@ module Payola
     def update
       if params[:id].present?
         Payola::UpdateCustomer.call(params[:id], customer_params)
-        redirect_to return_to, notice: "Succesfully updated customer"
+        redirect_to return_to, notice: "Successfully updated customer"
       else
         redirect_to return_to, alert: "Could not update customer"
       end  

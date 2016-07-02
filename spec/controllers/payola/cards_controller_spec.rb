@@ -24,7 +24,7 @@ module Payola
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/my/cards"
-        expect(flash[:notice]).to eq "Succesfully created new card"
+        expect(flash[:notice]).to eq "Successfully created new card"
         expect(flash[:alert]).to_not be_present
       end
 
@@ -62,7 +62,7 @@ module Payola
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/my/cards"
-        expect(flash[:notice]).to eq "Succesfully removed the card"
+        expect(flash[:notice]).to eq "Successfully removed the card"
         expect(flash[:alert]).to_not be_present
       end
 
