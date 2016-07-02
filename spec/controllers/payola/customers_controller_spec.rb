@@ -25,7 +25,7 @@ module Payola
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/my/cards"
-        expect(flash[:notice]).to eq "Succesfully updated customer"
+        expect(flash[:notice]).to eq "Successfully updated customer"
         expect(flash[:alert]).to_not be_present
       end
 
