@@ -29,7 +29,7 @@ module Payola
       @subscription = Subscription.find_by!(guid: params[:guid])
       Payola::ChangeSubscriptionPlan.call(@subscription, @plan, @quantity)
 
-      confirm_with_message("Subscription plan updated")
+      confirm_with_message(t('payola.subscriptions.plan_updated'))
     end
 
     def change_quantity
@@ -37,14 +37,14 @@ module Payola
       @subscription = Subscription.find_by!(guid: params[:guid])
       Payola::ChangeSubscriptionQuantity.call(@subscription, @quantity)
 
-      confirm_with_message("Subscription quantity updated")
+      confirm_with_message(t('payola.subscriptions.quantity_updated'))
     end
 
     def update_card
       @subscription = Subscription.find_by!(guid: params[:guid])
       Payola::UpdateCard.call(@subscription, params[:stripeToken])
 
-      confirm_with_message("Card updated")
+      confirm_with_message(t('payola.subscriptions.card_updated'))
     end
 
     private
@@ -76,7 +76,7 @@ module Payola
       if self.respond_to?(:payola_can_modify_subscription?)
         redirect_to(
           confirm_subscription_path(subscription),
-          alert: "You cannot modify this subscription."
+          alert: t('payola.subscriptions.not_authorized')
         ) and return unless self.payola_can_modify_subscription?(subscription)
       end
     end
