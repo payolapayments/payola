@@ -11,3 +11,4 @@ coverage
 .rspec
 *.sublime-*
 .idea
+vendor/bundle*

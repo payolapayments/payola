@@ -1,11 +1,12 @@
 source 'https://rubygems.org'
 
-gemspec
+gemspec path: '..'
 
 group :test do
+  gem 'rspec-rails', '~> 3.3.3'
   gem 'simplecov', require: false
   gem 'codeclimate-test-reporter', require: nil
 end
 gem 'rspec_junit_formatter'
 
-gem 'rails', git: 'https://github.com/rails/rails', branch: '4-2-stable'
+gem 'rails', git: 'https://github.com/rails/rails', branch: '4-1-stable'
