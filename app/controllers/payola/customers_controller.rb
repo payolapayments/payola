@@ -1,15 +1,16 @@
 module Payola
   class CustomersController < ApplicationController
 
-    before_filter :check_modify_permissions, only: [:update]
+    before_action :check_modify_permissions, only: [:update]
 
     def update
       if params[:id].present?
         Payola::UpdateCustomer.call(params[:id], customer_params)
-        redirect_to return_to, notice: t('payola.customers.updated')
+        flash_options = { notice: t('payola.customers.updated') }
       else
-        redirect_to return_to, alert: t('payola.customers.not_updated')
+        flash_options = { alert: t('payola.customers.not_updated') }
       end
+      redirect_to return_to, flash: flash_options
     end
 
     private
@@ -27,10 +28,6 @@ module Payola
           alert: t('payola.customers.not_authorized')
         ) and return unless self.payola_can_modify_customer?(params[:id])
       end
-    end
-
-    def return_to
-      params[:return_to] || :back
     end
 
   end

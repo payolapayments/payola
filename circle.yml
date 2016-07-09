@@ -1,18 +1,30 @@
+machine:
+  environment:
+    RAILS_ENV: test
+  ruby:
+    version: 2.3.1
+
 dependencies:
+  pre:
+    # Sqlite version should be > 3.7.9 to avoid issues with Rails 5.0
+    # https://github.com/rails/rails/pull/24440
+    - sudo apt-get install --only-upgrade sqlite3 libsqlite3-dev
+    - sqlite3 --version
+
   cache_directories:
-    - "vendor/bundle_rails-4.2"
-    - "vendor/bundle_rails-4.1"
+    - "vendor/bundle"
 
   override:
-    - bundle install --path=vendor/bundle_rails-4.2
-    - bundle install --gemfile=gemfiles/rails-4.1.gemfile --path=../vendor/bundle_rails-4.1
+    - bundle install --gemfile=Gemfile --path=vendor/bundle
+    - bundle install --gemfile=gemfiles/rails_4_2.gemfile --path=../vendor/bundle
+    - bundle install --gemfile=gemfiles/rails_4_1.gemfile --path=../vendor/bundle
 
 database:
   override:
-    - cp config/database.yml.ci config/database.yml
-    - bundle exec rake db:create db:migrate db:seed --trace
+    - echo "Do nothing in database step, default rake default task sets up db."
 
 test:
   override:
-    - bundle exec rake
-    - BUNDLE_GEMFILE=gemfiles/rails-4.1.gemfile bundle exec rake
+    - BUNDLE_GEMFILE=Gemfile bundle exec rake
+    - BUNDLE_GEMFILE=gemfiles/rails_4_2.gemfile bundle exec rake
+    - BUNDLE_GEMFILE=gemfiles/rails_4_1.gemfile bundle exec rake

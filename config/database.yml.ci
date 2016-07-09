@@ -1,6 +1,0 @@
- test:
-   adapter: postgresql
-   database: app_test
-   pool: 5
-   username:
-   password:

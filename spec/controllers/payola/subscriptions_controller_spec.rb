@@ -24,18 +24,20 @@ module Payola
         expect(subscription).to receive(:state).and_return('pending')
 
         expect(CreateSubscription).to receive(:call).with(
-          'plan_class' => 'subscription_plan',
-          'plan_id' => @plan.id.to_s,
-          'tax_percent' => tax_percent.to_s,
-          'controller' => 'payola/subscriptions',
-          'action' => 'create',
-          'plan' => @plan,
-          'coupon' => nil,
-          'quantity' => 1,
-          'affiliate' => nil
+          permitted_params(
+            'plan_class' => 'subscription_plan',
+            'plan_id' => @plan.id.to_s,
+            'tax_percent' => tax_percent.to_s,
+            'controller' => 'payola/subscriptions',
+            'action' => 'create',
+            'plan' => @plan,
+            'coupon' => nil,
+            'quantity' => 1,
+            'affiliate' => nil
+          )
         ).and_return(subscription)
 
-        post :create, plan_class: @plan.plan_class, plan_id: @plan.id, tax_percent: tax_percent
+        post :create, params: { plan_class: @plan.plan_class, plan_id: @plan.id, tax_percent: tax_percent }
 
         expect(response.status).to eq 200
         parsed_body = JSON.load(response.body)
@@ -57,7 +59,7 @@ module Payola
           expect(CreateSubscription).to receive(:call).and_return(subscription)
           expect(Payola).to_not receive(:queue!)
 
-          post :create, plan_class: @plan.plan_class, plan_id: @plan.id
+          post :create, params: { plan_class: @plan.plan_class, plan_id: @plan.id }
 
           expect(response.status).to eq 400
           parsed_body = JSON.load(response.body)
@@ -67,13 +69,14 @@ module Payola
     end
 
     describe '#status' do
-      it "should return 404 if it can't find the subscription" do
-        get :status, guid: 'doesnotexist'
+      it "should return 404 with no response body if it can't find the subscription" do
+        get :status, params: { guid: 'doesnotexist' }
         expect(response.status).to eq 404
+        expect(response.body).to be_blank
       end
       it "should return json with properties" do
         subscription = create(:subscription)
-        get :status, guid: subscription.guid
+        get :status, params: { guid: subscription.guid }
 
         expect(response.status).to eq 200
 
@@ -89,7 +92,7 @@ module Payola
       it "should redirect to the product's redirect path" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, :plan => plan)
-        get :show, guid: subscription.guid
+        get :show, params: { guid: subscription.guid }
 
         expect(response).to redirect_to '/'
       end
@@ -101,7 +104,7 @@ module Payola
       end
       it "call Payola::CancelSubscription and redirect" do
         expect(Payola::CancelSubscription).to receive(:call)
-        delete :destroy, guid: @subscription.guid
+        delete :destroy, params: { guid: @subscription.guid }
         # TODO : Figure out why this needs to be a hardcoded path.
         # Why doesn't subscription_path(@subscription) work?
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
@@ -111,14 +114,14 @@ module Payola
         expect(Payola::CancelSubscription).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
-        delete :destroy, guid: @subscription.guid
+        delete :destroy, params: { guid: @subscription.guid }
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
 
       it "coerce the at_period_end param to a boolean, and pass it through to Payola::CancelSubscription" do
         expect(Payola::CancelSubscription).to receive(:call).with(instance_of(Payola::Subscription), at_period_end: true)
-        delete :destroy, guid: @subscription.guid, at_period_end: 'true'
+        delete :destroy, params: { guid: @subscription.guid, at_period_end: 'true' }
       end
     end
 
@@ -132,7 +135,7 @@ module Payola
       it "should call Payola::ChangeSubscriptionPlan and redirect" do
         expect(Payola::ChangeSubscriptionPlan).to receive(:call).with(@subscription, @plan, @quantity)
 
-        post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id
+        post :change_plan, params: { guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:notice]).to eq 'Subscription plan updated'
@@ -141,7 +144,7 @@ module Payola
       it "should show error if Payola::ChangeSubscriptionPlan fails" do
         StripeMock.prepare_error(Stripe::StripeError.new('There was a problem changing the subscription'))
 
-        post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id
+        post :change_plan, params: { guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'There was a problem changing the subscription'
@@ -151,7 +154,7 @@ module Payola
         expect(Payola::ChangeSubscriptionPlan).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
-        post :change_plan, guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id
+        post :change_plan, params: { guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id }
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
@@ -166,7 +169,7 @@ module Payola
       it "should call Payola::ChangeSubscriptionQuantity and redirect" do
         expect(Payola::ChangeSubscriptionQuantity).to receive(:call).with(@subscription, 5)
 
-        post :change_quantity, guid: @subscription.guid, quantity: 5
+        post :change_quantity, params: { guid: @subscription.guid, quantity: 5 }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:notice]).to eq 'Subscription quantity updated'
@@ -175,7 +178,7 @@ module Payola
       it "should show error if Payola::ChangeSubscriptionQuantity fails" do
         StripeMock.prepare_error(Stripe::StripeError.new('There was a problem changing the subscription quantity'))
 
-        post :change_quantity, guid: @subscription.guid, quantity: 5
+        post :change_quantity, params: { guid: @subscription.guid, quantity: 5 }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'There was a problem changing the subscription quantity'
@@ -185,7 +188,7 @@ module Payola
         expect(Payola::ChangeSubscriptionQuantity).to_not receive(:call)
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
-        post :change_quantity, guid: @subscription.guid, quantity: 5
+        post :change_quantity, params: { guid: @subscription.guid, quantity: 5 }
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
@@ -200,7 +203,7 @@ module Payola
       it "should call UpdateCard and redirect" do
         expect(Payola::UpdateCard).to receive(:call).with(@subscription, 'tok_1234')
 
-        post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234'
+        post :update_card, params: { guid: @subscription.guid, stripeToken: 'tok_1234' }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:notice]).to eq 'Card updated'
@@ -209,7 +212,7 @@ module Payola
       it "should show error if Payola::UpdateCare fails" do
         StripeMock.prepare_error(Stripe::StripeError.new('There was a problem updating the card'))
 
-        post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234'
+        post :update_card, params: { guid: @subscription.guid, stripeToken: 'tok_1234' }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'There was a problem updating the card'
@@ -219,7 +222,7 @@ module Payola
         expect(Payola::UpdateCard).to receive(:call).never
         expect_any_instance_of(::ApplicationController).to receive(:payola_can_modify_subscription?).and_return(false)
 
-        post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234'
+        post :update_card, params: { guid: @subscription.guid, stripeToken: 'tok_1234' }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'

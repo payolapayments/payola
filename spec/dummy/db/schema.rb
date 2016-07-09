@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,6 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20151205004838) do
+
   create_table "owners", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -60,14 +60,13 @@ ActiveRecord::Schema.define(version: 20151205004838) do
     t.text     "signed_custom_fields"
     t.integer  "owner_id"
     t.string   "owner_type",           limit: 100
+    t.index ["coupon_id"], name: "index_payola_sales_on_coupon_id"
+    t.index ["email"], name: "index_payola_sales_on_email"
+    t.index ["guid"], name: "index_payola_sales_on_guid"
+    t.index ["owner_id", "owner_type"], name: "index_payola_sales_on_owner_id_and_owner_type"
+    t.index ["product_id", "product_type"], name: "index_payola_sales_on_product"
+    t.index ["stripe_customer_id"], name: "index_payola_sales_on_stripe_customer_id"
   end
-
-  add_index "payola_sales", ["coupon_id"], name: "index_payola_sales_on_coupon_id"
-  add_index "payola_sales", ["email"], name: "index_payola_sales_on_email"
-  add_index "payola_sales", ["guid"], name: "index_payola_sales_on_guid"
-  add_index "payola_sales", ["owner_id", "owner_type"], name: "index_payola_sales_on_owner_id_and_owner_type"
-  add_index "payola_sales", ["product_id", "product_type"], name: "index_payola_sales_on_product"
-  add_index "payola_sales", ["stripe_customer_id"], name: "index_payola_sales_on_stripe_customer_id"
 
   create_table "payola_stripe_webhooks", force: :cascade do |t|
     t.string   "stripe_id"
@@ -112,9 +111,8 @@ ActiveRecord::Schema.define(version: 20151205004838) do
     t.text     "business_address"
     t.integer  "setup_fee"
     t.decimal  "tax_percent",                      precision: 4, scale: 2
+    t.index ["guid"], name: "index_payola_subscriptions_on_guid"
   end
-
-  add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid"
 
   create_table "products", force: :cascade do |t|
     t.string   "name"

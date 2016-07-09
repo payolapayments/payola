@@ -21,17 +21,19 @@ module Payola
         expect(sale).to receive(:guid).at_least(1).times.and_return('blah')
 
         expect(CreateSale).to receive(:call).with(
-          'product_class' => 'product',
-          'permalink' => @product.permalink,
-          'controller' => 'payola/transactions',
-          'action' => 'create',
-          'product' => @product,
-          'coupon' => nil,
-          'affiliate' => nil
+          permitted_params(
+            'product_class' => 'product',
+            'permalink' => @product.permalink,
+            'controller' => 'payola/transactions',
+            'action' => 'create',
+            'product' => @product,
+            'coupon' => nil,
+            'affiliate' => nil
+          )
         ).and_return(sale)
 
         expect(Payola).to receive(:queue!)
-        post :create, product_class: @product.product_class, permalink: @product.permalink
+        post :create, params: { product_class: @product.product_class, permalink: @product.permalink }
 
         expect(response.status).to eq 200
         parsed_body = JSON.load(response.body)
@@ -49,10 +51,10 @@ module Payola
           expect(error).to receive(:full_messages).and_return(['done did broke'])
           expect(sale).to receive(:errors).and_return(error)
 
-          expect(CreateSale).to receive(:call).and_return(sale)          
+          expect(CreateSale).to receive(:call).and_return(sale)
           expect(Payola).to_not receive(:queue!)
 
-          post :create, product_class: @product.product_class, permalink: @product.permalink
+          post :create, params: { product_class: @product.product_class, permalink: @product.permalink }
 
           expect(response.status).to eq 400
           parsed_body = JSON.load(response.body)
@@ -62,13 +64,14 @@ module Payola
     end
 
     describe '#status' do
-      it "should return 404 if it can't find the sale" do
-        get :status, guid: 'doesnotexist'
+      it "should return 404 with no response body if it can't find the sale" do
+        get :status, params: { guid: 'doesnotexist' }
         expect(response.status).to eq 404
+        expect(response.body).to be_blank
       end
       it "should return json with properties" do
         sale = create(:sale)
-        get :status, guid: sale.guid
+        get :status, params: { guid: sale.guid }
 
         expect(response.status).to eq 200
 
@@ -83,7 +86,7 @@ module Payola
     describe '#show' do
       it "should redirect to the product's redirect path" do
         sale = create(:sale)
-        get :show, guid: sale.guid
+        get :show, params: { guid: sale.guid }
 
         expect(response).to redirect_to '/'
       end
