@@ -3,7 +3,7 @@ require 'spec_helper'
 module Payola
   describe CustomersController do
     routes { Payola::Engine.routes }
-  
+
     before do
       Payola.secret_key = 'sk_test_12345'
       request.env["HTTP_REFERER"] = "/my/cards"
@@ -34,6 +34,39 @@ module Payola
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/another/path"
+      end
+
+      it "should not invoke UpdateCustomer if id param is not present" do
+        expect(UpdateCustomer).to_not receive(:call)
+
+        post :update, id: ""
+
+        expect(response.status).to eq 302
+        expect(response).to redirect_to "/my/cards"
+        expect(flash[:alert]).to eq "Could not update customer"
+        expect(flash[:notice]).to_not be_present
+      end
+
+      context "authorization" do
+        it "should permit authorized requests" do
+          allow(controller).to receive(:payola_can_modify_customer?).with(customer.id).and_return(true)
+          expect(controller).to receive(:update).and_call_original
+
+          post :update, id: customer.id, customer: { default_source: "1234" }
+
+          expect(response).to redirect_to "/my/cards"
+          expect(flash[:alert]).to_not be_present
+        end
+
+        it "should deny unauthorized requests" do
+          allow(controller).to receive(:payola_can_modify_customer?).with(customer.id).and_return(false)
+          expect(controller).to_not receive(:update)
+
+          post :update, id: customer.id, customer: { default_source: "1234" }
+
+          expect(response).to redirect_to "/my/cards"
+          expect(flash[:alert]).to eq "You cannot modify this customer."
+        end
       end
 
     end

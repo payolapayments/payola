@@ -1,0 +1,17 @@
+en:
+  payola:
+    cards:
+      created: Successfully created new card
+      not_created: Could not create new card
+      destroyed: Successfully removed the card
+      not_destroyed: Could not remove the card
+      not_authorized: You cannot modify this customer.
+    customers:
+      updated: Successfully updated customer
+      not_updated: Could not update customer
+      not_authorized: You cannot modify this customer.
+    subscriptions:
+      plan_updated: Subscription plan updated
+      quantity_updated: Subscription quantity updated
+      card_updated: Card updated
+      not_authorized: You cannot modify this subscription.
