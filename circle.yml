@@ -1,4 +1,18 @@
+dependencies:
+  cache_directories:
+    - "vendor/bundle_rails-4.2"
+    - "vendor/bundle_rails-4.1"
+
+  override:
+    - bundle install --path=vendor/bundle_rails-4.2
+    - bundle install --gemfile=gemfiles/rails-4.1.gemfile --path=../vendor/bundle_rails-4.1
+
 database:
   override:
     - cp config/database.yml.ci config/database.yml
     - bundle exec rake db:create db:migrate db:seed --trace
+
+test:
+  override:
+    - bundle exec rake
+    - BUNDLE_GEMFILE=gemfiles/rails-4.1.gemfile bundle exec rake
