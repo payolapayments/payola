@@ -142,4 +142,11 @@ module Payola
       expect(Payola.create_stripe_plans).to be true
     end
   end
+
+  describe "#create_stripe_coupons" do
+    it "defaults to true" do
+      Payola.reset!
+      expect(Payola.create_stripe_coupons).to be true
+    end
+  end
 end

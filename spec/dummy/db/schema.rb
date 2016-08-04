@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151205004838) do
+ActiveRecord::Schema.define(version: 20160429161549) do
+
   create_table "owners", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -30,7 +31,13 @@ ActiveRecord::Schema.define(version: 20151205004838) do
     t.integer  "percent_off"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",      default: true
+    t.boolean  "active",             default: true
+    t.integer  "amount_off"
+    t.string   "duration",           default: "once"
+    t.integer  "duration_in_months"
+    t.integer  "max_redemptions"
+    t.datetime "redeem_by"
+    t.string   "currency"
   end
 
   create_table "payola_sales", force: :cascade do |t|

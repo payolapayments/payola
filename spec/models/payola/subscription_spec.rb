@@ -86,6 +86,8 @@ module Payola
       end
 
       it "should sync non-timestamp fields" do
+        Payola.create_stripe_coupons = false
+
         plan = create(:subscription_plan, amount: 200)
         subscription = build(:subscription, plan: plan, amount: 50)
         stripe_sub = Stripe::Customer.create.subscriptions.create(plan: plan.stripe_id, source: StripeMock.generate_card_token(last4: '1234', exp_year: Time.now.year + 1))
