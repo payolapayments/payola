@@ -27,6 +27,8 @@ module Payola
           return_to,
           alert: t('payola.customers.not_authorized')
         ) and return unless self.payola_can_modify_customer?(params[:id])
+      else
+        raise NotImplementedError.new("Please implement ApplicationController#payola_can_modify_customer?")
       end
     end
 

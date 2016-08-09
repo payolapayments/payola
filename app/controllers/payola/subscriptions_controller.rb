@@ -78,6 +78,8 @@ module Payola
           confirm_subscription_path(subscription),
           alert: t('payola.subscriptions.not_authorized')
         ) and return unless self.payola_can_modify_subscription?(subscription)
+      else
+        raise NotImplementedError.new("Please implement ApplicationController#payola_can_modify_subscription?")
       end
     end
 
