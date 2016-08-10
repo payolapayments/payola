@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Dummy</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-  <%= render 'payola/transactions/stripe_header' %>
-</head>
-<body data-no-turbolinks="true">
+<% if Rails::VERSION::MAJOR == 5 %>
+  <head>
+    <title>Dummy</title>
+    <%= csrf_meta_tags %>
 
-<%= yield %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= render 'payola/transactions/stripe_header' %>
+  </head>
 
-</body>
+  <body>
+    <%= yield %>
+  </body>
+<% elsif Rails::VERSION::MAJOR == 4 %>
+  <head>
+    <title>Dummy</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+    <%= render 'payola/transactions/stripe_header' %>
+  </head>
+
+  <body data-no-turbolinks="true">
+    <%= yield %>
+  </body>
+<% else %>
+  <% raise "Unsupported Rails version #{Rails::VERSION}" %>
+<% end %>
 </html>

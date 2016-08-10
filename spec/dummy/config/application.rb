@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -21,4 +21,3 @@ module Dummy
     config.i18n.available_locales = [:en, :de]
   end
 end
-

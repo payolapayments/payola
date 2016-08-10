@@ -4,7 +4,7 @@ module Payola
     include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
-    before_filter :find_product_and_coupon, only: [:create]
+    before_action :find_product_and_coupon, only: [:create]
 
     def show
       show_object(Sale)

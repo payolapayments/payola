@@ -21,7 +21,7 @@ module Payola
 
       it "should pass args to UpdateCustomer" do
         expect(UpdateCustomer).to receive(:call)
-        post :update, id: customer.id, customer: { default_source: "1234" }
+        post :update, params: { id: customer.id, customer: { default_source: "1234" } }
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/my/cards"
@@ -30,7 +30,7 @@ module Payola
       end
 
       it "should return to the passed return path" do
-        post :update, id: customer.id, customer: { default_source: "1234" }, return_to: "/another/path"
+        post :update, params: { id: customer.id, customer: { default_source: "1234" }, return_to: "/another/path" }
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/another/path"
@@ -39,7 +39,7 @@ module Payola
       it "should not invoke UpdateCustomer if id param is not present" do
         expect(UpdateCustomer).to_not receive(:call)
 
-        post :update, id: ""
+        post :update, params: { id: "" }
 
         expect(response.status).to eq 302
         expect(response).to redirect_to "/my/cards"
@@ -52,7 +52,7 @@ module Payola
           allow(controller).to receive(:payola_can_modify_customer?).with(customer.id).and_return(true)
           expect(controller).to receive(:update).and_call_original
 
-          post :update, id: customer.id, customer: { default_source: "1234" }
+          post :update, params: { id: customer.id, customer: { default_source: "1234" } }
 
           expect(response).to redirect_to "/my/cards"
           expect(flash[:alert]).to_not be_present
@@ -62,11 +62,21 @@ module Payola
           allow(controller).to receive(:payola_can_modify_customer?).with(customer.id).and_return(false)
           expect(controller).to_not receive(:update)
 
-          post :update, id: customer.id, customer: { default_source: "1234" }
+          post :update, params: { id: customer.id, customer: { default_source: "1234" } }
 
           expect(response).to redirect_to "/my/cards"
           expect(flash[:alert]).to eq "You cannot modify this customer."
         end
+      end
+
+      it "should raise error when no referrer to redirect to" do
+        request.env.delete("HTTP_REFERER")
+
+        expect do
+          post :update, params: {
+            id: customer.id, customer: { default_source: "1234" }
+          }
+        end.to raise_error(ActionController::RedirectBackError)
       end
 
     end

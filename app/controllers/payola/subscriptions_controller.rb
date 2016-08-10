@@ -4,8 +4,8 @@ module Payola
     include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
-    before_filter :find_plan_coupon_and_quantity, only: [:create, :change_plan]
-    before_filter :check_modify_permissions, only: [:destroy, :change_plan, :change_quantity, :update_card]
+    before_action :find_plan_coupon_and_quantity, only: [:create, :change_plan]
+    before_action :check_modify_permissions, only: [:destroy, :change_plan, :change_quantity, :update_card]
 
     def show
       show_object(Subscription)
@@ -21,7 +21,7 @@ module Payola
 
     def destroy
       subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::CancelSubscription.call(subscription, at_period_end: ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(params[:at_period_end]))
+      Payola::CancelSubscription.call(subscription, at_period_end: to_boolean(params[:at_period_end]))
       redirect_to confirm_subscription_path(subscription)
     end
 
@@ -87,6 +87,12 @@ module Payola
       else
         redirect_to confirm_subscription_path(@subscription), alert: @subscription.errors.full_messages.to_sentence
       end
+    end
+
+    TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE', 'on', 'ON'].to_set
+
+    def to_boolean(value)
+      TRUE_VALUES.include?(value)
     end
 
   end
