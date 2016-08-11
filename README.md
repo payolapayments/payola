@@ -62,11 +62,16 @@ Payola does not currently play nice with turbolinks. Disable it by removing the 
 
 Please see the LICENSE file for licensing details.
 
+## Changelog
+
+Please see [CHANGELOG.md](CHANGELOG.md).
+
 ## Contributing
 
 1. Fork the project
 2. Make your changes, including tests that exercise the code
-3. Make a pull request
+3. Summarize your changes in [CHANGELOG.md](CHANGELOG.md)
+4. Make a pull request
 
 Version announcements happen on the [Payola Payments Google group](https://groups.google.com/forum/#!forum/payola-payments) and [@payolapayments](https://twitter.com/payolapayments).
 
