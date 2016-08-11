@@ -7,6 +7,9 @@ All notable changes to Payola will be documented in this file.
 ## Unreleased
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...HEAD)
 
+### Bug Fixes
+- Call `instrument_quantity_changed` from `ChangeSubscriptionQuantity`. #235
+
 ## v1.4.0 - 2016-01-28
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.3.2...v1.4.0)
 
