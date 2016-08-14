@@ -75,4 +75,3 @@ var PayolaPaymentForm = {
 };
 
 $(document).on(PayolaLoadEvent, PayolaPaymentForm.initialize);
-

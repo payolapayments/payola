@@ -91,4 +91,3 @@ var PayolaOnestepSubscriptionForm = {
 };
 
 $(document).on(PayolaLoadEvent, PayolaOnestepSubscriptionForm.initialize);
-
