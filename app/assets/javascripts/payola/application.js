@@ -10,4 +10,17 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+
+var PayolaLoadEvent;
+
+if(Turbolinks && Turbolinks.supported) {
+  if(Turbolinks.EVENTS) {
+    PayolaLoadEvent = 'page:change';
+  } else {
+    PayolaLoadEvent = 'turbolinks:load';
+  }
+} else {
+  PayolaLoadEvent = 'ready';
+}
+
 //= require_tree .

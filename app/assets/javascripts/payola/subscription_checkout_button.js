@@ -103,8 +103,4 @@ var PayolaSubscriptionCheckout = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaSubscriptionCheckout.initialize);
-} else {
-    $(document).ready(PayolaSubscriptionCheckout.initialize);
-}
+$(document).on(PayolaLoadEvent, PayolaSubscriptionCheckout.initialize);
