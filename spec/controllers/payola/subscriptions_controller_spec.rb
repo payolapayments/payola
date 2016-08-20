@@ -233,7 +233,7 @@ module Payola
         controller.instance_eval('undef :payola_can_modify_subscription?')
 
         expect {
-          post :update_card, guid: @subscription.guid, stripeToken: 'tok_1234'
+          post :update_card, params: { guid: @subscription.guid, stripeToken: 'tok_1234' }
         }.to raise_error(NotImplementedError)
       end
     end
