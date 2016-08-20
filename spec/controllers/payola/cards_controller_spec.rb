@@ -136,6 +136,14 @@ module Payola
           expect(response).to redirect_to "/my/cards"
           expect(flash[:alert]).to eq "You cannot modify this customer."
         end
+
+        it "should throw error if controller doesn't define payola_can_modify_subscription?" do
+          controller.instance_eval('undef :payola_can_modify_customer?')
+
+          expect {
+            delete :destroy, id: customer.sources.first.id, customer_id: customer.id
+          }.to raise_error(NotImplementedError)
+      end
       end
 
       it "should raise error when no referrer to redirect to" do
