@@ -227,6 +227,15 @@ module Payola
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:alert]).to eq 'You cannot modify this subscription.'
       end
+
+      it "should throw error if controller doesn't define payola_can_modify_subscription?" do
+        expect(Payola::UpdateCard).to receive(:call).never
+        controller.instance_eval('undef :payola_can_modify_subscription?')
+
+        expect {
+          post :update_card, params: { guid: @subscription.guid, stripeToken: 'tok_1234' }
+        }.to raise_error(NotImplementedError)
+      end
     end
 
   end

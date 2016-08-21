@@ -6,4 +6,8 @@ class ApplicationController < ActionController::Base
   def payola_can_modify_subscription?(subscription)
     true
   end
+
+  def payola_can_modify_customer?(customer)
+    true
+  end
 end
