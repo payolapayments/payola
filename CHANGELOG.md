@@ -7,8 +7,29 @@ All notable changes to Payola will be documented in this file.
 ## Unreleased
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...HEAD)
 
+### Security
+- Raise error if `payola_can_modify_customer/subscription?` unimplemented. #246
+
+### Enhancements
+- Take optional `stripe_customer_id` when creating a sale. #183
+- Clean up error target HTML attributes. #198
+- Update `cancel_at_period_end` in `CancelSubscription` service. #200
+- Synchronize subscription amount and currency fields with Stripe. #202
+- Send the `plan_id` along with the form submission. #206
+- Set a customer's payment source if nil. #210
+- Maintain the active coupon code on a subscription. #211
+- Disallow deleting a plan if it has any related subscriptions. #221
+- Flash message i18n. #229
+- Rails 5.0 support. #232
+
 ### Bug Fixes
-- Call `instrument_quantity_changed` from `ChangeSubscriptionQuantity`. #235
+- Stop setting `Stripe.api_key` directly in `CancelSubscription` service. #201
+- Convert tax_percent from integer to decimal (at most two decimal places). #189
+- Submit all subscription options for existing stripe customers. #207
+- Update subscription quantity when a subscription is changed. #218
+- Fix flash message typo 'Successfully'. #228
+- Make tax percentage migration reversible. #242
+- Call `instrument_quantity_changed` from `ChangeSubscriptionQuantity`. #250
 
 ## v1.4.0 - 2016-01-28
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.3.2...v1.4.0)
