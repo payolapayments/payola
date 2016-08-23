@@ -1,9 +1,12 @@
 var PayolaCheckout = {
     initialize: function() {
-        $('.payola-checkout-button').on('click', function(e) {
-            e.preventDefault();
-            PayolaCheckout.handleCheckoutButtonClick($(this));
-        });
+        $(document).off('click.payola-checkout-button').on(
+            'click.payola-checkout-button', '.payola-checkout-button',
+            function(e) {
+                e.preventDefault();
+                PayolaCheckout.handleCheckoutButtonClick($(this));
+            }
+        );
     },
 
     handleCheckoutButtonClick: function(button) {
@@ -94,8 +97,4 @@ var PayolaCheckout = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaCheckout.initialize);
-} else {
-    $(document).ready(PayolaCheckout.initialize);
-}
+PayolaCheckout.initialize();

@@ -1,8 +1,11 @@
 var PayolaOnestepSubscriptionForm = {
     initialize: function() {
-        $('.payola-onestep-subscription-form').on('submit', function() {
-            return PayolaOnestepSubscriptionForm.handleSubmit($(this));
-        });
+        $(document).off('submit.payola-onestep-subscription-form').on(
+            'submit.payola-onestep-subscription-form', '.payola-onestep-subscription-form',
+            function() {
+                return PayolaOnestepSubscriptionForm.handleSubmit($(this));
+            }
+        );
     },
 
     handleSubmit: function(form) {
@@ -117,8 +120,4 @@ var PayolaOnestepSubscriptionForm = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaOnestepSubscriptionForm.initialize);
-} else {
-    $(document).ready(PayolaOnestepSubscriptionForm.initialize);
-}
+PayolaOnestepSubscriptionForm.initialize();

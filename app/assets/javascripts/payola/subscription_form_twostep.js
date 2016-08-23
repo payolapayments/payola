@@ -1,8 +1,11 @@
 var PayolaSubscriptionForm = {
     initialize: function() {
-        $('.payola-subscription-form').on('submit', function() {
-            return PayolaSubscriptionForm.handleSubmit($(this));
-        });
+        $(document).off('submit.payola-subscription-form').on(
+            'submit.payola-subscription-form', '.payola-subscription-form',
+            function() {
+                return PayolaSubscriptionForm.handleSubmit($(this));
+            }
+        );
     },
 
     handleSubmit: function(form) {
@@ -91,8 +94,4 @@ var PayolaSubscriptionForm = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaSubscriptionForm.initialize);
-} else {
-    $(document).ready(PayolaSubscriptionForm.initialize);
-}
+PayolaSubscriptionForm.initialize();
