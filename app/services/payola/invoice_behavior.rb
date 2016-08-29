@@ -13,12 +13,13 @@ module Payola
         subscription = Payola::Subscription.find_by!(stripe_id: invoice.subscription)
         secret_key = Payola.secret_key_for_sale(subscription)
 
-        stripe_sub = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key).subscriptions.retrieve(invoice.subscription, secret_key)
+        Stripe.api_key = secret_key
+        stripe_sub = Stripe::Customer.retrieve(subscription.stripe_customer_id).subscriptions.retrieve(invoice.subscription)
         subscription.sync_with!(stripe_sub)
 
         sale = create_sale(subscription, invoice)
 
-        charge = Stripe::Charge.retrieve(invoice.charge, secret_key)
+        charge = Stripe::Charge.retrieve(invoice.charge)
 
         update_sale_with_charge(sale, charge, secret_key)
 
@@ -45,7 +46,8 @@ module Payola
         if charge.respond_to?(:fee)
           sale.fee_amount = charge.fee
         elsif !charge.balance_transaction.nil?
-          balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction, secret_key)
+          Stripe.api_key = secret_key
+          balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction)
           sale.fee_amount = balance.fee
         end
       end

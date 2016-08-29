@@ -122,7 +122,8 @@ module Payola
     def self.call(params)
       return nil if StripeWebhook.exists?(stripe_id: params[:id])
       StripeWebhook.create!(stripe_id: params[:id])
-      event = Stripe::Event.retrieve(params[:id], { api_key: Payola.secret_key })
+      Stripe.api_key = Payola.secret_key
+      event = Stripe::Event.retrieve(params[:id])
       Payola.event_filter.call(event)
     end
   end

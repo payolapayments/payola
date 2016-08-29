@@ -2,6 +2,7 @@ module Payola
   class ChangeSubscriptionPlan
     def self.call(subscription, plan, quantity = 1, coupon_code = nil)
       secret_key = Payola.secret_key_for_sale(subscription)
+      Stripe.api_key = secret_key
       old_plan = subscription.plan
 
       begin
@@ -26,7 +27,7 @@ module Payola
     end
 
     def self.retrieve_subscription_for_customer(subscription, secret_key)
-      customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
+      customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
       customer.subscriptions.retrieve(subscription.stripe_id)
     end
 

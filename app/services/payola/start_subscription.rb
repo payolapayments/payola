@@ -5,6 +5,7 @@ module Payola
     def self.call(subscription)
       subscription.save!
       secret_key = Payola.secret_key_for_sale(subscription)
+      Stripe.api_key = secret_key
 
       new(subscription, secret_key).run
     end
@@ -72,7 +73,7 @@ module Payola
 
       if stripe_customer_id
         # Retrieve the customer from Stripe and use it for this subscription
-        customer = Stripe::Customer.retrieve(stripe_customer_id, secret_key)
+        customer = Stripe::Customer.retrieve(stripe_customer_id)
 
         unless customer.try(:deleted)
           if customer.default_source.nil? && subscription.stripe_token.present?
@@ -93,7 +94,7 @@ module Payola
         email:  subscription.email
       }
 
-      customer = Stripe::Customer.create(customer_create_params, secret_key)
+      customer = Stripe::Customer.create(customer_create_params)
 
       if subscription.setup_fee.present?
         plan = subscription.plan
@@ -103,7 +104,7 @@ module Payola
           amount: subscription.setup_fee,
           currency: subscription.currency,
           description: description
-        }, secret_key)
+        })
       end
 
       customer
