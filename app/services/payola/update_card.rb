@@ -3,14 +3,13 @@ module Payola
     def self.call(subscription, token)
       secret_key = Payola.secret_key_for_sale(subscription)
       begin
-        Stripe.api_key = secret_key
-        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
 
         customer.source = token
         customer.save
 
-        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
-        card = customer.sources.retrieve(customer.default_source)
+        customer = Stripe::Customer.retrieve(subscription.stripe_customer_id, secret_key)
+        card = customer.sources.retrieve(customer.default_source, secret_key)
 
         subscription.update_attributes(
           card_type: card.brand,

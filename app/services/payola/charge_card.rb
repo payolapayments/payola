@@ -22,14 +22,13 @@ module Payola
     end
 
     def self.create_customer(sale, secret_key)
-      Stripe.api_key = secret_key
       if sale.stripe_customer_id.present?
-        Stripe::Customer.retrieve(sale.stripe_customer_id)
+        Stripe::Customer.retrieve(sale.stripe_customer_id, secret_key)
       else
         Stripe::Customer.create({
           source: sale.stripe_token,
           email: sale.email
-        })
+        }, secret_key)
       end
     end
 
@@ -41,16 +40,14 @@ module Payola
         description: sale.guid,
       }.merge(Payola.additional_charge_attributes.call(sale, customer))
 
-      Stripe.api_key = secret_key
-      Stripe::Charge.create(charge_attributes)
+      Stripe::Charge.create(charge_attributes, secret_key)
     end
 
     def self.update_sale(sale, customer, charge, secret_key)
       if charge.respond_to?(:fee)
         fee = charge.fee
       else
-        Stripe.api_key = secret_key
-        balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction)
+        balance = Stripe::BalanceTransaction.retrieve(charge.balance_transaction, secret_key)
         fee = balance.fee
       end
 

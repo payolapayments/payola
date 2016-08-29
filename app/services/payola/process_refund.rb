@@ -5,8 +5,8 @@ module Payola
       
       begin
         secret_key = Payola.secret_key
-        Stripe.api_key = secret_key
-        charge = Stripe::Charge.retrieve(sale.stripe_id)
+    
+        charge = Stripe::Charge.retrieve(sale.stripe_id, secret_key)
         charge.refund
 
         sale.refund!
