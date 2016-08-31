@@ -11,6 +11,7 @@ All notable changes to Payola will be documented in this file.
 - Raise error if `payola_can_modify_customer/subscription?` unimplemented. #246
 
 ### Enhancements
+- Unpegged Stripe gem and stripe-ruby-mock. #255
 - Take optional `stripe_customer_id` when creating a sale. #183
 - Clean up error target HTML attributes. #198
 - Update `cancel_at_period_end` in `CancelSubscription` service. #200
