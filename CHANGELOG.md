@@ -31,6 +31,7 @@ All notable changes to Payola will be documented in this file.
 - Fix flash message typo 'Successfully'. #228
 - Make tax percentage migration reversible. #242
 - Call `instrument_quantity_changed` from `ChangeSubscriptionQuantity`. #250
+- Fix api_key String spec errors with stripe-ruby-mock 2.3.1. #261
 
 ## v1.4.0 - 2016-01-28
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.3.2...v1.4.0)
