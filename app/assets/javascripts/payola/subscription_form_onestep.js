@@ -6,12 +6,39 @@ var PayolaOnestepSubscriptionForm = {
     },
 
     handleSubmit: function(form) {
+        if (!PayolaOnestepSubscriptionForm.validateForm(form)) {
+            return false;
+        }
+
         $(form).find(':submit').prop('disabled', true);
         $('.payola-spinner').show();
         Stripe.card.createToken(form, function(status, response) {
             PayolaOnestepSubscriptionForm.stripeResponseHandler(form, status, response);
         });
         return false;
+    },
+
+    validateForm: function(form) {
+        var cardNumber = $( "input[data-stripe='number']" ).val();
+        if (!Stripe.card.validateCardNumber(cardNumber)) {
+            PayolaOnestepSubscriptionForm.showError(form, 'The card number is not a valid credit card number.');
+            return false;
+        }
+
+        var expMonth = $( "select[data-stripe='exp_month']" ).val();
+        var expYear = $( "select[data-stripe='exp_year']" ).val();
+        if (!Stripe.card.validateExpiry(expMonth, expYear)) {
+            PayolaOnestepSubscriptionForm.showError(form, "Your card's expiration month/year is invalid.");
+            return false;
+        }
+
+        var cvc = $( "input[data-stripe='cvc']" ).val();
+        if(!Stripe.card.validateCVC(cvc)) {
+            PayolaOnestepSubscriptionForm.showError(form, "Your card's security code is invalid.");
+            return false;
+        }
+
+        return true;
     },
 
     stripeResponseHandler: function(form, status, response) {
