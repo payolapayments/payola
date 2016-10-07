@@ -139,6 +139,12 @@ module Payola
     def ==(other)
       to_s == other.to_s
     end
+
+    # This is a nasty hack to counteract Stripe checking if the API key is_a String
+    # See https://github.com/peterkeen/payola/issues/256 for details
+    def is_a?(other)
+      ENV[@key].is_a?(other)
+    end
   end
 
   self.reset!
