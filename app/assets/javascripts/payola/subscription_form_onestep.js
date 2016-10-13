@@ -25,8 +25,8 @@ var PayolaOnestepSubscriptionForm = {
             return false;
         }
 
-        var expMonth = $( "select[data-stripe='exp_month']" ).val();
-        var expYear = $( "select[data-stripe='exp_year']" ).val();
+        var expMonth = $("[data-stripe='exp_month']").val();
+        var expYear = $("[data-stripe='exp_year']").val();
         if (!Stripe.card.validateExpiry(expMonth, expYear)) {
             PayolaOnestepSubscriptionForm.showError(form, "Your card's expiration month/year is invalid.");
             return false;
