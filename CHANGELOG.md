@@ -11,7 +11,6 @@ All notable changes to Payola will be documented in this file.
 - Raise error if `payola_can_modify_customer/subscription?` unimplemented. #246
 
 ### Enhancements
-- Add client side validation to subscription_form_onestep.js
 - Unpegged Stripe gem and stripe-ruby-mock. #255
 - Take optional `stripe_customer_id` when creating a sale. #183
 - Clean up error target HTML attributes. #198
@@ -23,6 +22,7 @@ All notable changes to Payola will be documented in this file.
 - Disallow deleting a plan if it has any related subscriptions. #221
 - Flash message i18n. #229
 - Rails 5.0 support. #232
+- Add client side validation to subscription_form_onestep.js. #262
 
 ### Bug Fixes
 - Stop setting `Stripe.api_key` directly in `CancelSubscription` service. #201
@@ -33,6 +33,7 @@ All notable changes to Payola will be documented in this file.
 - Make tax percentage migration reversible. #242
 - Call `instrument_quantity_changed` from `ChangeSubscriptionQuantity`. #250
 - Fix api_key String spec errors with stripe-ruby-mock 2.3.1. #261
+- Ensure ENV keys are seen as Strings by recent stripe-ruby versions. #265
 
 ## v1.4.0 - 2016-01-28
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.3.2...v1.4.0)
