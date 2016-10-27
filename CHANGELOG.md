@@ -4,8 +4,8 @@ Payola adheres to [Semantic Versioning](http://semver.org/).
 
 All notable changes to Payola will be documented in this file.
 
-## Unreleased
-[Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...HEAD)
+## v1.5.0 - 2016-10-27
+[Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...v1.5.0)
 
 ### Security
 - Raise error if `payola_can_modify_customer/subscription?` unimplemented. #246
