@@ -1,6 +1,6 @@
 # Payola
 
-[![Gem Version](https://badge.fury.io/rb/payola-payments.svg)](http://badge.fury.io/rb/payola-payments) [![CircleCI](https://circleci.com/gh/payolapayments/payola.svg?style=shield)](https://circleci.com/gh/payolapayments/payola) [![Code Climate](https://codeclimate.com/github/payolapayments/payola/badges/gpa.svg)](https://codeclimate.com/github/payolapayments/payola) [![Test Coverage](https://codeclimate.com/github/payolapayments/payola/badges/coverage.svg)](https://codeclimate.com/github/peterkeen/payola) [![Dependency Status](https://gemnasium.com/badges/github.com/payolapayments/payola.svg)](https://gemnasium.com/github.com/payolapayments/payola)
+[![Gem Version](https://badge.fury.io/rb/payola-payments.svg)](http://badge.fury.io/rb/payola-payments) [![CircleCI](https://circleci.com/gh/payolapayments/payola.svg?style=shield)](https://circleci.com/gh/payolapayments/payola) [![Code Climate](https://codeclimate.com/github/payolapayments/payola/badges/gpa.svg)](https://codeclimate.com/github/payolapayments/payola) [![Test Coverage](https://codeclimate.com/github/payolapayments/payola/badges/coverage.svg)](https://codeclimate.com/github/payolapayments/payola) [![Dependency Status](https://gemnasium.com/badges/github.com/payolapayments/payola.svg)](https://gemnasium.com/github.com/payolapayments/payola)
 
 
 Payments with Stripe for your Rails application.
@@ -47,7 +47,10 @@ Payola does not currently play nice with turbolinks. Disable it by removing the 
 ## Additional Setup Resources
 
 
-[One-time payments](https://github.com/peterkeen/payola/wiki/One-time-payments)
+[One-time payments](https://github.com/
+
+
+/payola/wiki/One-time-payments)
 
 [Configuration options](https://github.com/peterkeen/payola/wiki/Configuration-options)
 
