@@ -28,3 +28,5 @@ test:
     - BUNDLE_GEMFILE=Gemfile bundle exec rake
     - BUNDLE_GEMFILE=gemfiles/rails_4_2.gemfile bundle exec rake
     - BUNDLE_GEMFILE=gemfiles/rails_4_1.gemfile bundle exec rake
+  post:
+    - bundle exec codeclimate-test-reporter

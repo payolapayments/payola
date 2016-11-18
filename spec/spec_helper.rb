@@ -1,10 +1,9 @@
 require 'simplecov'
-require "codeclimate-test-reporter"
 
 if ENV['CIRCLE_ARTIFACTS']
   dir = File.join("..", "..", "..", ENV['CIRCLE_ARTIFACTS'], "coverage")
   SimpleCov.coverage_dir(dir)
-  CodeClimate::TestReporter.start
+  SimpleCov.start
 end
 SimpleCov.start 'rails' do
   add_filter 'app/secrets'
