@@ -47,10 +47,7 @@ Payola does not currently play nice with turbolinks. Disable it by removing the 
 ## Additional Setup Resources
 
 
-[One-time payments](https://github.com/
-
-
-/payola/wiki/One-time-payments)
+[One-time payments](https://github.com/payolapayments/payola/wiki/One-time-payments)
 
 [Configuration options](https://github.com/peterkeen/payola/wiki/Configuration-options)
 
