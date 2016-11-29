@@ -90,8 +90,4 @@ var PayolaRegistrationForm = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaRegistrationForm.initialize);
-} else {
-    $(document).ready(PayolaRegistrationForm.initialize);
-}
+$(document).on(PayolaLoadEvent, PayolaRegistrationForm.initialize);

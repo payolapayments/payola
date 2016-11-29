@@ -28,7 +28,7 @@ var PayolaPaymentForm = {
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
             data_form.append(PayolaPaymentForm.authenticityTokenInput());
-            
+
             $.ajax({
                 type: "POST",
                 url: base_path + "/buy/" + product + "/" + permalink,
@@ -74,8 +74,4 @@ var PayolaPaymentForm = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaPaymentForm.initialize);
-} else {
-    $(document).ready(PayolaPaymentForm.initialize);
-}
+$(document).on(PayolaLoadEvent, PayolaPaymentForm.initialize);
