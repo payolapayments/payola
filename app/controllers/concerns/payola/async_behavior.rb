@@ -6,7 +6,16 @@ module Payola
       object = object_class.find_by!(guid: params[:guid])
       redirector = object.redirector
 
-      new_path = redirector.respond_to?(:redirect_path) ? redirector.redirect_path(object) : '/'
+      new_path = '/'
+
+      if redirector.respond_to?(:redirect_path)
+        if redirector.method(:redirect_path).arity == 2
+          new_path = redirector.redirect_path(object, self)
+        else
+          new_path = redirector.redirect_path(object)
+        end
+      end
+
       redirect_to new_path
     end
 
