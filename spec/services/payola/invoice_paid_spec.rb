@@ -34,7 +34,7 @@ module Payola
 
       sub = create(:subscription, plan: plan, stripe_customer_id: customer.id, stripe_id: customer.subscriptions.first.id)
 
-      charge = Stripe::Charge.create(amount: 100, currency: 'usd')
+      charge = Stripe::Charge.create(amount: 100, currency: 'usd', customer: customer.id)
       expect(Stripe::BalanceTransaction).to receive(:retrieve).and_return(OpenStruct.new( amount: 100, fee: 3.29, currency: 'usd' ))
       event = StripeMock.mock_webhook_event('invoice.payment_succeeded', subscription: sub.stripe_id, charge: charge.id)
 
