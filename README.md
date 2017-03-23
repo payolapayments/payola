@@ -40,10 +40,6 @@ Optionally, tell Stripe about your application. Add this as a webhook in your [S
 https://your.website.example.com/payola/events
 ```
 
-### Disable Turbolinks
-
-Payola does not currently play nice with turbolinks. Disable it by removing the turbolinks include in your `application.js`.
-
 ## Additional Setup Resources
 
 

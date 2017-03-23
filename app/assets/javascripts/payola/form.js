@@ -1,8 +1,11 @@
 var PayolaPaymentForm = {
     initialize: function() {
-        $('.payola-payment-form').on('submit', function() {
-            return PayolaPaymentForm.handleSubmit($(this));
-        });
+        $(document).off('submit.payola-payment-form').on(
+            'submit.payola-payment-form', '.payola-payment-form',
+            function() {
+                return PayolaPaymentForm.handleSubmit($(this));
+            }
+        );
     },
 
     handleSubmit: function(form) {
@@ -28,7 +31,7 @@ var PayolaPaymentForm = {
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
             data_form.append(PayolaPaymentForm.authenticityTokenInput());
-            
+
             $.ajax({
                 type: "POST",
                 url: base_path + "/buy/" + product + "/" + permalink,
@@ -74,8 +77,4 @@ var PayolaPaymentForm = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaPaymentForm.initialize);
-} else {
-    $(document).ready(PayolaPaymentForm.initialize);
-}
+PayolaPaymentForm.initialize();

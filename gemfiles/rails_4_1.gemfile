@@ -10,3 +10,4 @@ end
 gem 'rspec_junit_formatter'
 
 gem 'rails', git: 'https://github.com/rails/rails', branch: '4-1-stable'
+gem 'rake', '~> 11.1'

@@ -1,9 +1,12 @@
 var PayolaRegistrationForm = {
     initialize: function() {
-        $('.payola-register-form').on('submit', function(e) {
-            e.preventDefault();
-            return PayolaRegistrationForm.handleSubmit($(this));
-        });
+        $(document).off('submit.payola-register-form').on(
+            'submit.payola-register-form', '.payola-register-form',
+            function() {
+                e.preventDefault();
+                return PayolaRegistrationForm.handleSubmit($(this));
+            }
+        );
     },
 
     handleSubmit: function(form) {
@@ -90,8 +93,4 @@ var PayolaRegistrationForm = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaRegistrationForm.initialize);
-} else {
-    $(document).ready(PayolaRegistrationForm.initialize);
-}
+PayolaRegistrationForm.initialize();

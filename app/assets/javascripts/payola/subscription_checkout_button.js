@@ -1,9 +1,12 @@
 var PayolaSubscriptionCheckout = {
     initialize: function() {
-        $('.payola-subscription-checkout-button').on('click', function(e) {
-            e.preventDefault();
-            PayolaSubscriptionCheckout.handleCheckoutButtonClick($(this));
-        });
+        $(document).off('click.payola-subscription-checkout-button').on(
+            'click.payola-subscription-checkout-button', '.payola-subscription-checkout-button',
+            function(e) {
+                e.preventDefault();
+                PayolaSubscriptionCheckout.handleCheckoutButtonClick($(this));
+            }
+        );
     },
 
     handleCheckoutButtonClick: function(button) {
@@ -103,8 +106,4 @@ var PayolaSubscriptionCheckout = {
     }
 };
 
-if ('undefined' !== typeof Turbolinks) {
-    $(document).on('page:change', PayolaSubscriptionCheckout.initialize);
-} else {
-    $(document).ready(PayolaSubscriptionCheckout.initialize);
-}
+PayolaSubscriptionCheckout.initialize();
