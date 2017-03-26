@@ -49,9 +49,10 @@ module Payola
 
         context "set" do
           before do
-            @trial_end = "now"
             @quantity = 1
-            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2, @quantity, nil, @trial_end)
+            @coupon = nil
+            @trial_end = "now"
+            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2, @quantity, @coupon, @trial_end)
           end
 
           it "should have the trial_end" do
