@@ -27,7 +27,7 @@ module Payola
 
     def change_plan
       @subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::ChangeSubscriptionPlan.call(@subscription, @plan, @quantity)
+      Payola::ChangeSubscriptionPlan.call(@subscription, @plan, @quantity, @trial_end)
 
       confirm_with_message(t('payola.subscriptions.plan_updated'))
     end
@@ -52,6 +52,7 @@ module Payola
     def find_plan_coupon_and_quantity
       find_plan
       find_coupon
+      find_trial_end
       find_quantity
     end
 
@@ -65,6 +66,10 @@ module Payola
 
     def find_coupon
       @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
+    end
+
+    def find_trial_end
+      @trial_end = params[:trial_end]
     end
 
     def find_quantity

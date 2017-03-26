@@ -29,6 +29,37 @@ module Payola
         end
       end
 
+      context "trial_end" do
+        before do
+          @sub = Stripe::Subscription.new
+
+          allow(@sub).to receive(:save).and_return(true) # trial_end value is wiped when save is called
+          allow(ChangeSubscriptionPlan).to receive(:retrieve_subscription_for_customer).and_return(@sub)
+        end
+
+        context "not set" do
+          before do
+            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2)
+          end
+
+          it "should not have trial_end set" do
+            expect(@sub.try(:trial_end)).to be_nil
+          end
+        end
+
+        context "set" do
+          before do
+            @trial_end = "now"
+            @quantity = 1
+            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2, @quantity, nil, @trial_end)
+          end
+
+          it "should have the trial_end" do
+            expect(@sub.trial_end).to eq(@trial_end)
+          end
+        end
+      end
+
       context "coupon" do
         before do
           @sub = Stripe::Subscription.new
