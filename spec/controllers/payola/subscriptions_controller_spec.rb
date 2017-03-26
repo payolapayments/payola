@@ -130,13 +130,14 @@ module Payola
         @subscription = create(:subscription, state: :active, stripe_customer_id: Stripe::Customer.create.id)
         @plan = create(:subscription_plan)
         @quantity = 1
+        @coupon = nil
         @trial_end = "now"
       end
 
       it "should call Payola::ChangeSubscriptionPlan and redirect" do
-        expect(Payola::ChangeSubscriptionPlan).to receive(:call).with(@subscription, @plan, @quantity, @trial_end)
+        expect(Payola::ChangeSubscriptionPlan).to receive(:call).with(@subscription, @plan, @quantity, @coupon, @trial_end)
 
-        post :change_plan, params: { guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id, trial_end: "now" }
+        post :change_plan, params: { guid: @subscription.guid, plan_class: @plan.plan_class, plan_id: @plan.id, trial_end: @trial_end }
 
         expect(response).to redirect_to "/subdir/payola/confirm_subscription/#{@subscription.guid}"
         expect(request.flash[:notice]).to eq 'Subscription plan updated'
