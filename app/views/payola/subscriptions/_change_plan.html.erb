@@ -1,5 +1,7 @@
 <%
   quantity = local_assigns.fetch :quantity, 1
+  coupon = local_assigns.fetch :coupon, nil
+  trial_end = local_assigns.fetch :trial_end, nil
   button_class = local_assigns.fetch :button_class, 'stripe-button-el'
   button_text = local_assigns.fetch :button_text, "Update Plan"
 %>
@@ -8,5 +10,11 @@
   <%= hidden_field_tag 'plan_class', new_plan.plan_class %>
   <%= hidden_field_tag 'plan_id', new_plan.id %>
   <%= hidden_field_tag 'quantity', quantity %>
+  <% if coupon %>
+  <%= hidden_field_tag 'coupon', coupon %>
+  <% end %>
+  <% if trial_end %>
+  <%= hidden_field_tag 'trial_end', trial_end %>
+  <% end %>
   <%= button_tag button_text, class: button_class %>
 <% end %>
