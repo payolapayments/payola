@@ -4,7 +4,7 @@ module Payola
     include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
-    before_action :find_plan_coupon_and_quantity, only: [:create, :change_plan]
+    before_action :find_plan_coupon_quantity_and_trial_end, only: [:create, :change_plan]
     before_action :check_modify_permissions, only: [:destroy, :change_plan, :change_quantity, :update_card]
 
     def show
@@ -49,7 +49,7 @@ module Payola
 
     private
 
-    def find_plan_coupon_and_quantity
+    def find_plan_coupon_quantity_and_trial_end
       find_plan
       find_coupon
       find_trial_end
