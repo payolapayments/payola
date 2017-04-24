@@ -26,8 +26,10 @@ var PayolaPaymentForm = {
             var base_path = form.data('payola-base-path');
             var product = form.data('payola-product');
             var permalink = form.data('payola-permalink');
-
+            var currency = form.data('payola-currency');
+  
             var data_form = $('<form></form>');
+            data_form.append($('<input type="hidden" name="currency">').val(currency));
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
             data_form.append($('<input type="hidden" name="stripeEmail">').val(email));
             data_form.append(PayolaPaymentForm.authenticityTokenInput());

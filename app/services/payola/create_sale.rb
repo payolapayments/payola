@@ -19,7 +19,11 @@ module Payola
         s.email = email
         s.stripe_token = token
         s.affiliate_id = affiliate.try(:id)
-        s.currency = product.respond_to?(:currency) ? product.currency : Payola.default_currency
+        if params[:currency].present?
+          s.currency = params[:currency]
+        else
+          s.currency = product.respond_to?(:currency) ? product.currency : Payola.default_currency
+        end
         s.signed_custom_fields = params[:signed_custom_fields]
         s.stripe_customer_id = customer.id if customer
 
