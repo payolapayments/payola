@@ -12,8 +12,9 @@ Gem::Specification.new do |s|
   s.description = "One-off and subscription payments for your Rails application"
   s.license     = "LGPL-3.0"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
-  s.test_files = Dir["spec/**/*"]
+  s.files         = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^(test|spec|features)/})
+  end
 
   s.add_dependency "rails", ">= 4.1"
   s.add_dependency "jquery-rails"
