@@ -9,6 +9,8 @@ All notable changes to Payola will be documented in this file.
 
 ### Enhancements
 - Support Turbolinks & non-Turbolinks apps reliably. #254
+- Remove `spec/` and `.gitignored` files from `gemspec.files`. #293
+- Allow checkout form to override currency. #296
 
 ## v1.5.0 - 2016-10-27
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...v1.5.0)
