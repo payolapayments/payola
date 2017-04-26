@@ -14,8 +14,8 @@ module Payola
 
     belongs_to :product, polymorphic: true
     belongs_to :owner, polymorphic: true
-    belongs_to :coupon
-    belongs_to :affiliate
+    belongs_to :coupon, optional: true
+    belongs_to :affiliate, optional: true
 
     include AASM
 
