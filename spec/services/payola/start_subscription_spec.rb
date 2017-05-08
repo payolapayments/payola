@@ -120,6 +120,19 @@ module Payola
         expect(ii.amount).to eq 100
         expect(ii.description).to eq 'Random Mystery Fee'
       end
+
+      it "should update the user's card information if a stripeToken is present" do
+        plan = create(:subscription_plan)
+        card_token = StripeMock.generate_card_token(last4: '1212', exp_year: Time.now + 2.years)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: card_token, owner: user)
+        StartSubscription.call(subscription)
+
+        card_token2 = StripeMock.generate_card_token(last4: '2121', exp_year: Time.now + 1.years)
+        subscription2 = create(:subscription, state: 'processing', plan: plan, stripe_token: card_token2, owner: user)
+        StartSubscription.call(subscription2)
+        expect(subscription.card_last4).to_not eq subscription2.card_last4
+        expect(subscription.exp_year).to_not eq subscription2.exp_year
+      end
     end
   end
 end
