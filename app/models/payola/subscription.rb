@@ -13,9 +13,9 @@ module Payola
     validate :conditional_stripe_token
     validates_presence_of :currency
 
-    belongs_to :plan,  polymorphic: true
-    belongs_to :owner, polymorphic: true, optional: true
-    belongs_to :affiliate, optional: true
+    belongs_to :plan, Rails::VERSION::MAJOR > 4 ? { polymorphic: true, optional: true } : { polymorphic: true }
+    belongs_to :owner, Rails::VERSION::MAJOR > 4 ? { polymorphic: true, optional: true } : { polymorphic: true }
+    belongs_to :affiliate, Rails::VERSION::MAJOR > 4 ? { optional: true } : {}
 
     has_many :sales, class_name: 'Payola::Sale', as: :owner
 
