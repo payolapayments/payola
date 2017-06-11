@@ -14,8 +14,8 @@ module Payola
     validates_presence_of :currency
 
     belongs_to :plan,  polymorphic: true
-    belongs_to :owner, polymorphic: true
-    belongs_to :affiliate
+    belongs_to :owner, polymorphic: true, optional: true
+    belongs_to :affiliate, optional: true
 
     has_many :sales, class_name: 'Payola::Sale', as: :owner
 
