@@ -1,4 +1,4 @@
-class AddOwnerToPayolaSale < ActiveRecord::Migration
+class AddOwnerToPayolaSale < ActiveRecord::Migration[4.2]
   def change
     add_column :payola_sales, :owner_id, :integer
     add_column :payola_sales, :owner_type, :string, limit: 100

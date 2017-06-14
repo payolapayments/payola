@@ -27,10 +27,14 @@ var PayolaOnestepSubscriptionForm = {
             PayolaOnestepSubscriptionForm.showError(form, 'The card number is not a valid credit card number.');
             return false;
         }
-
-        var expMonth = $("[data-stripe='exp_month']").val();
-        var expYear = $("[data-stripe='exp_year']").val();
-        if (!Stripe.card.validateExpiry(expMonth, expYear)) {
+        if ($("[data-stripe='exp']").length){
+            var valid = !Stripe.card.validateExpiry($("[data-stripe='exp']").val());
+        }else{
+            var expMonth = $("[data-stripe='exp_month']").val();
+            var expYear = $("[data-stripe='exp_year']").val();
+            var valid = !Stripe.card.validateExpiry(expMonth, expYear);
+        }
+        if (valid) {
             PayolaOnestepSubscriptionForm.showError(form, "Your card's expiration month/year is invalid.");
             return false;
         }

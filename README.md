@@ -59,6 +59,10 @@ https://your.website.example.com/payola/events
 
 Please see the LICENSE file for licensing details.
 
+## Sponsorship
+
+You can sponsor Payola development on [Patreon](https://www.patreon.com/user?u=5541136).
+
 ## Changelog
 
 Please see [CHANGELOG.md](CHANGELOG.md).
