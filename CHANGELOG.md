@@ -9,6 +9,7 @@ All notable changes to Payola will be documented in this file.
 
 ### Enhancements
 - Support Turbolinks & non-Turbolinks apps reliably. #254
+- added support to `ChangeSubscriptionPlan` for `trial_end` and `coupon`
 - Remove `spec/` and `.gitignored` files from `gemspec.files`. #293
 - Allow checkout form to override currency. #296
 

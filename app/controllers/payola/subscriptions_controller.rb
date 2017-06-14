@@ -4,7 +4,7 @@ module Payola
     include Payola::StatusBehavior
     include Payola::AsyncBehavior
 
-    before_action :find_plan_coupon_and_quantity, only: [:create, :change_plan]
+    before_action :find_plan_coupon_quantity_and_trial_end, only: [:create, :change_plan]
     before_action :check_modify_permissions, only: [:destroy, :change_plan, :change_quantity, :update_card]
 
     def show
@@ -27,7 +27,7 @@ module Payola
 
     def change_plan
       @subscription = Subscription.find_by!(guid: params[:guid])
-      Payola::ChangeSubscriptionPlan.call(@subscription, @plan, @quantity)
+      Payola::ChangeSubscriptionPlan.call(@subscription, @plan, @quantity, @coupon, @trial_end)
 
       confirm_with_message(t('payola.subscriptions.plan_updated'))
     end
@@ -49,9 +49,10 @@ module Payola
 
     private
 
-    def find_plan_coupon_and_quantity
+    def find_plan_coupon_quantity_and_trial_end
       find_plan
       find_coupon
+      find_trial_end
       find_quantity
     end
 
@@ -65,6 +66,10 @@ module Payola
 
     def find_coupon
       @coupon = cookies[:cc] || params[:cc] || params[:coupon_code] || params[:coupon]
+    end
+
+    def find_trial_end
+      @trial_end = params[:trial_end]
     end
 
     def find_quantity
