@@ -50,16 +50,26 @@ var PayolaPaymentForm = {
         if (num_retries_left === 0) {
             PayolaPaymentForm.showError(form, "This seems to be taking too long. Please contact support and give them transaction ID: " + guid);
         }
-        $.get(base_path + '/status/' + guid, function(data) {
+
+        var handler = function(data) {
             if (data.status === "finished") {
                 form.append($('<input type="hidden" name="payola_sale_guid"></input>').val(guid));
                 form.append(PayolaPaymentForm.authenticityTokenInput());
                 form.get(0).submit();
-            } else if (data.status === "errored") {
-                PayolaPaymentForm.showError(form, data.error);
             } else {
                 setTimeout(function() { PayolaPaymentForm.poll(form, num_retries_left - 1, guid, base_path); }, 500);
             }
+        };
+        var errorHandler = function(jqXHR) {
+            PayolaPaymentForm.showError(form, jQuery.parseJSON(jqXHR.responseText).error);
+        };
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: base_path + '/status/' + guid,
+            success: handler,
+            error: errorHandler
         });
     },
 
