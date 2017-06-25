@@ -13,6 +13,9 @@ All notable changes to Payola will be documented in this file.
 - Remove `spec/` and `.gitignored` files from `gemspec.files`. #293
 - Allow checkout form to override currency. #296
 
+### Bug Fixes
+- `PayolaPaymentForm.poll()` handles HTTP error responses. #310
+
 ## v1.5.0 - 2016-10-27
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...v1.5.0)
 
