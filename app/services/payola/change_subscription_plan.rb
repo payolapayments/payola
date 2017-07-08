@@ -13,6 +13,7 @@ module Payola
         sub.trial_end = trial_end if trial_end.present?
         sub.save
 
+        subscription.cancel_at_period_end = false
         subscription.plan = plan
         subscription.quantity = quantity
         subscription.save!

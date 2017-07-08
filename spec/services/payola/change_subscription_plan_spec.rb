@@ -9,8 +9,8 @@ module Payola
         @plan1 = create(:subscription_plan)
         @plan2 = create(:subscription_plan)
 
-        token = StripeMock.generate_card_token({})
-        @subscription = create(:subscription, plan: @plan1, stripe_token: token)
+        @token = StripeMock.generate_card_token({})
+        @subscription = create(:subscription, plan: @plan1, stripe_token: @token)
         StartSubscription.call(@subscription)
       end
 
@@ -88,6 +88,30 @@ module Payola
 
           it "should have the coupon" do
             expect(@sub.coupon.code).to eq(@coupon.code)
+          end
+        end
+      end
+
+      context "subscription.cancel_at_period_end" do
+        context "not set" do
+          before do
+            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2)
+          end
+
+          it "should not change" do
+            expect(@subscription.cancel_at_period_end).to be false
+          end
+        end
+
+        context "set" do
+          before do
+            @subscription = create(:subscription, plan: @plan1, stripe_token: @token, cancel_at_period_end: true)
+            StartSubscription.call(@subscription)
+            Payola::ChangeSubscriptionPlan.call(@subscription, @plan2)
+          end
+
+          it "should be reset to false" do
+            expect(@subscription.cancel_at_period_end).to be false
           end
         end
       end
