@@ -93,14 +93,16 @@ var PayolaOnestepSubscriptionForm = {
         var errorHandler = function(jqXHR){
             PayolaOnestepSubscriptionForm.showError(form, jQuery.parseJSON(jqXHR.responseText).error);
         };
-
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: base_path + '/subscription_status/' + guid,
-            success: handler,
-            error: errorHandler
-        });
+        
+        if (typeof guid != 'undefined') {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: base_path + '/subscription_status/' + guid,
+                success: handler,
+                error: errorHandler
+            });
+        }
     },
 
     showError: function(form, message) {
