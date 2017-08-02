@@ -1,4 +1,4 @@
-class AddGuidToPayolaSubscriptions < ActiveRecord::Migration[4.2]
+class AddGuidToPayolaSubscriptions < ActiveRecord::Migration[5.1]
   def change
     add_column :payola_subscriptions, :guid, :string, limit: 191
     add_index :payola_subscriptions, :guid

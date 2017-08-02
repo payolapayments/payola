@@ -1,4 +1,4 @@
-class CreatePayolaStripeWebhooks < ActiveRecord::Migration[4.2]
+class CreatePayolaStripeWebhooks < ActiveRecord::Migration[5.1]
   def change
     create_table :payola_stripe_webhooks do |t|
       t.string :stripe_id

@@ -1,4 +1,4 @@
-class CreatePayolaCoupons < ActiveRecord::Migration[4.2]
+class CreatePayolaCoupons < ActiveRecord::Migration[5.1]
   def change
     create_table :payola_coupons do |t|
       t.string :code

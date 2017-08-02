@@ -1,4 +1,4 @@
-class AddSignedCustomFieldsToPayolaSubscription < ActiveRecord::Migration[4.2]
+class AddSignedCustomFieldsToPayolaSubscription < ActiveRecord::Migration[5.1]
   def change
     add_column :payola_subscriptions, :signed_custom_fields, :text
   end
