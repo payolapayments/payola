@@ -31,7 +31,8 @@ module Payola
       :additional_charge_attributes,
       :guid_generator,
       :pdf_receipt,
-      :create_stripe_plans
+      :create_stripe_plans,
+      :allow_no_payment_info_for_trial_periods
 
     def configure(&block)
       raise ArgumentError, "must provide a block" unless block_given?
@@ -92,6 +93,7 @@ module Payola
       self.pdf_receipt = false
       self.guid_generator = lambda { SecureRandom.random_number(1_000_000_000).to_s(32) }
       self.create_stripe_plans = true
+      self.allow_no_payment_info_for_trial_periods = false
     end
 
     def register_sellable(klass)

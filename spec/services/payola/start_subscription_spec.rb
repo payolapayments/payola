@@ -6,6 +6,11 @@ module Payola
     let(:token){ StripeMock.generate_card_token({}) }
     let(:user){ User.create }
 
+    before do
+      Payola.allow_no_payment_info_for_trial_periods = false
+    end
+
+
     describe "#call" do
       it "should create a customer" do
         plan = create(:subscription_plan)
@@ -19,6 +24,21 @@ module Payola
         StartSubscription.call(subscription)
         expect(subscription.reload.stripe_customer_id).to_not be_nil
       end
+      it "should create a customer with paid plan without stripe token, but with free trial period" do
+        plan = create(:subscription_plan, amount:0, trial_period_days: 5)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil)
+        Payola.allow_no_payment_info_for_trial_periods = true
+        StartSubscription.call(subscription)
+        expect(subscription.reload.stripe_customer_id).to_not be_nil
+      end
+      it "should not create a customer with paid plan with free trial period, but without stripe token or configured to allow payment info for plans with trial periods" do
+        plan = create(:subscription_plan, amount:1, trial_period_days: 5)
+        subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: nil)
+        Payola.allow_no_payment_info_for_trial_periods = false
+        StartSubscription.call(subscription)
+        expect(subscription.reload.stripe_customer_id).to be_nil
+      end
+
       it "should capture credit card info" do
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token)
