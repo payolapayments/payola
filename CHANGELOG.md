@@ -4,8 +4,8 @@ Payola adheres to [Semantic Versioning](http://semver.org/).
 
 All notable changes to Payola will be documented in this file.
 
-## Unreleased
-[Full Changelog](https://github.com/peterkeen/payola/compare/v1.5.0...HEAD)
+## v1.5.1 - 2017-11-25
+[Full Changelog](https://github.com/peterkeen/payola/compare/v1.5.0...v1.5.1)
 
 ### Enhancements
 - Support Turbolinks & non-Turbolinks apps reliably. #254
@@ -13,9 +13,13 @@ All notable changes to Payola will be documented in this file.
 - Reset subscription `cancel_at_period_end` in `ChangeSubscriptionPlan`
 - Remove `spec/` and `.gitignored` files from `gemspec.files`. #293
 - Allow checkout form to override currency. #296
+- Add support for single exp field
+- Support Rails 5.1
+- Allow for non-card payment types in Subscription Create #327
 
 ### Bug Fixes
 - `PayolaPaymentForm.poll()` handles HTTP error responses. #310
+
 
 ## v1.5.0 - 2016-10-27
 [Full Changelog](https://github.com/peterkeen/payola/compare/v1.4.0...v1.5.0)
