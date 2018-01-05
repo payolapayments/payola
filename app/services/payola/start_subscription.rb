@@ -75,7 +75,7 @@ module Payola
         customer = Stripe::Customer.retrieve(stripe_customer_id, secret_key)
 
         unless customer.try(:deleted)
-          if customer.default_source.nil? && subscription.stripe_token.present?
+          if subscription.stripe_token.present?
             customer.source = subscription.stripe_token
             customer.save
           end
