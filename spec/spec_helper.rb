@@ -94,3 +94,9 @@ module Payola
     end
   end
 end
+
+class TwoArgumentProduct < Product
+  def redirect_path(object, controller)
+    "/" + [object.id, controller.class].join("/")
+  end
+end

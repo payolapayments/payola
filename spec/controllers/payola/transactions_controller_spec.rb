@@ -90,6 +90,18 @@ module Payola
 
         expect(response).to redirect_to '/'
       end
+
+      it "should call redirect_path with two arguments if possible" do
+        sale = create(:sale)
+        sale.update(product_type: 'TwoArgumentProduct')
+        sale.save!
+
+        expect(sale.product.method(:redirect_path).arity).to eq(2)
+
+        get :show, params: { guid: sale.guid }
+
+        expect(response).to redirect_to "/#{sale.id}/Payola::TransactionsController"
+      end
     end
   end
 end
