@@ -2,7 +2,7 @@ var PayolaRegistrationForm = {
     initialize: function() {
         $(document).off('submit.payola-register-form').on(
             'submit.payola-register-form', '.payola-register-form',
-            function() {
+            function(e) {
                 e.preventDefault();
                 return PayolaRegistrationForm.handleSubmit($(this));
             }
