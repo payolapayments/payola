@@ -8,7 +8,7 @@ module Payola
       if params[:stripe_customer_id].present?
         customer = Stripe::Customer.retrieve(params[:stripe_customer_id], Payola.secret_key)
         email = customer.email
-        token = customer.default_source
+        token = customer.default_source || params[:stripeToken]
       else
         email = params[:stripeEmail]
         token = params[:stripeToken]
