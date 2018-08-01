@@ -3,6 +3,10 @@ require 'spec_helper'
 module Payola
   describe Subscription do
 
+    before do
+      Payola.allow_no_payment_info_for_trial_periods = false
+    end
+
     describe "validations" do
       it "should validate" do
         subscription = build(:subscription)
@@ -21,6 +25,20 @@ module Payola
 
       it "should not validate nil stripe_token on paid plan" do
         plan = create(:subscription_plan)
+        subscription = build(:subscription, stripe_token: nil, plan: plan)
+        expect(subscription.valid?).to be false
+      end
+
+      it "should validate for nil stripe_token on paid plan when configured to allow plans with trial periods to allow no payment info" do
+        Payola.allow_no_payment_info_for_trial_periods = true
+        plan = create(:subscription_plan, trial_period_days: 10)
+        subscription = build(:subscription, stripe_token: nil, plan: plan)
+        expect(subscription.valid?).to be true
+      end
+
+      it "should not validate for nil stripe_token on paid plan without trial period when configured to allow plans with trial periods to allow no payment info" do
+        Payola.allow_no_payment_info_for_trial_periods = true
+        plan = create(:subscription_plan, trial_period_days: 0)
         subscription = build(:subscription, stripe_token: nil, plan: plan)
         expect(subscription.valid?).to be false
       end

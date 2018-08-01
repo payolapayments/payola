@@ -94,14 +94,27 @@ module Payola
         end
       end
 
-      if subscription.plan.amount > 0 and not subscription.stripe_token.present?
-        raise "stripeToken required for new customer with paid subscription"
-      end
-
       customer_create_params = {
         source: subscription.stripe_token,
         email:  subscription.email
       }
+
+      if subscription.plan.amount > 0 and
+        not subscription.stripe_token.present?
+        if Payola.allow_no_payment_info_for_trial_periods
+          if not subscription.plan.respond_to?(:trial_period_days) or
+             not subscription.plan.trial_period_days.present? or
+             subscription.plan.trial_period_days <= 0
+             raise "A payment method is required for subscription plans without a free trial period"
+          else
+            customer_create_params.delete(:source)
+          end
+        else
+          raise "stripeToken required for new customer with paid subscription"
+        end
+      end
+
+
 
       customer = Stripe::Customer.create(customer_create_params, secret_key)
 

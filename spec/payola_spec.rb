@@ -63,13 +63,13 @@ module Payola
     describe "with callable" do
       it "should call the callable" do
         foo = nil
-        
+
         Payola.background_worker = lambda do |sale|
           foo = sale
         end
-  
+
         Payola.queue!('blah')
-  
+
         expect(foo).to eq 'blah'
       end
     end
@@ -140,6 +140,13 @@ module Payola
     it "defaults to true" do
       Payola.reset!
       expect(Payola.create_stripe_plans).to be true
+    end
+  end
+
+  describe "#allow_no_payment_info_for_trial_periods" do
+    it "defaults to false" do
+      Payola.reset!
+      expect(Payola.allow_no_payment_info_for_trial_periods).to be false
     end
   end
 end

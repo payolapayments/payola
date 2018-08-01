@@ -139,8 +139,12 @@ module Payola
       return true if stripe_customer_id.present?
       return true if plan.nil?
       if (plan.amount > 0 )
-        if plan.respond_to?(:trial_period_days) and (plan.trial_period_days.nil? or ( plan.trial_period_days and !(plan.trial_period_days > 0) ))
-          errors.add(:base, 'No Stripe token is present for a paid plan') if stripe_token.nil?
+        if plan.respond_to?(:trial_period_days)
+          if Payola.allow_no_payment_info_for_trial_periods and (plan.trial_period_days.nil? or plan.trial_period_days <= 0)
+            errors.add(:base, 'No Stripe token is present for a paid plan without a trial period') if stripe_token.nil?
+          elsif (plan.trial_period_days.nil? or ( plan.trial_period_days and !(plan.trial_period_days > 0) ))
+            errors.add(:base, 'No Stripe token is present for a paid plan') if stripe_token.nil?
+          end
         end
       end
     end
