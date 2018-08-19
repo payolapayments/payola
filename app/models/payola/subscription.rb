@@ -104,6 +104,14 @@ module Payola
       self.amount               = stripe_sub.plan.amount
       self.currency             = stripe_sub.plan.respond_to?(:currency) ? stripe_sub.plan.currency : Payola.default_currency
       self.cancel_at_period_end = stripe_sub.cancel_at_period_end
+      
+      Payola.subscribables.values.each do |plan_class|
+        plan = plan_class.find_by(stripe_id: stripe_sub.plan.id)
+        if plan
+          self.plan = plan
+          break
+        end
+      end
 
       # Support for discounts is added to stripe-ruby-mock in v2.2.0, 84f08eb
       self.coupon               = stripe_sub.discount && stripe_sub.discount.coupon.id if stripe_sub.respond_to?(:discount)
