@@ -145,6 +145,11 @@ module Payola
     def is_a?(other)
       ENV[@key].is_a?(other)
     end
+    
+    # similar to above - fixes an issue with newer stripe gem checking start_with?
+    def start_with?(*args)
+      ENV[@key].start_with?(*args)
+    end
   end
 
   self.reset!
