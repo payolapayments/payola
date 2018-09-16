@@ -28,8 +28,10 @@ var PayolaPaymentForm = {
             var permalink = form.data('payola-permalink');
             var currency = form.data('payola-currency');
             var stripe_customer_id = form.data('stripe_customer_id');
+            var application_fee = form.data('payola-application-fee')
   
             var data_form = $('<form></form>');
+            data_form.append($('<input type="hidden" name="application_fee">').val(application_fee));
             data_form.append($('<input type="hidden" name="stripe_customer_id">').val(stripe_customer_id));
             data_form.append($('<input type="hidden" name="currency">').val(currency));
             data_form.append($('<input type="hidden" name="stripeToken">').val(response.id));
