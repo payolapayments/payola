@@ -21,10 +21,10 @@ dependencies:
 
 database:
   override:
-    - echo "Do nothing in database step, default rake default task sets up db."
+    - BUNDLE_GEMFILE=Gemfile bundle exec rake db:migrate
 
 test:
-  override:
+  override:  
     - BUNDLE_GEMFILE=Gemfile bundle exec rake
     - BUNDLE_GEMFILE=gemfiles/rails_4_2.gemfile bundle exec rake
     - BUNDLE_GEMFILE=gemfiles/rails_4_1.gemfile bundle exec rake

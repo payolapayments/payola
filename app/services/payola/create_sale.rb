@@ -4,6 +4,7 @@ module Payola
       product   = params[:product]
       affiliate = params[:affiliate]
       coupon    = params[:coupon]
+      application_fee = params[:application_fee]
 
       if params[:stripe_customer_id].present?
         customer = Stripe::Customer.retrieve(params[:stripe_customer_id], Payola.secret_key)
@@ -27,6 +28,12 @@ module Payola
         s.signed_custom_fields = params[:signed_custom_fields]
         s.stripe_customer_id = customer.id if customer
 
+        if application_fee
+          s.application_fee = application_fee
+        else
+          s.application_fee = 0
+        end
+           
         if coupon
           s.coupon = coupon
           s.amount = product.price * (1 - s.coupon.percent_off / 100.0)

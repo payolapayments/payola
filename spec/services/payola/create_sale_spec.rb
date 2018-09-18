@@ -60,6 +60,21 @@ module Payola
           expect(sale.amount).to eq 99
         end
       end
+      
+      describe "with application_fee" do
+        it "should include the application_fee" do
+          application_fee = 500
+
+          sale = CreateSale.call(
+            email: 'pete@bugsplat.info',
+            stripeToken: 'test_tok',
+            product: @product,
+            application_fee: application_fee
+          )
+
+          expect(sale.application_fee).to eq application_fee
+        end
+      end
     end
   end
 end
