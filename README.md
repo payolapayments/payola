@@ -22,7 +22,7 @@ To see Payola in action, check out the site for [Mastering Modern Payments: Usin
 Add Payola to your Gemfile:
 
 ```ruby
-gem 'payola-payments'
+gem 'payola-payments', :git => 'git@github.com:payolapayments/payola.git'
 ```
 
 Run the installer:
